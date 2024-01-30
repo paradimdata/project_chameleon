@@ -1,0 +1,2 @@
+Elapsed time [s]	Numeric value	Description [IDLE,EXCHANGE_REQUEST,EXCHANGE_OK]
+0.000	0	IDLE

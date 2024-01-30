@@ -1,0 +1,2 @@
+Elapsed time [s]	Numeric value	Description [OK,Overtemp]
+0.000	0	OK

@@ -1,0 +1,2 @@
+Elapsed time [s]	Numeric value	Description [NotAtHome,AtHome]
+0.000	0	NotAtHome

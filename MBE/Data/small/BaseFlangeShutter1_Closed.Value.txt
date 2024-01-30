@@ -1,0 +1,2 @@
+Elapsed time [s]	Numeric value	Description [NotClosed,Closed]
+0.000	1	Closed

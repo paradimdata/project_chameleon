@@ -1,0 +1,2 @@
+Elapsed time [s]	Numeric value	Description [Idle,Abort]
+0.000	0	Idle
