@@ -7,7 +7,18 @@ file_width = 480
 file_height = 640
 
 def rheedconverter(file_name):
+    """
+    A function to allow RHEED users to convert 16 bpp .img images into 8 bpp easily readable .jpeg images
 
+    args: takes one .img file with a 685 byte header and of size 480 x 640
+    return: does not return anything. Saves image as .jpeg file
+    exception: will throw an exception if the input file is not a .img file 
+    """
+
+    #Make sure input is a .img file
+    if not filename.endswith('.img'):
+        raise ValueError(“ERROR: bad input. Expected .img file”)
+    
     #Open file as unknown type. Skip header bytes and adjust to a 480 X 640 image. 
     with open(file_name,"r") as f:
         f.seek(header_bytes)

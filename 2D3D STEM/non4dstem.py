@@ -3,11 +3,22 @@ from glob import glob
 import matplotlib.pyplot as plt
 import os
 
-def non4dstem():
+def non4dstem(data_folder):
+    """
+    A function to take 2D and 3D STEM file formats and turn them into 2D readable .png image files. 
 
+    args: data_folder is the only input and it holds the 2D and 3D files that will be converted into .png images
+    return: this function does not return anything. Instead it just saves converted files as .png images
+    exceptions: will throw an exception if the input file is not a folder
+    """
+
+    #Make sure input is a folder
+    if os.path.isdir(data_folder) is not true:
+        raise ValueError(“ERROR: bad input. Expected folder”)
+    
     #Read in files from data folder
-    for file in glob("data/*"):
-    data = hs.load(file)
+    for file in glob(data_folder + "/*"):
+        data = hs.load(file)
 
     #For each file that gets read in, plot and save as a figure
     for obj in data:

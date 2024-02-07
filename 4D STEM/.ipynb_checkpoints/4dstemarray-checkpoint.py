@@ -4,6 +4,17 @@ import numpy as np
 import os
 
 def 4dstemarray(file_name):
+    """
+    A function to take 4D STEM files and turn them into a series of 2D readable image files
+
+    args: primarily takes .raw files that contain 4D arrays 
+    return: does not return anything. Instead it saves files as .png images
+    exceptions: will throw an exception if the input is not a file
+    """
+
+    #Check if input is a file
+    if os.path.isfile(file_name) is not true:
+        raise ValueError(“ERROR: bad input. Expected file”)
     
     #Import the file as 4D STEM array
     dataset = py4DSTEM.import_file(file_name)
