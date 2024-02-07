@@ -15,8 +15,8 @@ def mbeparser(file_folder):
     """
 
     #Make sure input is a folder
-    if os.path.isdir(file_folder) is not true:
-        raise ValueError(“ERROR: bad input. Expected folder”)
+    if os.path.isdir(file_folder) is False:
+        raise ValueError("ERROR: bad input. Expected folder")
     
     #Create two folders to sort all of the mbe text files into and add them into the current file folder. Useful folder will contain all the files that contain useful data. Useless folder will contain only files that contain no relevant data. 
     useless_folder = os.path.join(file_folder, "useless")
@@ -28,17 +28,19 @@ def mbeparser(file_folder):
     for filename in os.listdir(file_folder):
         if filename.endswith('.txt'):
             filepath = os.path.join(file_folder, filename)
+        elif ('use' in filename):
+            continue
         else:
-            raise ValueError(“ERROR: bad data. Expected .txt file”)
+            raise ValueError("ERROR: bad data. Expected .txt file")
 
         # Sort files into folders based on name. There are a couple of key words that appear in file names that we can use to sort the files. 
-        if ('Alarm' in file_name) or ('Proportional' in file_name) or ('Integral' in file_name) or ('Derivative' in file_name) or ('Max' in file_name) or ('Min' in file_name) or ('UT1' in file_name): 
+        if ('Alarm' in filename) or ('Proportional' in filename) or ('Integral' in filename) or ('Derivative' in filename) or ('Max' in filename) or ('Min' in filename) or ('UT1' in filename): 
             shutil.move(filepath, os.path.join(useless_folder, filename))
         else:  
             shutil.move(filepath, os.path.join(useful_folder, filename))
 
     #After files have been sorted, move into the useful folder and list all the useful files
-    Useful_directory_path = file_folder + 'Useful/'
+    Useful_directory_path = file_folder + '/useful/'
     file_list = os.listdir(Useful_directory_path)
     for file_name in file_list:
         print(file_name)
