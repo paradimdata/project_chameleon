@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def 4dstemarray(file_name):
+def stemarray4d(file_name):
     """
     A function to take 4D STEM files and turn them into a series of 2D readable image files
 
@@ -13,8 +13,8 @@ def 4dstemarray(file_name):
     """
 
     #Check if input is a file
-    if os.path.isfile(file_name) is not true:
-        raise ValueError(“ERROR: bad input. Expected file”)
+    if os.path.isfile(file_name) is False:
+        raise ValueError("ERROR: bad input. Expected file")
     
     #Import the file as 4D STEM array
     dataset = py4DSTEM.import_file(file_name)
@@ -28,7 +28,7 @@ def 4dstemarray(file_name):
 
     #Save mean as a png
     plt.imsave(
-    fname=os.path.splitext(os.path.split(filepath)[1])[0] + "_mean_DP.png",
+    fname=os.path.splitext(os.path.split(file_name)[1])[0] + "_mean_DP.png",
     arr=meanDP.data,
     vmin=np.percentile(meanDP.data, 1),
     vmax=np.percentile(meanDP.data, 99),
@@ -37,7 +37,7 @@ def 4dstemarray(file_name):
 
     #Save max as a png
     plt.imsave(
-    fname=os.path.splitext(os.path.split(filepath)[1])[0] + "_max_DP.png",
+    fname=os.path.splitext(os.path.split(file_name)[1])[0] + "_max_DP.png",
     arr=maxDP.data,
     vmin=np.percentile(meanDP.data, 1),
     vmax=np.percentile(meanDP.data, 99),
@@ -46,7 +46,7 @@ def 4dstemarray(file_name):
 
     #Save individual 2D slice as a png
     plt.imsave(
-    fname=os.path.splitext(os.path.split(filepath)[1])[0] + "_vBF.png",
+    fname=os.path.splitext(os.path.split(file_name)[1])[0] + "_vBF.png",
     arr=vBF,
     vmin=np.percentile(vBF, 1),
     vmax=np.percentile(vBF, 99),

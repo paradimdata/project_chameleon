@@ -1,6 +1,7 @@
 import argparse
 import sys
 import xylib
+import os
 
 #Function gets the metadata and writes it to a file. Used in main function
 def export_metadata(f, meta):
@@ -24,8 +25,8 @@ def brukerrawconverter(input_file, output_file):
     """
 
     #Check if input is a file
-    if os.path.isfile(input_file) is not true:
-        raise ValueError(“ERROR: bad input. Expected file”)
+    if os.path.isfile(input_file) is False:
+        raise ValueError("ERROR: bad input. Expected file")
     
     #Load input file and create output text file
     d = xylib.load_file(input_file)

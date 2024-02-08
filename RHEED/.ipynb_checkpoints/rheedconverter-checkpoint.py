@@ -1,7 +1,6 @@
 import os
 import numpy as np 
 import matplotlib.pyplot as plt
-from PIL import image
 header_bytes = 685
 file_width = 480
 file_height = 640
@@ -16,8 +15,8 @@ def rheedconverter(file_name):
     """
 
     #Make sure input is a .img file
-    if not filename.endswith('.img'):
-        raise ValueError(“ERROR: bad input. Expected .img file”)
+    if not file_name.endswith('.img'):
+        raise ValueError("ERROR: bad input. Expected .img file")
     
     #Open file as unknown type. Skip header bytes and adjust to a 480 X 640 image. 
     with open(file_name,"r") as f:
@@ -30,6 +29,7 @@ def rheedconverter(file_name):
     im_temp = im_temp * 255
    
     #Adjust to unsigned integers and save as a jpeg
-    im = Image.fromarray(im_temp.astype(np.uint8))
-    im.save("your_file.jpeg")
+    im_uint8_scaled = im_temp.astype(np.uint8)
+    plt.imshow(im_uint8_scaled)
+    plt.savefig('test.png')
     

@@ -11,10 +11,12 @@ def non4dstem(data_folder):
     return: this function does not return anything. Instead it just saves converted files as .png images
     exceptions: will throw an exception if the input file is not a folder
     """
-
+    #Create outputs folder
+    os.makedirs('outputs')
+    
     #Make sure input is a folder
-    if os.path.isdir(data_folder) is not true:
-        raise ValueError(“ERROR: bad input. Expected folder”)
+    if os.path.isdir(data_folder) is False:
+        raise ValueError("ERROR: bad input. Expected folder")
     
     #Read in files from data folder
     for file in glob(data_folder + "/*"):
