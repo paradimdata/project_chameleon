@@ -1,0 +1,70 @@
+1) Download and install windows cmake:
+https://cmake.org/download/
+(make sure cmake is added to path for all users)
+
+2) Download and install git:
+https://git-scm.com/download/win
+(make sure git wrappers are added to path -- defaults should do this)
+
+3) Download and install the MSVC build tools (not full ide):
+https://docs.microsoft.com/en-us/visualstudio/install/build-tools-container?view=vs-2017
+
+(you can adjust end of url to change version, the below is written assuming 2017...)
+
+Download: https://aka.ms/vs/15/release/vs_buildtools.exe
+
+From command prompt:
+vs_buildtools.exe --wait --passive --norestart --nocache --installPath "%ProgramFiles%\Microsoft Visual Studio\2017\BuildTools" --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.Component.VC.Runtime.UCRTSDK --add Microsoft.VisualStudio.Component.Windows81SDK
+
+3) Download the header files, development files, and corresponding Release DLLs:
+https://www.wxwidgets.org/downloads/
+
+Put in c:\wxWidgets
+
+4) Download Boost header files:
+https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/
+unzip in c:\Boost
+
+5) Download prebuilt SWIG:
+
+http://www.swig.org/download.html
+unzip to c:\SWIG
+
+6) To build python wheels:
+download python 3.5 or later (x86 or x86-64 for 32-bit and 64-bit respectively) executable installers from https://www.python.org/downloads/windows/ . Install python (Make sure to add python to path). Wheels must be built for each major version (3.5/3.6/3.7/...) and each architecture (x86/x64) separately.
+
+7) REBOOT
+
+8) Download and build zlib dll:
+https://www.zlib.net/zlib1211.zip
+Open msvc prompt
+cd zlib
+
+For 32-bit, use 32-bit msvc prompt and do:
+# assembly accelerated versions incompatible with SAFESEH, so don't use
+nmake -f win32/Makefile.msc  
+
+For 64-bit, use 64-bit msvc prompt and do:
+nmake -f win32/Makefile.msc AS=ml64 LOC="-DASMV -DASMINF -I."  OBJA="inffasx64.obj gvmat64.obj inffas8664.obj"
+
+9) Build XYLIB:
+goto c: root
+git clone https://github.com/wojdyr/xylib.git
+cd xylib
+# For 32-bit build with 32-bit msvc prompt
+cmake -G "Visual Studio 15 2017" -A Win32 -DZLIB_ROOT=c:\zlib -DwxWidgets_ROOT_DIR=c:\wxWidgets -DwxWidgets_LIB_DIR=c:\wxWidgets\lib\vc14x_dll -B build_winx86
+cd build_winx86
+msbuild ALL_BUILD.vcxproj -p:configuration=release
+
+# For 64-bit build with 64-bit msvc prompt
+cmake -G "Visual Studio 15 2017" -A x64 -DZLIB_ROOT=c:\zlib -DwxWidgets_ROOT_DIR=c:\wxWidgets -DwxWidgets_LIB_DIR=c:\wxWidgets\lib\vc14x_x64_dll -B build_winx64
+cd build_winx64
+msbuild ALL_BUILD.vcxproj -p:configuration=release
+
+10) Build python binary wheels
+From separate admin command prompt, do:
+pip install --upgrade setuptools wheel
+then back in msvc console
+set path=c:\swig;%PATH%
+set include=c:\boost;%INCLUDE%
+python setup.py bdist_wheel
