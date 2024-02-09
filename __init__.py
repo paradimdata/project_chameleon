@@ -1,6 +1,6 @@
 "Defining imports from the base package"
-from .RHEED import rheedconverter.py
-from .MBE import mbeparser.py
+from .RHEED import rheedconverter
+from .MBE import mbeparser
 from .XRD.BrukerRAW import brukerrawconverter
-from 4D STEM import 4dstemarray
-from non4dstem import non4dstem
+from .4D STEM import stemarray4d
+from .2D3D STEM import non4dstem
