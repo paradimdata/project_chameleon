@@ -1,19 +1,19 @@
 # project_chameleon
 Repository for Project Chameleon conversion scripts
 
-# Working conversion functions held in the repository:
--4D STEM: documented and converted to series of 2D slices (16bpp TIFS)
--NON 4D STEM: Data graphed and converted to png
--XRD: Brker RAW/UXD to CSV
--RHEED: 16 bpp images to TIF/PNG
--MBE: Data sorted and graphed
+## Working conversion functions held in the repository:
+- 4D STEM: documented and converted to series of 2D slices (16bpp TIFS)
+- NON 4D STEM: Data graphed and converted to png
+- XRD: Brker RAW/UXD to CSV
+- RHEED: 16 bpp images to TIF/PNG
+- MBE: Data sorted and graphed
 
-# Conversions still in progress
--ARPES
--EPR
--JEOL SEM
--EBSD
--PPMS/MPMS
+## Conversions still in progress
+- ARPES
+- EPR
+- JEOL SEM
+- EBSD
+- PPMS/MPMS
 
 ## Description of individual working functions
 
@@ -41,5 +41,21 @@ This function taks a 16bpp rheed image file(.img) as an input, and outputs a 8bp
 **Function: mbeparser('foldername')**
 
 This function takes a folder as an input. This folder should contain all text file(.txt) outputs from a specific MBE run. The input folder should be in the same folder where the function is run. Within the input folder, the function will sort all text files into two sub directories: useful, and useless. Sorting is accomplished using keywords from file names. After sorting is complete, the useful files will be listed and the user may choose if they would like to graph a specific file. If users would like to graph a file, they must input the full file name and then this graph of the file will be displayed. This function does not return anything. 
+
+
+## Dependencies
+Dependency install instructions written for a conda environment
+- os (pip install os)
+- matplolib.pyplot (pip install matplotlib.pyplot)
+- glob (pip install glob)
+- numpy (pip install numpy)
+- pathlib (pip install pathlib)
+- shutil (pip install shutil)
+- argparse (pip install argparse)
+- sys (pip install sys)
+- hyperspy (install directions can be found [here](https://hyperspy.org/hyperspy-doc/current/user_guide/install.html))
+- py4dstem (install directions can be found [here](https://github.com/py4dstem/py4DSTEM))
+- xylib (install directions can be found [here](https://github.com/wojdyr/xylib))
+If further instructions are needed for the xylib install, reference the file "xylib Install Instructions" for a second set of instructions of how to download xylib on a windows machine. 
 
 
