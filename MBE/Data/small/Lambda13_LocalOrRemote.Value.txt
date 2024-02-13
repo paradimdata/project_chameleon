@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [LOC,REM]
-0.000	0	LOC

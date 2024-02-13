@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [NOTRESET,RESET]
-0.000	0	NOTRESET

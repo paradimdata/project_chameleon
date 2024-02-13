@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [0,1]
-0.000	0	0

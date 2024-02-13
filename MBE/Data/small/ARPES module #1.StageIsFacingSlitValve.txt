@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [NO,YES,UNKNOWN,STAGE_DOWN,STAGE_LOST]
-0.000	2	UNKNOWN

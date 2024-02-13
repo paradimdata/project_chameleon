@@ -1,3 +1,0 @@
-Elapsed time [s]	Numeric value	Description [Down,Up]
-0.000	1	Up
-90.923	0	Down

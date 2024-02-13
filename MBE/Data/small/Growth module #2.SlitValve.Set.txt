@@ -1,4 +1,0 @@
-Elapsed time [s]	Numeric value	Description [CLOSE,OPEN]
-0.000	1	OPEN
-20.172	0	CLOSE
-66.438	1	OPEN

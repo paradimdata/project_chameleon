@@ -1,3 +1,0 @@
-Elapsed time [s]	Numeric value	Description [FALSE,TRUE]
-0.000	0	FALSE
-0.028	1	TRUE

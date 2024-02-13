@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [None,Acknowledge,Clear,Lower,Raise,Unacknowledge]
-0.000	0	None

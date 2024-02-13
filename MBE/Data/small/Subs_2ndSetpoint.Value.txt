@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [Inactive,Active]
-0.000	0	Inactive

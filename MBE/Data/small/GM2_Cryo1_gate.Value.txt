@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [Close,Open]
-0.000	1	Open

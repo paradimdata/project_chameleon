@@ -1,5 +1,0 @@
-Elapsed time [s]	Numeric value	Description [NotAtHome,AtHome]
-0.000	1	AtHome
-38.361	0	NotAtHome
-42.499	1	AtHome
-90.923	0	NotAtHome

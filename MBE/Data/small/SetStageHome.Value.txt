@@ -1,4 +1,0 @@
-Elapsed time [s]	Numeric value	Description [NULL,ACTIVATE]
-0.000	0	NULL
-45.422	1	ACTIVATE
-46.531	0	NULL

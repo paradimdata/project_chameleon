@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [NotAtSP1,AtSP1]
-0.000	1	AtSP1

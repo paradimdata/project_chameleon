@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [NotInterlocked,Interlocked]
-0.000	0	NotInterlocked

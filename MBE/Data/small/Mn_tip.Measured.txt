@@ -1,2 +1,0 @@
-Elapsed time [s]	Value [0,1350]
-0.000	204.2370

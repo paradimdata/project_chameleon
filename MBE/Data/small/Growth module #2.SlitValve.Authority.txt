@@ -1,4 +1,0 @@
-Elapsed time [s]	Numeric value	Description [DISABLED,ENABLED]
-0.000	0	DISABLED
-18.424	1	ENABLED
-75.203	0	DISABLED

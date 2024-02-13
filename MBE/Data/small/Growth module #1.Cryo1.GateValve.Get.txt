@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [Ajar,Open,Closed,Invalid]
-0.000	2	Closed

@@ -1,2 +1,0 @@
-Elapsed time [s]	Numeric value	Description [ManualMode,AutoMode]
-0.000	0	ManualMode
