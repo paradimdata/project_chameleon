@@ -18,29 +18,29 @@ Repository for Project Chameleon conversion scripts
 ## Description of individual working functions
 
 ### 4D STEM 
-**Function: stemarray4d('filename')** 
+**Function: stemarray4d('file_name','output_name')** 
 
-This function takes a raw (.raw files) 4D STEM array as an input, and outputs three png files: The mean of the dataset, the max of the data set, and one specific slice from the 4D array. The function will take files from the directory where the function is run and the outputs will but output in the directory where the function is run. This function relies on the library py4DSTEM functions to load and read the 4D STEM files. This function does not return anything.
+This function takes a raw (.raw files) 4D STEM array as an input, and outputs three png files: The mean of the dataset, the max of the data set, and one specific slice from the 4D array. The function will take of a file from the directory where the function is run, or a path to a file. Outputs will take the name 'output_name' + the designation of whatever name is being output. 'output_name' may also include a file path as part of the name (example: /root/folder/output_name). 'output_name' should not include any file type designation(.txt,.png.jpeg) as this is added in the code. This function relies on the library py4DSTEM functions to load and read the 4D STEM files. This function does not return anything.
 
 ### NON 4D STEM
-**Function: non4dstem('foldername')**
+**Function: non4dstem('foldername','outputfolder')**
 
-This function takes a folder of non-4D STEM images (.dm4, .ser, .emd) files as an input, and outputs a folder called 'outputs' that contains .png images for each of the inputs. The folder containing the input files must be in the same directory where the function is run, and the folder 'ouputs' will be created in the folder where the function is run. Files must be put into a folder even if there is just one file. This function relies on the library hypserspy to load and read the data. This function does not return anything. 
+This function takes a folder of non-4D STEM images (.dm4, .ser, .emd) files as an input, and outputs a folder called 'outputs' that contains .png images for each of the inputs. The folder containing the input files may be in the same directory where the function is run, or 'foldername' can be a path to a folder. The folder 'outputfolder' will be created in the folder where the function is run if only a name is given. 'outputfolder' may also be a path. Files must be put into a folder even if there is just one file. This function relies on the library hypserspy to load and read the data. This function does not return anything. 
 
 ### XRD BRUKER RAW/UXD
 **Function: brukerrawconverter('input_filename','output_filename)**
 
-This function takes a raw Bruker file (.raw, .uxd) as an input(input_filename), and outputs a text file titled 'output_filename.txt' containing metadata and all data from the raw file. This function will look for the input file in the directory where the function is run, and the output file will be created in the folder where the function is run. This function relies on the library xylib. This function does not return anything.
+This function takes a raw Bruker file (.raw, .uxd) as an input(input_filename), and outputs a text file titled 'output_filename.txt' containing metadata and all data from the raw file. This function will by default look for the input file in the directory where the function is run unless 'input_filename' includes a path. The output file will be created in the folder where the function is run unless 'output_filename' includes a path. 'output_filename' should include the file type designation '.txt' at the end. This function relies on the library xylib. This function does not return anything.
 
 ### RHEED
-**Function: rheedconverter('filename')**
+**Function: rheedconverter('filename', 'outputname')**
 
-This function taks a 16bpp rheed image file(.img) as an input, and outputs a 8bpp image file(.png). This function will look for the input file in the directory where the function is run, and the ouput file will be created in the folder where the function is run. This function does not return anything.
+This function taks a 16bpp rheed image file(.img) as an input, and outputs a 8bpp image file(.png). This function will look for the input file in the directory where the function is run by default, unless 'filename' contains a path. The ouput file will be created in the folder where the function is run with the name 'outputname'.png unless 'outputname' contains a path. 'outputname' should include the file type designation '.png' at the end. This function does not return anything.
 
 ### MBE
 **Function: mbeparser('foldername')**
 
-This function takes a folder as an input. This folder should contain all text file(.txt) outputs from a specific MBE run. The input folder should be in the same folder where the function is run. Within the input folder, the function will sort all text files into two sub directories: useful, and useless. Sorting is accomplished using keywords from file names. After sorting is complete, the useful files will be listed and the user may choose if they would like to graph a specific file. If users would like to graph a file, they must input the full file name and then this graph of the file will be displayed. This function does not return anything. 
+This function takes a folder as an input. This folder should contain all text file(.txt) outputs from a specific MBE run. The input folder may be in the same folder where the function is run, or 'foldername' may be a file path to a folder. Within the input folder, the function will sort all text files into two sub directories: useful, and useless. Sorting is accomplished using keywords from file names. After sorting is complete, the useful files will be listed and the user may choose if they would like to graph a specific file. If users would like to graph a file, they must input the full file name and then this graph of the file will be displayed. This function does not return anything. 
 
 
 ## Install Instructions
@@ -93,3 +93,6 @@ Xylib has the most complicated install process. Below are mac install instructio
 7. Install the python xylib binding
 
     $ pip install xylib-py
+
+
+This package was written by Peter Cauchy with funding by PARADIM
