@@ -7,13 +7,13 @@ Repository for Project Chameleon conversion scripts
 - XRD: Brker RAW/UXD to CSV
 - RHEED: 16 bpp images to TIF/PNG
 - MBE: Data sorted and graphed
+- PPMS/MPMS: Relevant lines extracted and saved
 
 ## Conversions still in progress
 - ARPES
 - EPR
 - JEOL SEM
 - EBSD
-- PPMS/MPMS
 
 ## Description of individual working functions
 
@@ -40,8 +40,12 @@ This function taks a 16bpp rheed image file(.img) as an input, and outputs a 8bp
 ### MBE
 **Function: mbeparser('foldername')**
 
-This function takes a folder as an input. This folder should contain all text file(.txt) outputs from a specific MBE run. The input folder may be in the same folder where the function is run, or 'foldername' may be a file path to a folder. Within the input folder, the function will sort all text files into two sub directories: useful, and useless. Sorting is accomplished using keywords from file names. After sorting is complete, the useful files will be listed and the user may choose if they would like to graph a specific file. If users would like to graph a file, they must input the full file name and then this graph of the file will be displayed. This function does not return anything. 
+This function takes a folder as an input. This folder should contain all text file(.txt) outputs from a specific MBE run. The input folder may be in the same folder where the function is run, or 'foldername' may be a file path to a folder. Within the input folder, the function will sort all text files into two sub directories: useful, and useless. Sorting is accomplished using keywords from file names. After sorting is complete, the user may choose what kind of action they want to take: graph and show a file, graph, show, and save a file, check setpoints, or exit. If graph and show is chosen, all graphable files from the useful folder will be printed and the user can choose one to graph which will then be displayed. If graph, show, and save a file is chosen, all graphable files from the useful folder will be printed and the user can pick one which will then be graphed and also saved in the useful folder. If check setpoints is chosen, all the setpoint files will be displayed and the user can choose a setpoint to check the value of. Users will be continuously given these option until they pick the exit option. 
 
+### PPMS/MPMS
+**Function: ppmsmpmsparser('inputfile', 'outputfile')** 
+
+This function takes a .dat file as an input. This .dat file should be one of four types so that the function can extract the data properly. The four types are 4 probe resistivity, heat capacity, thermal transport, and magnetic susceptibility. The input file may be a file or a path to a file in a different folder. When the function is run the user may choose what kind of file was input so the correct columns can be extracted. The relevant columns in the .dat input file are read by the function and written into a .txt file called 'outputfile'.  'inputfile' and 'outputfile' should both contain full file names and file extensions (.dat for input, .txt for output). 
 
 ## Install Instructions
 Full listed of dependencies used by Project Chameleon

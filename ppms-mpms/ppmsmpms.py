@@ -1,6 +1,6 @@
 import numpy as np
 
-def ppmsmpmaparser(inputfile, outputfile):
+def ppmsmpmsparser(inputfile, outputfile):
     """
     A function to allow users to parse their ppms and mpms data more efficiently. Allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file.
 
