@@ -60,4 +60,6 @@ def mbeparser(file_folder):
     plt.title('Plot of ' + user_input)
     plt.show()
     
-    
+
+if __name__ == '__main__':
+    mbeparser()

@@ -32,4 +32,6 @@ def rheedconverter(file_name, output_file):
     im_uint8_scaled = im_temp.astype(np.uint8)
     plt.imshow(im_uint8_scaled)
     plt.savefig(output_file)
-    
+
+if __name__ == '__main__':
+    rheedconverter()

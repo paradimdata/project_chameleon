@@ -52,3 +52,6 @@ def brukerrawconverter(input_file, output_file):
             values = ["%.6f" % block.get_column(k).get_value(j)
                       for k in range(1, ncol+1)]
             f.write('\t'.join(values) + '\n')
+
+if __name__ == '__main__':
+    brukerrawconverter()

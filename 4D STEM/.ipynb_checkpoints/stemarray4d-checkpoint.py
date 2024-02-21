@@ -52,3 +52,6 @@ def stemarray4d(file_name,output_name):
     vmax=np.percentile(vBF, 99),
     cmap="gray",
     )
+
+if __name__ == '__main__':
+    stemarray4d()
