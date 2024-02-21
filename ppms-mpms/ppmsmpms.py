@@ -1,20 +1,33 @@
 import numpy as np
 
 def ppmsmpmaparser(inputfile, outputfile):
+    """
+    A function to allow users to parse their ppms and mpms data more efficiently. Allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file.
 
+    args: Takes a .dat file or path as an input for inputfile and a name for as an input for outputfile
+    return: this fucntion does not return anything. It saves outputs into a file called outputfile
+    exceptions: will throw an exception if the input file is not a file
+    """
+
+    #Error if the input file is not a file
+    if os.path.isfile(inputfile) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+
+    #Initialize values and open file
     metadata_limit = 0
     limit_holder = 0
     array = []
     count = 0
-
     datafile = open(outputfile,'w')
-    
+
+    #Read size of file and lines in file
     with open(inputfile, 'r', encoding='latin-1') as fp:
         size = len(fp.readlines())
     with open(inputfile, 'r', encoding='latin-1') as file:
         lines = file.readlines()
         lines = [line.strip() for line in lines]
-        
+
+    #Find where the header is and where the data starts
     while metadata_limit < 1:  
         if ('Time Stamp' in lines[count]):
             header = lines[count].split(',')
@@ -23,6 +36,7 @@ def ppmsmpmaparser(inputfile, outputfile):
         else:
             count += 1
 
+    #Take user input to choose which loop to enter
     user_input = input("Which file type is this? \n Heat Capacity \n AC Magnetic Susceptibility \n 4-Probe Resistivity \n Thermal Transport \n") 
 
     #4-PROBE LOOP

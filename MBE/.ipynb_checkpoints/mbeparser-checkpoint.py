@@ -42,24 +42,58 @@ def mbeparser(file_folder):
     #After files have been sorted, move into the useful folder and list all the useful files
     Useful_directory_path = file_folder + '/useful/'
     file_list = os.listdir(Useful_directory_path)
-    for file_name in file_list:
-        if not ('Setpoint' in file_name):
-            print(file_name)
+    #for file_name in file_list:
+     #   if not ('Setpoint' in file_name):
+      #      print(file_name)
 
-    #Let user decide which file/files they would like to graph
-    user_input = input("Which file would you like to graph? ")
-
-    #Load and graph selected files
-    graph_path = pathlib.Path(Useful_directory_path + user_input) 
-    data = np.loadtxt(graph_path,skiprows = 1)
-    x_values = data[:, 0]
-    y_values = data[:, 1]
-    plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
-    plt.xlabel('Time')
-    plt.ylabel('Process Value')
-    plt.title('Plot of ' + user_input)
-    plt.show()
+    loopholder = 1
+    while loopholder > 0:
     
+        #Let user decide which file/files they would like to graph
+        user_input = input("What would you like to do? \n Graph and show \n Graph, show, and save \n Check set points \n Exit \n")
+
+        if('Graph and show' in user_input):
+            for file_name in file_list:
+                if not ('Setpoint' in file_name):
+                    print(file_name)
+            filechoice = input("What file would you like to graph? \n")
+            #Load and graph selected files
+            graph_path = pathlib.Path(Useful_directory_path + filechoice) 
+            data = np.loadtxt(graph_path,skiprows = 1)
+            x_values = data[:, 0]
+            y_values = data[:, 1]
+            plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
+            plt.xlabel('Time')
+            plt.ylabel('Process Value')
+            plt.title('Plot of ' + filechoice)
+            plt.show()
+        elif('Graph, show, and save' in user_input):
+            for file_name in file_list:
+                if not ('Setpoint' in file_name):
+                    print(file_name)
+            filechoice = input("What file would you like to graph? \n")
+            #Load and graph selected files
+            graph_path = pathlib.Path(Useful_directory_path + filechoice) 
+            data = np.loadtxt(graph_path,skiprows = 1)
+            x_values = data[:, 0]
+            y_values = data[:, 1]
+            plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
+            plt.xlabel('Time')
+            plt.ylabel('Process Value')
+            plt.title('Plot of ' + filechoice)
+            plt.show()
+            plt.savefig(filechoice + '.png')
+        elif('Check set points' in user_input):
+            for file_name in file_list:
+                if('Setpoint' in file_name):
+                    print(file_name)
+            filechoice = input("What file would you like to check? \n")
+            f = open(Useful_directory_path + filechoice)
+            for line in f:
+                print(line)
+        elif('Exit' in user_input):
+            break
+            
 
 if __name__ == '__main__':
     mbeparser()
