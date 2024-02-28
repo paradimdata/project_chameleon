@@ -2,6 +2,8 @@ import py4DSTEM
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
+import shutil
 
 def stemarray4d(file_name,output_name):
     """
@@ -24,7 +26,7 @@ def stemarray4d(file_name,output_name):
     maxDP = dataset.get_dp_max()
 
     #Save an individual 2D slice from the 4D array
-    vBF = dataset.data[:, :, 64, 64]
+    #vBF = dataset.data[:, :, 64, 64]
 
     #Save mean as a png
     plt.imsave(
@@ -45,13 +47,40 @@ def stemarray4d(file_name,output_name):
     )
 
     #Save individual 2D slice as a png
-    plt.imsave(
-    fname=output_name + "_vBF.png",
-    arr=vBF,
-    vmin=np.percentile(vBF, 1),
-    vmax=np.percentile(vBF, 99),
-    cmap="gray",
-    )
+    count = 0
+    upper_limit = len(dataset.data[2])
+    while 0 <= count < upper_limit:
+        vBF = dataset.data[:,:,count,count]
+        plt.imsave(
+        fname=output_name + str(count) + "_vBF.png",
+        arr=dataset.data[:,:,count,count],
+        vmin=np.percentile(vBF, 1),
+        vmax=np.percentile(vBF, 99),
+        cmap="gray",
+        )
+        count += 1
+
+    #Make a folder to holder all the images from the 4d array
+    output_folder = output_name + 'array'
+    os.makedirs(output_folder)
+
+    #Sort all the slices into the directory
+    current_directory = os.getcwd()
+    for filename in os.listdir(current_directory):
+        if filename.endswith('.png'):
+            filepath = os.path.join(current_directory, filename)
+        else:
+            continue
+            
+        if (output_name in filename) and ('vBF' in filename): 
+            shutil.move(filepath, os.path.join(output_folder, filename))
+        else:  
+            continue
 
 if __name__ == '__main__':
-    stemarray4d()
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <input_file> <output_file>")
+        sys.exit(1)
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    stemarray4d(input_file,ouput_file)

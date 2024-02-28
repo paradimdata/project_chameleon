@@ -3,6 +3,7 @@ import pathlib
 import shutil
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 def mbeparser(file_folder):
     """
@@ -96,4 +97,8 @@ def mbeparser(file_folder):
             
 
 if __name__ == '__main__':
-    mbeparser()
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <input_file>")
+        sys.exit(1)
+    input_file = sys.argv[1]
+    non4dstem(input_file)

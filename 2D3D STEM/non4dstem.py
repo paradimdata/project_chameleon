@@ -2,6 +2,7 @@ import hyperspy.api as hs
 from glob import glob
 import matplotlib.pyplot as plt
 import os
+import sys
 
 def non4dstem(data_folder,outputs_folder):
     """
@@ -28,4 +29,10 @@ def non4dstem(data_folder,outputs_folder):
         plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}.png")
 
 if __name__ == '__main__':
-    non4dstem()
+    
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <input_file> <output_file>")
+        sys.exit(1)
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    non4dstem(input_file,ouput_file)

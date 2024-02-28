@@ -54,4 +54,9 @@ def brukerrawconverter(input_file, output_file):
             f.write('\t'.join(values) + '\n')
 
 if __name__ == '__main__':
-    brukerrawconverter()
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <input_file> <output_file>")
+        sys.exit(1)
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    brukerrawconverter(input_file,ouput_file)

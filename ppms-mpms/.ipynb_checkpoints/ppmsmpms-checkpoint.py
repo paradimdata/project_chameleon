@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 def ppmsmpmsparser(inputfile, outputfile):
     """
@@ -102,6 +103,11 @@ def ppmsmpmsparser(inputfile, outputfile):
 
 
 if __name__ == '__main__':
-    ppmsmpmaparser()
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <input_file> <output_file>")
+        sys.exit(1)
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    ppmsmpmsparser(input_file,ouput_file)
 
 
