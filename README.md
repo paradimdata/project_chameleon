@@ -20,7 +20,7 @@ Repository for Project Chameleon conversion scripts
 ### 4D STEM 
 **Function: stemarray4d('file_name','output_name')** 
 
-This function takes a raw (.raw files) 4D STEM array as an input, and outputs three png files: The mean of the dataset, the max of the data set, and one specific slice from the 4D array. The function will take of a file from the directory where the function is run, or a path to a file. Outputs will take the name 'output_name' + the designation of whatever name is being output. 'output_name' may also include a file path as part of the name (example: /root/folder/output_name). 'output_name' should not include any file type designation(.txt,.png.jpeg) as this is added in the code. This function relies on the library py4DSTEM functions to load and read the 4D STEM files. This function does not return anything.
+This function takes a raw (.raw files) 4D STEM array as an input, and outputs two png files and a folder of png files: The mean of the dataset, the max of the data set, and 128 2D slices of the 4D array. The function will take of a file from the directory where the function is run, or a path to a file. Outputs will take the name 'output_name', which is just the name of the output file. 'output_name' may also include a file path as part of the name (example: /root/folder/output_name). 'output_name' should not include any file type designation(.txt,.png.jpeg) as this is added in the code. This function relies on the library py4DSTEM functions to load and read the 4D STEM files. This function does not return anything.
 
 ### NON 4D STEM
 **Function: non4dstem('foldername','outputfolder')**
