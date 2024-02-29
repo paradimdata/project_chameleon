@@ -47,7 +47,7 @@ This function takes a folder as an input. This folder should contain all text fi
 
 This function takes a .dat file as an input. This .dat file should be one of four types so that the function can extract the data properly. The four types are 4 probe resistivity, heat capacity, thermal transport, and magnetic susceptibility. The input file may be a file or a path to a file in a different folder. When the function is run the user may choose what kind of file was input so the correct columns can be extracted. The relevant columns in the .dat input file are read by the function and written into a .txt file called 'outputfile'.  'inputfile' and 'outputfile' should both contain full file names and file extensions (.dat for input, .txt for output). 
 
-## Install Instructions
+## Dependencies Install Instructions
 Full listed of dependencies used by Project Chameleon
 - matplolib.pyplot 
 - numpy 
@@ -80,23 +80,45 @@ Xylib has the most complicated install process. Below are mac install instructio
 1.Install boost 1.76 with homebrew
 
     $ brew install boost@1.76
-2.set two environment variables to let the C compiler know where to find the Boost headers
+2.Set two environment variables to let the C compiler know where to find the Boost headers
 
     $ export LDFLAGS="-L/usr/local/opt/boost@1.76/lib"
     $ export CPPFLAGS="-I/usr/local/opt/boost@1.76/include"
-3. Download the xylib package, unzip it, and cd into it
-4. configure the xylib compliation with 
+3.Download the xylib package, unzip it, and cd into it
+4.Configure the xylib compliation with 
 
     $ ./configure --without-gui
-5. Compile with 
+5.Compile with 
 
     $ make
-6. Install swig with homebrew
+6.Install swig with homebrew
 
     $ brew install swig
-7. Install the python xylib binding
+7.Install the python xylib binding
 
     $ pip install xylib-py
 
 
-This package was written by Peter Cauchy with funding by PARADIM
+## Package Install Instructions
+This package is managed using [Poetry](https://python-poetry.org/), which you should install globaly on your system. Once you have Poetry installed you can install this package and its dependencies in any environment of your choice 
+
+### Install Poetry with pipx 
+The easiest way to install Poetry is with pipx. If you do not already have pipx installed you can find the instructions [here](https://pipx.pypa.io/stable/installation/). Once pipx has been installed, restart your shell/terminal window. After Poetry has been installed, you can install poetry with:
+
+    $ pipx install poetry
+pipx should be installed on the base system, so make sure to deactivate any environments before running the command above.
+
+### Install the Package and its Dependencies
+The example below assumes a conda environment but any other virtual environment manager should work as well. 
+
+First, create a new conda environment:
+
+	$ conda create -n project_chameleon python -y 
+	$ conda activate project_chameleon
+	
+Navigate to this repositories directory and install the `project_chameleon` package with its dependencies:
+
+	$ cd project_chameleon
+	$ poetry install
+	
+It is also possible to skip the create and activate step, and poetry will automatically create one when you run `poetry install` as seen above.
