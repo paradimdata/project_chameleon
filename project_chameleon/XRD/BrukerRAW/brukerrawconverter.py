@@ -2,6 +2,7 @@ import argparse
 import sys
 import xylib
 import os
+import argparse
 
 #Function gets the metadata and writes it to a file. Used in main function
 def export_metadata(f, meta):
@@ -54,9 +55,8 @@ def brukerrawconverter(input_file, output_file):
             f.write('\t'.join(values) + '\n')
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python script.py <input_file> <output_file>")
-        sys.exit(1)
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    brukerrawconverter(input_file,ouput_file)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("x", help="the input file")
+    parser.add_argument("y", help="the output file")
+    args = parser.parse_args()
+    brukerrawconverter(args.x, args.y)

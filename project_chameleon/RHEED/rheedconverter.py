@@ -2,6 +2,7 @@ import os
 import numpy as np 
 import matplotlib.pyplot as plt
 import sys
+import argparse
 header_bytes = 685
 file_width = 480
 file_height = 640
@@ -35,9 +36,8 @@ def rheedconverter(file_name, output_file):
     plt.savefig(output_file)
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python script.py <input_file> <output_file>")
-        sys.exit(1)
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    rheedconverter(input_file,ouput_file)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("x", help="the input file")
+    parser.add_argument("y", help="the output file")
+    args = parser.parse_args()
+    rheedconverter(args.x, args.y)
