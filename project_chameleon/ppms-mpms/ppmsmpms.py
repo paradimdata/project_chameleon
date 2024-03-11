@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import argparse
+import os
 
 def ppmsmpmsparser(inputfile, outputfile):
     """
@@ -105,9 +106,9 @@ def ppmsmpmsparser(inputfile, outputfile):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("x", help="the input file")
-    parser.add_argument("y", help="the output file")
+    parser.add_argument("input", help="the input file")
+    parser.add_argument("output", help="the output file")
     args = parser.parse_args()
-    ppmsmpmaparser(args.x, args.y)
+    ppmsmpmsparser(args.input, args.output)
 
 

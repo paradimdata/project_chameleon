@@ -80,7 +80,7 @@ def stemarray4d(file_name,output_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("x", help="the input file")
-    parser.add_argument("y", help="the output file")
+    parser.add_argument("input", help="the input file")
+    parser.add_argument("output", help="the output file")
     args = parser.parse_args()
-    stemarray4d(args.x, args.y)
+    stemarray4d(args.input, args.output)

@@ -99,6 +99,6 @@ def mbeparser(file_folder):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("x", help="the input folder")
+    parser.add_argument("input", help="the input folder")
     args = parser.parse_args()
-    mbeparser(args.x)
+    mbeparser(args.input)

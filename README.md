@@ -56,48 +56,6 @@ Full listed of dependencies used by Project Chameleon
 - xylib (install directions can be found [here](https://github.com/wojdyr/xylib))
 If further instructions are needed for the xylib install, reference the file ["xylib_Install_Instructions"](https://github.com/paradimdata/project_chameleon/blob/main/xylib%20Install%20Instructions.txt) for a second set of instructions of how to download xylib on a windows machine. 
 
-Full instructions for installing dependencies in a conda environment:
-
-First create a new conda environment and activate it
-    
-    $ conda create -n project_chameleon
-    $ conda activate project_chameleon
-
-Install libraries
-
-    $ pip install matplotlib.pyplot
-    $ pip install numpy
-
-For Hyperspy only the required functionalities are needed
-
-    $ pip install hyperspy
-
-Py4dstem has slightly different procedures for each system but this command should work for most Windows and mac machines. If it does not further instructions can be found [here](https://py4dstem.readthedocs.io/en/latest/installation.html#id3).
-
-    $ conda install -c conda-forge py4dstem pymatgen
-Xylib has the most complicated install process. Below are mac install instructions. Windows instructions are linked above.Please not these instructions are based on a Mac with an intel chip. Results may vary.
-
-1.Install boost 1.76 with homebrew
-
-    $ brew install boost@1.76
-2.Set two environment variables to let the C compiler know where to find the Boost headers
-
-    $ export LDFLAGS="-L/usr/local/opt/boost@1.76/lib"
-    $ export CPPFLAGS="-I/usr/local/opt/boost@1.76/include"
-3.Download the xylib package, unzip it, and cd into it
-4.Configure the xylib compliation with 
-
-    $ ./configure --without-gui
-5.Compile with 
-
-    $ make
-6.Install swig with homebrew
-
-    $ brew install swig
-7.Install the python xylib binding
-
-    $ pip install xylib-py
-
 
 ## Package Install Instructions
 This package is managed using [Poetry](https://python-poetry.org/), which you should install globaly on your system. Once you have Poetry installed you can install this package and its dependencies in any environment of your choice 

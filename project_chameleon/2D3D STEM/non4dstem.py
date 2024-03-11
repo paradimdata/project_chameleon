@@ -31,7 +31,7 @@ def non4dstem(data_folder,outputs_folder):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("x", help="the input folder")
-    parser.add_argument("y", help="the output folder")
+    parser.add_argument("input", help="the input folder")
+    parser.add_argument("output", help="the output folder")
     args = parser.parse_args()
-    non4dstem(args.x, args.y)
+    non4dstem(args.input, args.output)
