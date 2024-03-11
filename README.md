@@ -14,6 +14,7 @@ Repository for Project Chameleon conversion scripts
 - EPR
 - JEOL SEM
 - EBSD
+- Bruker BRML
 
 ## Description of individual working functions
 
