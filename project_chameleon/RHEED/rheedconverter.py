@@ -36,7 +36,7 @@ def rheedconverter(file_name, output_file):
     plt.imshow(im_uint8_scaled)
     plt.savefig(output_file)
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="the input file")
     parser.add_argument("output", help="the output file")

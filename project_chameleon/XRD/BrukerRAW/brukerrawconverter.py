@@ -54,7 +54,7 @@ def brukerrawconverter(input_file, output_file):
                       for k in range(1, ncol+1)]
             f.write('\t'.join(values) + '\n')
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="the input file")
     parser.add_argument("output", help="the output file")
