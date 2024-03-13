@@ -32,6 +32,7 @@ def rheedconverter(file_name, output_file):
    
     #Adjust to unsigned integers and save as a jpeg
     im_uint8_scaled = im_temp.astype(np.uint8)
+    plt.axis('off')
     plt.imshow(im_uint8_scaled)
     plt.savefig(output_file)
 
