@@ -19,34 +19,69 @@ Repository for Project Chameleon conversion scripts
 ## Description of individual working functions
 
 ### 4D STEM 
-**Function: stemarray4d('file_name','output_name')** 
+To run the function stemarray4d in the command line, run:
 
-This function takes a raw (.raw files) 4D STEM array as an input, and outputs two png files and a folder of png files: The mean of the dataset, the max of the data set, and 128 2D slices of the 4D array. The function will take of a file from the directory where the function is run, or a path to a file. Outputs will take the name 'output_name', which is just the name of the output file. 'output_name' may also include a file path as part of the name (example: /root/folder/output_name). 'output_name' should not include any file type designation(.txt,.png.jpeg) as this is added in the code. This function relies on the library py4DSTEM functions to load and read the 4D STEM files. This function does not return anything.
+	stemarray4d([inputfile],[outputfile])
+
+Where:
+
+* [inputfile] is a string or a path to a 4D STEM array .raw file, which is a 4D array.
+* [outputfile] is a string or a path including a name which is the name of the output folder(ex. /root/folder/outputname). The output folder holds 128 2D slices of the 4D array as well as the mean and the max of the set.
+* This command uses the py4DSTEM library
+
+
 
 ### NON 4D STEM
-**Function: non4dstem('foldername','outputfolder')**
+To run the function non4dstem in the command line, run:
 
-This function takes a folder of non-4D STEM images (.dm4, .ser, .emd) files as an input, and outputs a folder called 'outputs' that contains .png images for each of the inputs. The folder containing the input files may be in the same directory where the function is run, or 'foldername' can be a path to a folder. The folder 'outputfolder' will be created in the folder where the function is run if only a name is given. 'outputfolder' may also be a path. Files must be put into a folder even if there is just one file. This function relies on the library hypserspy to load and read the data. This function does not return anything. 
+	non4dstem([inputfile],[outputfile])
+
+Where:
+
+* [inputfile] is a string or a path to a folder containing non-4D STEM images (.dm4, .ser, .emd). 
+* [outputfile] is a string or a path including a name which is the name of the output folder(ex. /root/folder/outputname). The output folder holds .png images for each of the input images.
+* This command uses the hyperspy library
 
 ### XRD BRUKER RAW/UXD
-**Function: brukerrawconverter('input_filename','output_filename)**
+To run the function brukerrawconverter in the command line, run:
 
-This function takes a raw Bruker file (.raw, .uxd) as an input(input_filename), and outputs a text file titled 'output_filename.txt' containing metadata and all data from the raw file. This function will by default look for the input file in the directory where the function is run unless 'input_filename' includes a path. The output file will be created in the folder where the function is run unless 'output_filename' includes a path. 'output_filename' should include the file type designation '.txt' at the end. This function relies on the library xylib. This function does not return anything.
+	brukerrawconverter([inputfile],[outputfile])
+
+Where:
+
+* [inputfile] is a string or a path to a XRD Bruker file (.raw, .uxd) file. 
+* [outputfile] is a string or a path including a name which is the name of the output file(ex. /root/folder/filename). The output file holds the metadata and data from the input file.
+* This command uses the xylib library
 
 ### RHEED
-**Function: rheedconverter('filename', 'outputname')**
+To run the function rheedconverter in the command line, run:
 
-This function taks a 16bpp rheed image file(.img) as an input, and outputs a 8bpp image file(.png). This function will look for the input file in the directory where the function is run by default, unless 'filename' contains a path. The ouput file will be created in the folder where the function is run with the name 'outputname'.png unless 'outputname' contains a path. 'outputname' should include the file type designation '.png' at the end. This function does not return anything.
+	rheedconverter([inputfile],[outputfile])
+
+Where:
+
+* [inputfile] is a string or a path to a 16bpp rheed image file (.img).
+* [outputfile] is a string or a path including a name which is the name of the output file(ex. /root/folder/filename). The output file is a 8bpp .png file.
 
 ### MBE
-**Function: mbeparser('foldername')**
+To run the function mbeparser in the command line, run:
 
-This function takes a folder as an input. This folder should contain all text file(.txt) outputs from a specific MBE run. The input folder may be in the same folder where the function is run, or 'foldername' may be a file path to a folder. Within the input folder, the function will sort all text files into two sub directories: useful, and useless. Sorting is accomplished using keywords from file names. After sorting is complete, the user may choose what kind of action they want to take: graph and show a file, graph, show, and save a file, check setpoints, or exit. If graph and show is chosen, all graphable files from the useful folder will be printed and the user can choose one to graph which will then be displayed. If graph, show, and save a file is chosen, all graphable files from the useful folder will be printed and the user can pick one which will then be graphed and also saved in the useful folder. If check setpoints is chosen, all the setpoint files will be displayed and the user can choose a setpoint to check the value of. Users will be continuously given these option until they pick the exit option. 
+	mbeparser([inputfolder])
+
+Where:
+
+* [inputfile] is a string or a path to a folder holding text file outputs from MBE measurements.
+* There is no output file or folder. All textfiles are sorted within the given folder and all outputs are saved within that folder.
 
 ### PPMS/MPMS
-**Function: ppmsmpmsparser('inputfile', 'outputfile')** 
+To run the function ppmsmpmsparser in the command line, run:
 
-This function takes a .dat file as an input. This .dat file should be one of four types so that the function can extract the data properly. The four types are 4 probe resistivity, heat capacity, thermal transport, and magnetic susceptibility. The input file may be a file or a path to a file in a different folder. When the function is run the user may choose what kind of file was input so the correct columns can be extracted. The relevant columns in the .dat input file are read by the function and written into a .txt file called 'outputfile'.  'inputfile' and 'outputfile' should both contain full file names and file extensions (.dat for input, .txt for output). 
+	ppmsmpmsparser([inputfile],[outputfile])
+
+Where:
+
+* [inputfile] is a string or a path to a ppms/mpms .dat file.
+* [outputfile] is a string or a path including a name which is the name of the output file(ex. /root/folder/filename). The output file is a .txt file that holds relevant data columns from the input file. The "relevant" columns are chosen by user input.
 
 ## Dependencies Install Instructions
 Full listed of dependencies used by Project Chameleon
@@ -80,4 +115,4 @@ Navigate to this repositories directory and install the `project_chameleon` pack
 	$ cd project_chameleon
 	$ poetry install
 	
-It is also possible to skip the create and activate step, and poetry will automatically create one when you run `poetry install` as seen above.
+It is also possible to skip the create and activate step, and poetry will automatically create one when you run `poetry install` as seen above. 
