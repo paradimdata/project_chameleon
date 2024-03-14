@@ -45,18 +45,18 @@ Where:
 ### XRD BRUKER RAW/UXD
 To run the function brukerrawconverter in the command line, run:
 
-	brukerrawconverter([inputfile],[outputfile])
+	brukerraw([inputfile],[outputfile])
 
 Where:
 
 * [inputfile] is a string or a path to a XRD Bruker file (.raw, .uxd) file. 
-* [outputfile] is a string or a path including a name which is the name of the output file(ex. /root/folder/filename). The output file holds the metadata and data from the input file.
+* [outputfile] is a string or a path including a name which is the name of the output file(ex. /root/folder/filename). The output file holds the metadata and data from the input file. Output file is just a regular text file
 * This command uses the xylib library
 
 ### RHEED
 To run the function rheedconverter in the command line, run:
 
-	rheedconverter([inputfile],[outputfile])
+	rheed([inputfile],[outputfile])
 
 Where:
 
@@ -73,10 +73,10 @@ Where:
 * [inputfile] is a string or a path to a folder holding text file outputs from MBE measurements.
 * There is no output file or folder. All textfiles are sorted within the given folder and all outputs are saved within that folder.
 
-### PPMS/MPMS
+### PPMSMPMS
 To run the function ppmsmpmsparser in the command line, run:
 
-	ppmsmpmsparser([inputfile],[outputfile])
+	ppmsmpms([inputfile],[outputfile])
 
 Where:
 
