@@ -1,0 +1,39 @@
+These instructions were written based on a Mac with an M1 chip and macOS Sonoma 14.1. If you have different specifications instructions may vary slightly
+
+1) Download and install homebrew(brew):
+https://docs.brew.sh/Installation
+
+2) Download and install a C++ compiler:
+For this instruction set Xcode was used. Other C++ compilers should work as well
+https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators
+
+3) Download and install MacOS cmake:
+There are multiple ways to install cmake. It is recommended to simply use the command "brew install make" in a terminal.
+https://cmake.org/download/
+(make sure cmake is added to path for all users)
+
+4) Install the boost version 1.76:
+Boost can be installed using the command "brew install boost@1.76" in a terminal window. It is important that the boost version downloaded and installed is 1.76. Newer versions will not work for xylib. 
+
+5) Set boost headers:
+Some of the boost headers need to be adjusted to the C compiler knows where to find them. Used the commands below to point the compiler to the right headers.
+export LDFLAGS="-L/opt/homebrew/opt/boost@1.76/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/boost@1.76/include"
+The path to the boost files may be different on a different chip. If the path to your boost folder is not the same you can use the command "brew --prefix boost" to figure out where your boost folder is located. 
+
+6) Download and unzip the xylib package:
+Next you are going to want to download the xylib package from the GitHub. The version used can be found here: https://github.com/wojdyr/xylib/releases/tag/v1.6. Once the package has be downloaded, unzip it and cd into the new folder in your terminal window. 
+
+7) Configure xylib compilation:
+Run: "./configure --without-gui" in the xylib folder you just cd'ed into.
+
+8) compile with xylib:
+Run: "make"
+
+9)Install swig with brew:
+Run: "brew install swig"
+
+10)Install the xylib python binding:
+Run: pip install xylib-py
+
+We recommend that you create a virtual environment of some kind to contain your xylib install. Xylib has conflicts with other packages so be aware. For this version xylib was installed in a conda environment. 
