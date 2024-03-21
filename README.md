@@ -2,8 +2,8 @@
 Repository for Project Chameleon conversion scripts
 
 ## Working conversion functions held in the repository:
-- 4D STEM: documented and converted to series of 2D slices (16bpp TIFS)
-- NON 4D STEM: Data graphed and converted to png
+- 4D STEM: documented and converted to series of 2D slices 
+- NON 4D STEM: Data graphed and converted to png (Experiencing difficulties)
 - XRD: Brker RAW/UXD to CSV
 - RHEED: 16 bpp images to TIF/PNG
 - MBE: Data sorted and graphed
@@ -11,7 +11,6 @@ Repository for Project Chameleon conversion scripts
 
 ## Conversions still in progress
 - ARPES
-- EPR
 - JEOL SEM
 - EBSD
 - Bruker BRML
@@ -90,7 +89,7 @@ Full listed of dependencies used by Project Chameleon
 - hyperspy (Further information can be found [here](https://hyperspy.org/hyperspy-doc/current/user_guide/install.html))
 - py4dstem (Further information can be found [here](https://github.com/py4dstem/py4DSTEM))
 - xylib (install directions can be found [here](https://github.com/wojdyr/xylib))
-If further instructions are needed for the xylib install, reference the file ["xylib_Install_Instructions"](https://github.com/paradimdata/project_chameleon/blob/main/xylib%20Install%20Instructions.txt) for a second set of instructions of how to download xylib on a windows machine. 
+If further instructions are needed for the xylib install, reference the file ["xylib_Install_Instructions_Windows"](https://github.com/paradimdata/project_chameleon/blob/main/xylib%20Install%20Instructions.txt) for a second set of instructions of how to download xylib on a windows machine, or reference the file ["xylib_Install_Instructions_MacOS"](https://github.com/paradimdata/project_chameleon/blob/main/xylib_Install_Instructions_MacOS.txt) for a second set of instructions of how to download xylib on a MacOS machine. 
 
 
 ## Package Install Instructions
