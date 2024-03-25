@@ -36,7 +36,11 @@ def mbeparser(file_folder):
             raise ValueError("ERROR: bad data. Expected .txt file")
 
         # Sort files into folders based on name. There are a couple of key words that appear in file names that we can use to sort the files. 
-        if ('Alarm' in filename) or ('Proportional' in filename) or ('Integral' in filename) or ('Derivative' in filename) or ('Max' in filename) or ('Min' in filename) or ('UT1' in filename): 
+        if ('_Shutter_Control.Value.txt' in filename):
+            with open(filename, 'r') as file:
+                shutter_data = [[float(value) for value in line.split()] for line in file]
+            shutil.move(filepath, os.path.join(useless_folder, filename))
+        elif ('Alarm' in filename) or ('Proportional' in filename) or ('Integral' in filename) or ('Derivative' in filename) or ('Max' in filename) or ('Min' in filename) or ('UT1' in filename): 
             shutil.move(filepath, os.path.join(useless_folder, filename))
         else:  
             shutil.move(filepath, os.path.join(useful_folder, filename))
@@ -68,6 +72,7 @@ def mbeparser(file_folder):
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
+            plt.axvspan(shutter_data[2][0],shutter_data[3][0])
             plt.show()
         elif('Graph, show, and save' in user_input):
             for file_name in file_list:
@@ -83,6 +88,7 @@ def mbeparser(file_folder):
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
+            plt.axvspan(shutter_data[2][0],shutter_data[3][0])
             plt.show()
             plt.savefig(filechoice + '.png')
         elif('Check set points' in user_input):
