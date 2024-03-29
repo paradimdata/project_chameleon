@@ -13,6 +13,7 @@ numpy = "^1.26.4"
 hyperspy = "^2.0.1"
 py4DSTEM = "^0.14.9"
 xylib-py = "^1.6.1"
+pandas = "^2.2.1"
 
 
 [build-system]
@@ -26,3 +27,4 @@ mbeparser = "project_chameleon.MBE.mbeparser:main"
 ppmsmpms = "project_chameleon.ppmsmpms.ppmsmpms:main"
 rheed = "project_chameleon.RHEED.rheedconverter:main"
 brukerraw = "project_chameleon.XRD.BrukerRAW.brukerrawconverter:main"
+brukerrawbackground = "project_chameleon.XRD.BrukerRaw.brukerrawbackground:main"

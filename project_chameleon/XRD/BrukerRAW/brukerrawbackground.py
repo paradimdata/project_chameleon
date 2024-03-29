@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import xylib
 import csv
+import argparse
 
 def brukerrawbackground(background_input, sample_input):
 
@@ -89,3 +90,10 @@ def brukerrawbackground(background_input, sample_input):
     plt.savefig(sample_input + 'background_subtracted.png')
 
     raw_diff.to_csv(sample_input + '_backgroundSubtracted.csv')
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("background file input", help="the input file for the background data")
+    parser.add_argument("sample file input", help="the input file for the sample data")
+    args = parser.parse_args()
+    brukerrawconverter(args.input, args.output)

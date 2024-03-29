@@ -6,6 +6,18 @@ import numpy as np
 import sys
 import argparse
 
+def find_shutter_values(shutter_input):
+    exponent = 10
+    shutter_array = []
+    while exponent >= 0:
+        if shutter_input > 2**exponent:
+            shutter_input = shutter_input - 2**exponent
+            shutter_array = shutter_array + [exponent + 1]
+        elif shutter_input == 2**exponent:
+            shutter_array = shutter_array + [exponent + 1]
+            return shutter_array
+        exponent = exponent - 1
+
 def mbeparser(file_folder):
     """
     A function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
@@ -72,7 +84,8 @@ def mbeparser(file_folder):
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
-            plt.axvspan(shutter_data[2][0],shutter_data[3][0])
+            plt.axvspan(shutter_data[2][0],shutter_data[3][0],alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
+            plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
         elif('Graph, show, and save' in user_input):
             for file_name in file_list:
@@ -88,7 +101,8 @@ def mbeparser(file_folder):
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
-            plt.axvspan(shutter_data[2][0],shutter_data[3][0])
+            plt.axvspan(shutter_data[2][0],shutter_data[3][0],alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
+            plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
             plt.savefig(filechoice + '.png')
         elif('Check set points' in user_input):
