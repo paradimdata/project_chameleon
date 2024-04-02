@@ -68,9 +68,9 @@ def mbeparser(file_folder):
     while loopholder > 0:
     
         #Let user decide which file/files they would like to graph
-        user_input = input("What would you like to do? \n Graph and show \n Graph, show, and save \n Check set points \n Exit \n")
+        user_input = input("What would you like to do? \n (1) Graph and show \n (2) Graph, show, and save \n (3) Check set points \n (4) Exit \n (Please only type the number \n)")
 
-        if('Graph and show' in user_input):
+        if('1' in user_input):
             for file_name in file_list:
                 if not ('Setpoint' in file_name):
                     print(file_name)
@@ -78,16 +78,16 @@ def mbeparser(file_folder):
             #Load and graph selected files
             graph_path = pathlib.Path(Useful_directory_path + filechoice) 
             data = np.loadtxt(graph_path,skiprows = 1)
-            x_values = data[:, 0]
+            x_values = (data[:, 0])/3600
             y_values = data[:, 1]
             plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
-            plt.axvspan(shutter_data[2][0],shutter_data[3][0],alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
+            plt.axvspan((shutter_data[2][0])/3600,(shutter_data[3][0])/3600,alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
             plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
-        elif('Graph, show, and save' in user_input):
+        elif('2' in user_input):
             for file_name in file_list:
                 if not ('Setpoint' in file_name):
                     print(file_name)
@@ -95,17 +95,17 @@ def mbeparser(file_folder):
             #Load and graph selected files
             graph_path = pathlib.Path(Useful_directory_path + filechoice) 
             data = np.loadtxt(graph_path,skiprows = 1)
-            x_values = data[:, 0]
+            x_values = (data[:, 0])/3600
             y_values = data[:, 1]
             plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
-            plt.axvspan(shutter_data[2][0],shutter_data[3][0],alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
+            plt.axvspan((shutter_data[2][0])/3600,(shutter_data[3][0])/3600,alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
             plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
             plt.savefig(filechoice + '.png')
-        elif('Check set points' in user_input):
+        elif('3' in user_input):
             for file_name in file_list:
                 if('Setpoint' in file_name):
                     print(file_name)
@@ -113,7 +113,7 @@ def mbeparser(file_folder):
             f = open(Useful_directory_path + filechoice)
             for line in f:
                 print(line)
-        elif('Exit' in user_input):
+        elif('4' in user_input):
             break
             
 
