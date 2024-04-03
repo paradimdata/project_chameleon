@@ -84,7 +84,9 @@ def mbeparser(file_folder):
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
-            plt.axvspan((shutter_data[2][0])/3600,(shutter_data[3][0])/3600,alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
+            for index in range(len(shutter_data) - 2): 
+                if find_shutter_values(shutter_data[index + 1][1]):
+                        plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
             plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
         elif('2' in user_input):
@@ -101,7 +103,9 @@ def mbeparser(file_folder):
             plt.xlabel('Time')
             plt.ylabel('Process Value')
             plt.title('Plot of ' + filechoice)
-            plt.axvspan((shutter_data[2][0])/3600,(shutter_data[3][0])/3600,alpha=0.5, label="Valve = " + str(shutter_data[2][1]))
+            for index in range(len(shutter_data) - 2): 
+                if find_shutter_values(shutter_data[index + 1][1]):
+                        plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
             plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
             plt.savefig(filechoice + '.png')
