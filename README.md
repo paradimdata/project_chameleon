@@ -42,6 +42,8 @@ Where:
 * This command uses the hyperspy library
 
 ### XRD BRUKER RAW/UXD
+There are two functions for Bruker RAW files: brukerrawconverter and brukerrawbackground
+
 To run the function brukerrawconverter in the command line, run:
 
 	brukerraw([inputfile],[outputfile])
@@ -51,6 +53,18 @@ Where:
 * [inputfile] is a string or a path to a XRD Bruker file (.raw, .uxd) file. 
 * [outputfile] is a string or a path including a name which is the name of the output file(ex. /root/folder/filename). The output file holds the metadata and data from the input file. Output file is just a regular text file
 * This command uses the xylib library
+
+To run the function brukerrawbackground in the command line, run:
+
+	brukerrawbackground([background_input],[sample_input])
+
+Where:
+
+* [background_input] is a string or a path to either a .csv file or a .raw file containing the background of the sample.
+* [sample_input] is a string or a path to either a .csv file or a .raw file containing the sample data.
+* This file outputs four things: A plot of the raw data, a plot of the background adjusted data, a plot of the background subtracted data, and a .csv of the background subtracted data.
+* This command uses the brukerrawconverter command
+
 
 ### RHEED
 To run the function rheedconverter in the command line, run:
