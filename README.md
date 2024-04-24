@@ -4,7 +4,7 @@ Repository for Project Chameleon conversion scripts
 ## Working conversion functions held in the repository:
 - 4D STEM: documented and converted to series of 2D slices 
 - NON 4D STEM: Data graphed and converted to png (Experiencing difficulties)
-- XRD: Brker RAW/UXD to CSV
+- XRD: Bruker RAW/UXD to CSV
 - RHEED: 16 bpp images to TIF/PNG
 - MBE: Data sorted and graphed
 - PPMS/MPMS: Relevant lines extracted and saved
