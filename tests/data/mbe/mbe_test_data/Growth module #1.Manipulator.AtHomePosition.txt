@@ -1,0 +1,20 @@
+Elapsed time [s]	Numeric value	Description [NotAtHome,AtHome]
+0.000	1	AtHome
+2100.723	0	NotAtHome
+2186.973	1	AtHome
+2189.125	0	NotAtHome
+2295.006	1	AtHome
+2297.153	0	NotAtHome
+2486.987	1	AtHome
+2489.140	0	NotAtHome
+2595.005	1	AtHome
+2597.168	0	NotAtHome
+3086.979	1	AtHome
+3089.137	0	NotAtHome
+3386.958	1	AtHome
+3389.141	0	NotAtHome
+3602.891	1	AtHome
+3605.048	0	NotAtHome
+3686.998	1	AtHome
+3689.161	0	NotAtHome
+4194.741	1	AtHome

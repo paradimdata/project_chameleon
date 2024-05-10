@@ -1,0 +1,4 @@
+Elapsed time [s]	Numeric value	Description [Active,Inactive,Unknown]
+0.000	1	Inactive
+2140.696	0	Active
+3930.699	1	Inactive

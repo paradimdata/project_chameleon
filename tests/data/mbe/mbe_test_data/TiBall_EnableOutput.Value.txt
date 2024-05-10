@@ -1,0 +1,2 @@
+Elapsed time [s]	Numeric value	Description [OFF,ON]
+0.000	1	ON

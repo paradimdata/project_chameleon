@@ -1,0 +1,4 @@
+Elapsed time [s]	Numeric value	Description [RELEASE,LOCK]
+0.000	1	LOCK
+25.558	0	RELEASE
+4202.631	1	LOCK

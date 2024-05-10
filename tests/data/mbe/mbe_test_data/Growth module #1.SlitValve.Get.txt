@@ -1,0 +1,6 @@
+Elapsed time [s]	Numeric value	Description [AJAR,OPEN,CLOSED,INVALID]
+0.000	1	OPEN
+24.410	0	AJAR
+25.461	2	CLOSED
+4214.501	0	AJAR
+4215.840	1	OPEN
