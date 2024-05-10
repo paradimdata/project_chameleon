@@ -3,8 +3,7 @@ import pathlib
 import shutil
 import imagehash
 from PIL import Image
-from rheedconverter import main
-from rheedconverter import rheedconverter
+from project_chameleon.RHEED.rheedconverter import rheedconverter
 
 
 def test_rheed_basic_output():

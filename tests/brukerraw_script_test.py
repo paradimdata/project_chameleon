@@ -2,7 +2,7 @@ import pytest
 import pathlib
 import shutil
 from pathlib import Path
-from brukerrawconverter import brukerrawconverter
+from project_chameleon.XRD.BrukerRAW.brukerrawconverter import brukerrawconverter
 
 def test_brukerraw_basic_output():
     brukerraw_file_path_basic = (
