@@ -50,6 +50,7 @@ def mbeparser(file_folder):
         # Sort files into folders based on name. There are a couple of key words that appear in file names that we can use to sort the files. 
         if ('_Shutter_Control.Value.txt' in filename):
             with open(filename, 'r') as file:
+                next(file)
                 shutter_data = [[float(value) for value in line.split()] for line in file]
             shutil.move(filepath, os.path.join(useless_folder, filename))
         elif ('Alarm' in filename) or ('Proportional' in filename) or ('Integral' in filename) or ('Derivative' in filename) or ('Max' in filename) or ('Min' in filename) or ('UT1' in filename): 
@@ -68,7 +69,7 @@ def mbeparser(file_folder):
     while loopholder > 0:
     
         #Let user decide which file/files they would like to graph
-        user_input = input("What would you like to do? \n (1) Graph and show \n (2) Graph, show, and save \n (3) Check set points \n (4) Exit \n (Please only type the number \n)")
+        user_input = input("What would you like to do? \n (1) Graph and show \n (2) Graph, show, and save \n (3) Check set points \n (4) Exit \n (Please only type the number) \n")
 
         if('1' in user_input):
             for file_name in file_list:
