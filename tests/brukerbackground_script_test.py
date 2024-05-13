@@ -16,7 +16,7 @@ def test_brukerbackground_basic_output():
     brukerbackground_file_path_basic.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.15):
-            brukerrawbackground('test_background.csv','test_sample.csv', 'test_output')
+            brukerrawbackground('/project_chameleon/tests/data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
         p = Path('test_output_backgroundSubtracted.csv')
         assert p.is_file()
     finally:
@@ -32,7 +32,7 @@ def test_brukerbackground_plot_output():
     brukerbackground_file_path_plot.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.85):
-            brukerrawbackground('test_background.csv','test_sample.csv', 'test_output')
+            brukerrawbackground('/project_chameleon/tests/data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
         p = Path('test_output_raw_data.png')
         assert p.is_file()
     finally:
@@ -48,7 +48,7 @@ def test_brukerbackground_csv_output():
     brukerbackground_file_path_csv.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.85):
-            brukerrawbackground('test_background.csv','test_sample.csv', 'test_output')
+            brukerrawbackground('/project_chameleon/tests/data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
         with open('test_output_backgroundSubtracted.csv', 'r') as file:
             file.readline()
             for lines in file:

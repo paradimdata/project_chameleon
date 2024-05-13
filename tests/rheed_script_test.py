@@ -15,7 +15,7 @@ def test_rheed_basic_output():
     assert not test_file_path.parent.is_dir()
     test_file_path.parent.mkdir()
     try:
-        rheedconverter('test.img',test_file_path)
+        rheedconverter('/project_chameleon/tests/data/rheed/test.img',test_file_path)
         assert test_file_path.is_file()
     finally:
         shutil.rmtree(test_file_path.parent)
@@ -28,7 +28,7 @@ def test_rheed_hash():
     )
     assert not test_file_path.parent.is_dir()
     test_file_path.parent.mkdir()
-    rheedconverter('test.img',test_file_path)
+    rheedconverter('/project_chameleon/tests/data/rheed/test.img',test_file_path)
     hash0 = imagehash.average_hash(Image.open('new_test_output.png')) 
     hash1 = imagehash.average_hash(Image.open(test_file_path)) 
     shutil.rmtree(test_file_path.parent)
