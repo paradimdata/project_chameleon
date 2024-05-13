@@ -14,7 +14,7 @@ def test_non4dstem_basic_output():
     assert not non4dstem_file_path_basic.parent.is_dir()
     non4dstem_file_path_basic.parent.mkdir()
     try:
-        non4dstem('non4dstem_data', non4dstem_file_path_basic)
+        non4dstem('/data/non4dstem_data', non4dstem_file_path_basic)
         assert non4dstem_file_path_basic.is_dir()
     finally:
         shutil.rmtree(non4dstem_file_path_basic.parent)
@@ -28,7 +28,7 @@ def test_non4dstem_file_output():
     assert not non4dstem_file_path_file.parent.is_dir()
     non4dstem_file_path_file.parent.mkdir()
     try:
-        non4dstem('non4dstem_data', non4dstem_file_path_file)
+        non4dstem('/data/non4dstem_data', non4dstem_file_path_file)
         files = os.listdir(non4dstem_file_path_file)
         assert files
 

@@ -16,7 +16,7 @@ def test_stemarray4d_basic_output():
     assert not stemarray4d_file_path_basic.parent.is_dir()
     stemarray4d_file_path_basic.parent.mkdir()
     try:
-        stemarray4d('stemarray4d_test_data.raw', stemarray4d_file_path_basic)
+        stemarray4d('/data/stemarray4d/stemarray4d_test_data.raw', stemarray4d_file_path_basic)
         assert Path(str(stemarray4d_file_path_basic)+'_max_DP.png').is_file()
     finally:
         shutil.rmtree(stemarray4d_file_path_basic.parent)
@@ -29,8 +29,8 @@ def test_stemarray4d_file_output():
     )
     assert not stemarray4d_file_path_file.parent.is_dir()
     stemarray4d_file_path_file.parent.mkdir()
-    stemarray4d('stemarray4d_test_data.raw', stemarray4d_file_path_file)
-    hash0 = imagehash.average_hash(Image.open('stemarray4d_example__mean_DP.png')) 
+    stemarray4d('/data/stemarray4d/stemarray4d_test_data.raw', stemarray4d_file_path_file)
+    hash0 = imagehash.average_hash(Image.open('/data/stemarray4d/stemarray4d_example__mean_DP.png')) 
     hash1 = imagehash.average_hash(Image.open(Path(str(stemarray4d_file_path_file)+'_mean_DP.png'))) 
     shutil.rmtree(stemarray4d_file_path_file.parent)
     assert hash1 - hash0 < 2
