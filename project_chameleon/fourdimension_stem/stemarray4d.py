@@ -2,9 +2,9 @@ import py4DSTEM
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-import sys
 import shutil
 import argparse
+from pathlib import Path
 
 def stemarray4d(file_name,output_name):
     """
@@ -31,7 +31,7 @@ def stemarray4d(file_name,output_name):
 
     #Save mean as a png
     plt.imsave(
-    fname=output_name + "_mean_DP.png",
+    fname=Path(str(output_name) + "_mean_DP.png"),
     arr=meanDP.data,
     vmin=np.percentile(meanDP.data, 1),
     vmax=np.percentile(meanDP.data, 99),
@@ -40,7 +40,7 @@ def stemarray4d(file_name,output_name):
 
     #Save max as a png
     plt.imsave(
-    fname=output_name + "_max_DP.png",
+    fname=Path(str(output_name) + "_max_DP.png"),
     arr=maxDP.data,
     vmin=np.percentile(meanDP.data, 1),
     vmax=np.percentile(meanDP.data, 99),
@@ -53,7 +53,7 @@ def stemarray4d(file_name,output_name):
     while 0 <= count < upper_limit:
         vBF = dataset.data[:,:,count,count]
         plt.imsave(
-        fname=output_name + str(count) + "_vBF.png",
+        fname=Path(str(output_name) + str(count) + "_vBF.png"),
         arr=dataset.data[:,:,count,count],
         vmin=np.percentile(vBF, 1),
         vmax=np.percentile(vBF, 99),
@@ -62,7 +62,7 @@ def stemarray4d(file_name,output_name):
         count += 1
 
     #Make a folder to holder all the images from the 4d array
-    output_folder = output_name + 'array'
+    output_folder = Path(str(output_name) + 'array')
     os.makedirs(output_folder)
 
     #Sort all the slices into the directory
@@ -73,7 +73,7 @@ def stemarray4d(file_name,output_name):
         else:
             continue
             
-        if (output_name in filename) and ('vBF' in filename): 
+        if (str(output_name) in filename) and ('vBF' in filename): 
             shutil.move(filepath, os.path.join(output_folder, filename))
         else:  
             continue

@@ -1,15 +1,12 @@
 from brukerrawconverter import brukerrawconverter
-from BackgroundSub_Gui import MainWindow
-from BackgroundSub_Gui import MPLCanvas
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
-import xylib
 import csv
 import argparse
 
-def brukerrawbackground(background_input, sample_input):
+def brukerrawbackground(background_input, sample_input, output_name):
 
     if background_input.endswith('.csv'):
         Background = pd.read_csv(background_input)
@@ -52,9 +49,9 @@ def brukerrawbackground(background_input, sample_input):
     plt.xlabel('Two Theta (Degrees)')
     plt.ylabel('Intensity (Arb. Units)')
     plt.show()
-    plt.savefig(sample_input + 'raw_data.png')
+    plt.savefig(output_name + '_raw_data.png')
 
-    mult = input("Please input your multiplier \n")
+    mult = float(input("Please input your multiplier \n"))
     back_adj= Background.copy()
     back_adj.iloc[:,1] = back_adj.iloc[:,1].apply(lambda x: x*mult) 
 
@@ -66,7 +63,7 @@ def brukerrawbackground(background_input, sample_input):
     plt.title('Background Adjusted Raw Data')
     plt.xlabel('Two Theta (Degrees)')
     plt.ylabel('Intensity (Arb. Units)')
-    plt.savefig(sample_input + 'background_adjusted.png')
+    plt.savefig(output_name + '_background_adjusted.png')
 
     x1, x2, y1, y2 = 60, 150, 0, 800  # subregion of the original image
     axins = ax.inset_axes(
@@ -87,13 +84,14 @@ def brukerrawbackground(background_input, sample_input):
     plt.xlabel('Two Theta (Degrees)')
     plt.ylabel('Intensity (Arb. Units)')
     plt.show()
-    plt.savefig(sample_input + 'background_subtracted.png')
+    plt.savefig(output_name + '_background_subtracted.png')
 
-    raw_diff.to_csv(sample_input + '_backgroundSubtracted.csv')
+    raw_diff.to_csv(output_name+ '_backgroundSubtracted.csv')
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("background file input", help="the input file for the background data")
     parser.add_argument("sample file input", help="the input file for the sample data")
+    parser.add_argument("output name", help="the name for all outputs that are saved")
     args = parser.parse_args()
     brukerrawconverter(args.input, args.output)

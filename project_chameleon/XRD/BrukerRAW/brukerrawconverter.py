@@ -1,8 +1,6 @@
 import argparse
-import sys
 import xylib
 import os
-import argparse
 
 #Function gets the metadata and writes it to a file. Used in main function
 def export_metadata(f, meta):

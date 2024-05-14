@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 import argparse
 import os
 
@@ -19,7 +18,6 @@ def ppmsmpmsparser(inputfile, outputfile):
     #Initialize values and open file
     metadata_limit = 0
     limit_holder = 0
-    array = []
     count = 0
     datafile = open(outputfile,'w')
 
@@ -101,8 +99,6 @@ def ppmsmpmsparser(inputfile, outputfile):
     #IF THERE IS A TYPO
     else:
         print('Please pick one of the file types')
-    
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -110,5 +106,3 @@ def main():
     parser.add_argument("output", help="the output file")
     args = parser.parse_args()
     ppmsmpmsparser(args.input, args.output)
-
-

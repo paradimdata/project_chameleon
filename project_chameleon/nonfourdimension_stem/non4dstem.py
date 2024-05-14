@@ -13,6 +13,8 @@ def non4dstem(data_folder,outputs_folder):
     return: this function does not return anything. Instead it just saves converted files as .png images
     exceptions: will throw an exception if the input file is not a folder
     """
+    count = 0
+
     #Create outputs folder
     os.makedirs(outputs_folder)
     
@@ -25,9 +27,13 @@ def non4dstem(data_folder,outputs_folder):
         data = hs.load(file)
 
     #For each file that gets read in, plot and save as a figure
+    print(data)
     for obj in data:
+        count = count + 1
         obj.plot()
-        plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}.png")
+        plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}{count}.png")
+        plt.close()
+        
 
 def main():
     parser = argparse.ArgumentParser()

@@ -49,7 +49,8 @@ def mbeparser(file_folder):
 
         # Sort files into folders based on name. There are a couple of key words that appear in file names that we can use to sort the files. 
         if ('_Shutter_Control.Value.txt' in filename):
-            with open(filename, 'r') as file:
+            file_path = (pathlib.Path(file_folder)/filename).resolve()
+            with open(file_path, 'r') as file:
                 next(file)
                 shutter_data = [[float(value) for value in line.split()] for line in file]
             shutil.move(filepath, os.path.join(useless_folder, filename))
@@ -59,7 +60,7 @@ def mbeparser(file_folder):
             shutil.move(filepath, os.path.join(useful_folder, filename))
 
     #After files have been sorted, move into the useful folder and list all the useful files
-    Useful_directory_path = file_folder + '/useful/'
+    Useful_directory_path = str(file_folder) + '/useful/'
     file_list = os.listdir(Useful_directory_path)
     #for file_name in file_list:
      #   if not ('Setpoint' in file_name):
