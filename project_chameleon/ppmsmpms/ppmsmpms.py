@@ -38,10 +38,10 @@ def ppmsmpmsparser(inputfile, outputfile):
             count += 1
 
     #Take user input to choose which loop to enter
-    user_input = input("Which file type is this? \n Heat Capacity \n AC Magnetic Susceptibility \n 4-Probe Resistivity \n Thermal Transport \n") 
+    user_input = input("Which file type is this? \n (1)Heat Capacity \n (2)AC Magnetic Susceptibility \n (3)4-Probe Resistivity \n (4)Thermal Transport \n (Input the number of your choice) \n") 
 
     #4-PROBE LOOP
-    if('4-Probe Resistivity' in user_input):
+    if('3' in user_input):
         datafile.write(header[1] + ', ' + header[3] + ', ' + header[4] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + '\n')
         count = limit_holder
         count += 1  
@@ -55,7 +55,7 @@ def ppmsmpmsparser(inputfile, outputfile):
                 count += 1
 
     #HEAT CAPACITY LOOP
-    elif('Heat Capacity' in user_input):
+    elif('1' in user_input):
         datafile.write(header[0] + ', ' + header[5] + ', ' + header[7] + ', ' + header[9] + ', ' + header[10] + ', ' + header[18] + ', ' + header[28] + '\n')
         count = limit_holder
         count += 1  
@@ -69,7 +69,7 @@ def ppmsmpmsparser(inputfile, outputfile):
                 count += 1
 
     #AC MAGNETIC SUSCEPTIBILITY LOOP
-    elif('AC Magnetic Susceptibility' in user_input):
+    elif('2' in user_input):
         datafile.write(header[1] + ', ' + header[2] + ', ' + header[3] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[9] + '\n')
         count = limit_holder
         count += 1  
@@ -83,7 +83,7 @@ def ppmsmpmsparser(inputfile, outputfile):
                 count += 1
 
     #THERMAL TRANSPORT LOOP
-    elif('Thermal Transport' in user_input):
+    elif('4' in user_input):
         datafile.write(header[1] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + ', ' + header[12] + '\n')
         count = limit_holder
         count += 1  
