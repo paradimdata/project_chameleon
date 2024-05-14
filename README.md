@@ -56,12 +56,13 @@ Where:
 
 To run the function brukerrawbackground in the command line, run:
 
-	brukerrawbackground([background_input],[sample_input])
+	brukerrawbackground([background_input],[sample_input],[output_name])
 
 Where:
 
 * [background_input] is a string or a path to either a .csv file or a .raw file containing the background of the sample.
 * [sample_input] is a string or a path to either a .csv file or a .raw file containing the sample data.
+* [output_name] is a string which will be the beginning of the name of all the output files.
 * This file outputs four things: A plot of the raw data, a plot of the background adjusted data, a plot of the background subtracted data, and a .csv of the background subtracted data.
 * This command uses the brukerrawconverter command
 
