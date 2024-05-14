@@ -3,9 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import argparse
-header_bytes = 685
-file_width = 480
-file_height = 640
 
 def rheedconverter(file_name, output_file):
     """
@@ -19,6 +16,16 @@ def rheedconverter(file_name, output_file):
     #Make sure input is a .img file
     if not file_name.endswith('.img'):
         raise ValueError("ERROR: bad input. Expected .img file")
+    
+    file_size = os.path.getsize(file_name)
+    if file_size < 1000000:
+        header_bytes = 685
+        file_width = 480
+        file_height = 640
+    else:
+        header_bytes = 640
+        file_width = 1024
+        file_height = 1024
     
     #Open file as unknown type. Skip header bytes and adjust to a 480 X 640 image. 
     with open(file_name,"r") as f:
