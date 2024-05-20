@@ -3,7 +3,7 @@ import pathlib
 import shutil
 from pathlib import Path
 from unittest.mock import patch
-from ppmsmpms.ppmsmpms import ppmsmpmsparser
+from project_chameleon.ppmsmpms.ppmsmpms import ppmsmpmsparser
 
 
 def test_ppms_basic_output():
