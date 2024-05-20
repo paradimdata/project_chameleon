@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Body
 import os
 import requests as r
-import Header
+from flask import Header
 from project_chameleon.RHEED.rheedconverter import rheedconverter
 from project_chameleon.XRD.BrukerRAW.brukerrawbackground import brukerrawbackground
 from project_chameleon.XRD.BrukerRAW.brukerrawconverter import brukerrawconverter
