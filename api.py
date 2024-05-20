@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, Body
 import os
+import requests as r
+import Header
 from project_chameleon.RHEED.rheedconverter import rheedconverter
 from project_chameleon.XRD.BrukerRAW.brukerrawbackground import brukerrawbackground
 from project_chameleon.XRD.BrukerRAW.brukerrawconverter import brukerrawconverter
@@ -10,10 +12,18 @@ from project_chameleon.ppmsmpms.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
 
+def authorized(access_token, endpoint_id, params):
+    if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
+        return True
+    return False # or throw not authorized exception
+
 @app.post('/rheedconverter')
-def rheed_convert_route(data: dict = Body(...)):
+def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'file_name' not in data or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     file_name = data.get('file_name')
     output_file = data.get('output_file')
@@ -28,9 +38,12 @@ def rheed_convert_route(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/brukerrawbackground')
-def brukerbackground_convert_route(data: dict = Body(...)):
+def brukerbackground_convert_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'background_file' not in data or 'sample_file' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     background = data.get('background_file')
     sample = data.get('sample_file')
@@ -47,9 +60,12 @@ def brukerbackground_convert_route(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=f'Failed to apply background functions')
     
 @app.post('/brukerrawconverter')
-def brukerraw_convert_route(data: dict = Body(...)):
+def brukerraw_convert_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'file_name' not in data or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     file_name = data.get('file_name')
     output_file = data.get('output_file')
@@ -64,9 +80,12 @@ def brukerraw_convert_route(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/mbeparser')
-def MBE_parser_route(data: dict = Body(...)):
+def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'folder_name' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     folder = data.get('folder_name')
 
@@ -80,9 +99,12 @@ def MBE_parser_route(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=f'Failed to parse folder')
     
 @app.post('/non4dstem')
-def non4dstem_convert_route(data: dict = Body(...)):
+def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'file_folder' not in data or 'output_folder' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     file_folder = data.get('file_folder')
     output_folder = data.get('output_folder')
@@ -97,9 +119,12 @@ def non4dstem_convert_route(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=f'Failed to convert files')
     
 @app.post('/ppmsmpms')
-def ppmsmpms_convert_route(data: dict = Body(...)):
+def ppmsmpms_convert_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'file_name' not in data or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     file_name = data.get('file_name')
     output_file = data.get('output_file')
@@ -114,9 +139,12 @@ def ppmsmpms_convert_route(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/stemarray4d')
-def stem4d_convert_route(data: dict = Body(...)):
+def stem4d_convert_route(data: dict = Body(...), access_token: str = Header(...)):
     if 'file_name' not in data or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Missing parameters')
+    
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+        raise HTTPException(status_code=401, detail='Unauthorized')
 
     file_name = data.get('file_name')
     output_file = data.get('output_file')
