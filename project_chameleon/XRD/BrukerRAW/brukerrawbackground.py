@@ -1,4 +1,4 @@
-from brukerrawconverter import brukerrawconverter
+from project_chameleon.XRD.BrukerRAW.brukerrawconverter import brukerrawconverter
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
