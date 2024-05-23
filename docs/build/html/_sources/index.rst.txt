@@ -10,6 +10,11 @@ Welcome to Project_Chameleon's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+MBE
+RHEED
+4D STEM
+NON-4D STEM
+PPMS/MPMS
 
 
 Indices and tables
