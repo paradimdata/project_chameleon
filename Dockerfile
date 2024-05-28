@@ -19,8 +19,8 @@ RUN git config --global credential.helper store && \
 # Clone your repository
 RUN git clone https://github.com/paradimdata/project_chameleon.git .
 # # Install project dependencies with Poetry
-# RUN poetry install
+RUN poetry install
 
-# Below here are edits for testing
-RUN pip install matplotlib numpy hyperspy py4DSTEM pandas
-RUN pip install xylib-py
+EXPOSE 5020
+
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5020"]
