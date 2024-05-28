@@ -8,12 +8,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-matplotlib = "^3.8.3"
+matplotlib = "^3.9.0"
 numpy = "^1.26.4"
-hyperspy = "^2.0.1"
-py4DSTEM = "^0.14.9"
+hyperspy = "^2.1.0"
+py4DSTEM = "^0.14.15"
 xylib-py = "^1.6.1"
-pandas = "^2.2.1"
+pandas = "^2.2.2"
 
 
 [build-system]
