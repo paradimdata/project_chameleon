@@ -19,7 +19,7 @@ RUN git config --global credential.helper store && \
 # Clone your repository
 RUN git clone https://github.com/paradimdata/project_chameleon.git .
 # # Install project dependencies with Poetry
-RUN poetry install
+#RUN poetry install
 
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py
 #EXPOSE 5020
