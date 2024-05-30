@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y curl
 RUN pip install uvicorn fastapi flask
-RUN pip install poetry numpy matplotlib
+RUN pip install poetry 
 # Set build arguments for Git username and access token
 ARG GIT_USERNAME
 ARG GIT_ACCESS_TOKEN
