@@ -7,7 +7,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y curl
 RUN pip install uvicorn fastapi flask
-RUN pip install poetry 
 # Set build arguments for Git username and access token
 ARG GIT_USERNAME
 ARG GIT_ACCESS_TOKEN
@@ -18,9 +17,8 @@ RUN git config --global credential.helper store && \
     printf "https://${GIT_USERNAME}:${GIT_ACCESS_TOKEN}@github.com" > ~/.git-credentials
 # Clone your repository
 RUN git clone https://github.com/paradimdata/project_chameleon.git .
-# # Install project dependencies with Poetry
-RUN poetry install
+# # Install project dependencies 
+RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py
 
-#RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py
 #EXPOSE 5020
 #CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5020"]
