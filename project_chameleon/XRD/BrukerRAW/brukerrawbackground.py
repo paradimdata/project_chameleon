@@ -5,8 +5,25 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import csv
 import argparse
+import os
 
 def brukerrawbackground(background_input, sample_input, output_name):
+    """
+    A function that takes an two input files and an output name. The first output file, sample_input, is the sample file which can be either a bruker raw file 
+    or a csv file. The second output file, background_input, is the background subtraction data to be subtracted from the sample file. The background_input file 
+    can be either a bruker raw file or a csv file. This function generates three plots all title output_name + graph version. The plots are one plot of the raw sample 
+    data, one plot of the background adjusted data, and one plot of the sample data with the background data subtracted from it. All the plots are saved as .png files.
+
+    args: first argument is background_input. Background_input is either a .csv or bruker .raw file. Second arguemnt is sample_input. Sample_input is either a .csv 
+    or bruker .raw file. Third arguement is output_name. Output_anme is a string.
+    return: does not return anything. Saves outputs as .png files
+    exceptions: will throw an exception if the either the background_input or the sample_input are not files.
+    """
+    
+    if os.path.isfile(background_input) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+    if os.path.isfile(sample_input) is False:
+        raise ValueError("ERROR: bad input. Expected file")
 
     if background_input.endswith('.csv'):
         Background = pd.read_csv(background_input)
