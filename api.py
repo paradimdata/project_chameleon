@@ -1,13 +1,13 @@
 from fastapi import FastAPI, HTTPException, Body, Header
 import os
 import requests as r
-from project_chameleon.RHEED.rheedconverter import rheedconverter
-from project_chameleon.XRD.BrukerRAW.brukerrawbackground import brukerrawbackground
-from project_chameleon.XRD.BrukerRAW.brukerrawconverter import brukerrawconverter
-from project_chameleon.MBE.mbeparser import mbeparser
-from project_chameleon.nonfourdimension_stem.non4dstem import non4dstem
-from project_chameleon.fourdimension_stem.stemarray4d import stemarray4d
-from project_chameleon.ppmsmpms.ppmsmpms import ppmsmpmsparser
+from project_chameleon.rheedconverter import rheedconverter
+from project_chameleon.brukerrawbackground import brukerrawbackground
+from project_chameleon.brukerrawconverter import brukerrawconverter
+from project_chameleon.mbeparser import mbeparser
+from project_chameleon.non4dstem import non4dstem
+from project_chameleon.stemarray4d import stemarray4d
+from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
 
