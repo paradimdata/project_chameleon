@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>brukerrawbackground module &mdash; Project Chameleon 0.0.1 documentation</title>
+  <title>Bruker Raw Background Subtraction &mdash; Project Chameleon 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="brukerrawconverter module" href="brukerrawconverter.html" />
+    <link rel="next" title="Bruker XRD RAW" href="brukerrawconverter.html" />
     <link rel="prev" title="project_chameleon" href="modules.html" /> 
 </head>
 
@@ -47,17 +47,17 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">project_chameleon</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">brukerrawbackground module</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Bruker Raw Background Subtraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#brukerrawbackground.brukerrawbackground"><code class="docutils literal notranslate"><span class="pre">brukerrawbackground()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#brukerrawbackground.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="brukerrawconverter.html">brukerrawconverter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mbeparser.html">mbeparser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="non4dstem.html">non4dstem module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ppmsmpms.html">ppmsmpms module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rheedconverter.html">rheedconverter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stemarray4d.html">stemarray4d module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
 </ul>
 </li>
 </ul>
@@ -77,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">project_chameleon</a></li>
-      <li class="breadcrumb-item active">brukerrawbackground module</li>
+      <li class="breadcrumb-item active">Bruker Raw Background Subtraction</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/brukerrawbackground.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,9 +87,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-brukerrawbackground">
-<span id="brukerrawbackground-module"></span><h1>brukerrawbackground module<a class="headerlink" href="#module-brukerrawbackground" title="Link to this heading"></a></h1>
-<dl class="py function">
+  <section id="bruker-raw-background-subtraction">
+<h1>Bruker Raw Background Subtraction<a class="headerlink" href="#bruker-raw-background-subtraction" title="Link to this heading"></a></h1>
+<p>This module contains a function called ‘brukerrawbackground’. This function takes takes a sample file and a background file and subtracts the background file from the sample file to create a background subtracted data set. The function takes either .csv or Bruker .raw files as an input and outputs plots of the sample data, background data, and background subtracted data, as well as a .csv file of the background subtracted data.</p>
+<dl class="py function" id="module-brukerrawbackground">
 <dt class="sig sig-object py" id="brukerrawbackground.brukerrawbackground">
 <span class="sig-prename descclassname"><span class="pre">brukerrawbackground.</span></span><span class="sig-name descname"><span class="pre">brukerrawbackground</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">background_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawbackground.brukerrawbackground" title="Link to this definition"></a></dt>
 <dd><p>A function that takes an two input files and an output name. The first output file, sample_input, is the sample file which can be either a bruker raw file 
@@ -114,7 +115,7 @@ exceptions: will throw an exception if the either the background_input or the sa
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="project_chameleon" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="brukerrawconverter.html" class="btn btn-neutral float-right" title="brukerrawconverter module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="brukerrawconverter.html" class="btn btn-neutral float-right" title="Bruker XRD RAW" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -3,8 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Project Chameleon's documentation!
 =============================================
+Project Chameleon
+=============================================
+
+Welcome to the documentation for Project Chameleon. Project Chameleon is a package for querying and converting files typically found in material science research. Below is a list of the modules that are currently working. Each page gives a description of what kinds of files the modules are meant to be used for and how to properly call the functions. 
 
 .. toctree::
    :maxdepth: 2

@@ -1,5 +1,6 @@
-stemarray4d module
-==================
+=============================================
+4D Scanning Transmission Electron Microscopy
+=============================================
 
 .. automodule:: stemarray4d
    :members:

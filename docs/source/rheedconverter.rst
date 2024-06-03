@@ -1,5 +1,6 @@
-rheedconverter module
-=====================
+=============================================
+Reflection High Energy Electron Diffraction
+=============================================
 
 .. automodule:: rheedconverter
    :members:

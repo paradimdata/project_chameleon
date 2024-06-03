@@ -1,4 +1,5 @@
-brukerrawconverter module
+=========================
+Bruker XRD RAW
 =========================
 
 .. automodule:: brukerrawconverter
