@@ -21,10 +21,10 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-non4dstem = "project_chameleon.nonfourdimension_stem.non4dstem:main"
-stemarray4d = "project_chameleon.fourdimension_stem.stemarray4d:main"
-mbeparser = "project_chameleon.MBE.mbeparser:main"
-ppmsmpms = "project_chameleon.ppmsmpms.ppmsmpms:main"
-rheed = "project_chameleon.RHEED.rheedconverter:main"
-brukerraw = "project_chameleon.XRD.BrukerRAW.brukerrawconverter:main"
-brukerrawbackground = "project_chameleon.XRD.BrukerRaw.brukerrawbackground:main"
+non4dstem = "project_chameleon.non4dstem:main"
+stemarray4d = "project_chameleon.stemarray4d:main"
+mbeparser = "project_chameleon.mbeparser:main"
+ppmsmpms = "project_chameleon.ppmsmpms:main"
+rheed = "project_chameleon.rheedconverter:main"
+brukerraw = "project_chameleon.brukerrawconverter:main"
+brukerrawbackground = "project_chameleon.brukerrawbackground:main"
