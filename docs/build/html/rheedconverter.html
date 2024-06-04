@@ -53,7 +53,6 @@
 <li class="toctree-l2"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Reflection High Energy Electron Diffraction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#rheedconverter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rheedconverter.rheedconverter"><code class="docutils literal notranslate"><span class="pre">rheedconverter()</span></code></a></li>
 </ul>
 </li>
@@ -87,20 +86,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-rheedconverter">
-<span id="reflection-high-energy-electron-diffraction"></span><h1>Reflection High Energy Electron Diffraction<a class="headerlink" href="#module-rheedconverter" title="Link to this heading"></a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="rheedconverter.main">
-<span class="sig-prename descclassname"><span class="pre">rheedconverter.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rheedconverter.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
+  <section id="reflection-high-energy-electron-diffraction">
+<h1>Reflection High Energy Electron Diffraction<a class="headerlink" href="#reflection-high-energy-electron-diffraction" title="Link to this heading"></a></h1>
+<p>This module contains a function called ‘rheedconverter’. ‘rheedconverter’ takes a 16bpp RHEED .img file as an input. The function then converts this image into an 8bpp image file that is more easily readable. Please note this function was design for .img files with dimensions of 1024x1024 as that is the standard size of the the images that this function was developed with.</p>
+<dl class="py function" id="module-rheedconverter">
 <dt class="sig sig-object py" id="rheedconverter.rheedconverter">
 <span class="sig-prename descclassname"><span class="pre">rheedconverter.</span></span><span class="sig-name descname"><span class="pre">rheedconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rheedconverter.rheedconverter" title="Link to this definition"></a></dt>
-<dd><p>A function to allow RHEED users to convert 16 bpp .img images into 8 bpp easily readable .jpeg images</p>
-<p>args: takes one .img file with a 685 byte header and of size 480 x 640
-return: does not return anything. Saves image as .jpeg file
-exception: will throw an exception if the input file is not a .img file</p>
+<dd><p>‘rheedconverter’ is a function to allow RHEED users to convert 16 bpp .img images into 8 bpp more easily readable .jpeg images</p>
+<p>args: This function has two inputs: ‘file_name’ and ‘output_file’. ‘file_name’ should be a rheed .img file. This function has been designed to handle images with dimensions of 1024x1024 as that is the standard size for RHEED images used for developing this function. ‘output_file’ is a string which will be the name of the final output file.</p>
+<p>return: this function does not return anything. The output is saved as an image file.</p>
+<p>exception: will throw an exception if the input file is not a .img file.</p>
 </dd></dl>
 
 </section>

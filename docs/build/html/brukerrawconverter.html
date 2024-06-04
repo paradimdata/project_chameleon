@@ -51,7 +51,6 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Bruker XRD RAW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#brukerrawconverter.brukerrawconverter"><code class="docutils literal notranslate"><span class="pre">brukerrawconverter()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#brukerrawconverter.export_metadata"><code class="docutils literal notranslate"><span class="pre">export_metadata()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#brukerrawconverter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
@@ -88,28 +87,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-brukerrawconverter">
-<span id="bruker-xrd-raw"></span><h1>Bruker XRD RAW<a class="headerlink" href="#module-brukerrawconverter" title="Link to this heading"></a></h1>
-<dl class="py function">
+  <section id="bruker-xrd-raw">
+<h1>Bruker XRD RAW<a class="headerlink" href="#bruker-xrd-raw" title="Link to this heading"></a></h1>
+<p>This module contains a function called ‘brukerrawconverter’. This function takes either Bruker .raw or Bruker .UXD files, extracts the data and metadata, and saves all extracted data to a .txt file.</p>
+<dl class="py function" id="module-brukerrawconverter">
 <dt class="sig sig-object py" id="brukerrawconverter.brukerrawconverter">
 <span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">brukerrawconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.brukerrawconverter" title="Link to this definition"></a></dt>
-<dd><p>A function that takes an input file, extracts the data from the input, and writes it to the output file.
-This function should work for all file types that the xylib library can handle, but it is primarily being used for Bruker RAW and Bruker XRD formats here.</p>
-<p>args: first argument is input_file. Input_file is one of the supported file types. Second arguemnt is output_file. Output_file is a string that will be used for the name of the output file that is created in the function
-return: does not return anything. Saves output_file as a text file
-exceptions: will throw an exception if the input_file is not a file</p>
+<dd><p>‘brukerrawconverter’ is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
+This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib.</p>
+<p>args: This function has two inputs: ‘input_file’ and ‘output_file’. ‘Input_file’ should be a Bruker .raw or Bruker .UXD file. ‘Output_file’ is a string that will be used for the name of the output file that is created in the function</p>
+<p>return: does not return anything. Saves ‘output_file’ as a text file.</p>
+<p>exceptions: will throw an exception if the ‘input_file’ is not a file.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="brukerrawconverter.export_metadata">
 <span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">export_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.export_metadata" title="Link to this definition"></a></dt>
-<dd><p>A function to extract metadata from files</p>
+<dd><p>‘export_metadata’ is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.</p>
 </dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="brukerrawconverter.main">
-<span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </section>
 

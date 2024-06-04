@@ -5,7 +5,7 @@ import os
 #Function gets the metadata and writes it to a file. Used in main function
 def export_metadata(f, meta):
     """
-    A function to extract metadata from files
+   'export_metadata' is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.
     """
     for i in range(meta.size()):
         key = meta.get_key(i)

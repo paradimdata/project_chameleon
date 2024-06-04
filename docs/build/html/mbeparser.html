@@ -51,7 +51,6 @@
 <li class="toctree-l2"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Molecular Beam Epitaxy</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#mbeparser.find_shutter_values"><code class="docutils literal notranslate"><span class="pre">find_shutter_values()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mbeparser.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mbeparser.mbeparser"><code class="docutils literal notranslate"><span class="pre">mbeparser()</span></code></a></li>
 </ul>
 </li>
@@ -94,21 +93,20 @@
 <dl class="py function" id="module-mbeparser">
 <dt class="sig sig-object py" id="mbeparser.find_shutter_values">
 <span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">find_shutter_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shutter_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.find_shutter_values" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="mbeparser.main">
-<span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>‘find_shutter_values’ is a function that deciphers what shutters are open on a specific MBE run from the number given in the shutter control value text file. The number given is a combination of numbers that are 2 raised to an exponent.</p>
+<p>args: Takes a integer value</p>
+<p>return: returns an array of the decompose exponents that make up the original shutter value</p>
+<p>exceptions: None</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="mbeparser.mbeparser">
 <span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">mbeparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.mbeparser" title="Link to this definition"></a></dt>
 <dd><p>A function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
-and non useful data, then query the useful data for specific files. Files can be graphed and saved.</p>
-<p>args: Takes folder that holds text files that hold all of the mbe data
-return: Does not return anything. Sorts data into two subdirectories within main directory. Displays graph of chosen file
-exceptions: will throw an exception if the input is not a file folder. Will throw an exception if files in the folder are not text files</p>
+and non useful data, then query the useful data for specific files. When the function is run, the user can choose from three different actions: graph a chosen file, graph and save a chosen file, and check a specific setpoint. These actions can be repeated until the user chooses to exit.</p>
+<p>args: This function has one input: ‘file_folder’. ‘file_folder’ should be the folder containing all .txt files generated during the MBE run.</p>
+<p>return: Does not return anything. Sorts data into two subdirectories within main directory. Displays graph of chosen file.</p>
+<p>exceptions: will throw an exception if the input is not a file folder. Will throw an exception if files in the folder are not text files.</p>
 </dd></dl>
 
 </section>

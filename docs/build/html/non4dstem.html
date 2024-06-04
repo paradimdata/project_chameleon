@@ -51,7 +51,6 @@
 <li class="toctree-l2"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Non-4D Scanning Transmission Electron Microscopy</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#non4dstem.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#non4dstem.non4dstem"><code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code></a></li>
 </ul>
 </li>
@@ -89,19 +88,14 @@
              
   <section id="non-4d-scanning-transmission-electron-microscopy">
 <h1>Non-4D Scanning Transmission Electron Microscopy<a class="headerlink" href="#non-4d-scanning-transmission-electron-microscopy" title="Link to this heading"></a></h1>
-<p>This module constains a function called ‘non4dstem’. This function takes a folder of files and plots them in an output folder. The files in the folder can be .dm4 files, .ser files, or .emd files.</p>
+<p>This module constains a function called ‘non4dstem’. ‘non4dstem’ is designed to handle files associated with STEM that are not 4 dimension scans. This function has been designed around 2D and 3D .dm4, .ser, and .emd files. All files to be input should be put into a folder and the function will process each image in the folder. This function should be able to process any filetypes that can be processed by the hyperspy ‘load’ function. All outputs will be held in the folder named by the user input ‘output_folder’.</p>
 <dl class="py function" id="module-non4dstem">
-<dt class="sig sig-object py" id="non4dstem.main">
-<span class="sig-prename descclassname"><span class="pre">non4dstem.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#non4dstem.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="non4dstem.non4dstem">
 <span class="sig-prename descclassname"><span class="pre">non4dstem.</span></span><span class="sig-name descname"><span class="pre">non4dstem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#non4dstem.non4dstem" title="Link to this definition"></a></dt>
-<dd><p>A function to take 2D and 3D STEM file formats and turn them into 2D readable .png image files.</p>
-<p>args: data_folder is the only input and it holds the 2D and 3D files that will be converted into .png images
-return: this function does not return anything. Instead it just saves converted files as .png images
-exceptions: will throw an exception if the input file is not a folder</p>
+<dd><p>‘non4dstem’ is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy ‘load’ function.</p>
+<p>args: This function has two inputs: ‘data_folder’ and ‘outputs_folder’. ‘data_folder’ should be a folder holding all non 4D files that are being processed. ‘outputs_folder’ is a string which will be the name out the folder that holds all the processed images.</p>
+<p>return: this function does not return anything. It saves converted files as .png images in the folder labeled ‘output_folder’.</p>
+<p>exceptions: will throw an exception if the ‘data_folder’ is not a folder.</p>
 </dd></dl>
 
 </section>

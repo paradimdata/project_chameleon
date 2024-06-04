@@ -52,7 +52,6 @@
 <li class="toctree-l2"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Physical/Magnetic Property Management System</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ppmsmpms.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ppmsmpms.ppmsmpmsparser"><code class="docutils literal notranslate"><span class="pre">ppmsmpmsparser()</span></code></a></li>
 </ul>
 </li>
@@ -87,20 +86,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-ppmsmpms">
-<span id="physical-magnetic-property-management-system"></span><h1>Physical/Magnetic Property Management System<a class="headerlink" href="#module-ppmsmpms" title="Link to this heading"></a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="ppmsmpms.main">
-<span class="sig-prename descclassname"><span class="pre">ppmsmpms.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ppmsmpms.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
+  <section id="physical-magnetic-property-management-system">
+<h1>Physical/Magnetic Property Management System<a class="headerlink" href="#physical-magnetic-property-management-system" title="Link to this heading"></a></h1>
+<p>This module contains a function called ‘ppmsmpmsparser’. ‘ppmsmpmsparser’ takes a .dat file as an input. Once the user has input their file they can select what kind of run generated this file so the correct data can be extracted. All relevant data and metadata is then extracted and saved to a .txt file.</p>
+<dl class="py function" id="module-ppmsmpms">
 <dt class="sig sig-object py" id="ppmsmpms.ppmsmpmsparser">
 <span class="sig-prename descclassname"><span class="pre">ppmsmpms.</span></span><span class="sig-name descname"><span class="pre">ppmsmpmsparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ppmsmpms.ppmsmpmsparser" title="Link to this definition"></a></dt>
-<dd><p>A function to allow users to parse their ppms and mpms data more efficiently. Allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file.</p>
-<p>args: Takes a .dat file or path as an input for inputfile and a name for as an input for outputfile
-return: this fucntion does not return anything. It saves outputs into a file called outputfile
-exceptions: will throw an exception if the input file is not a file</p>
+<dd><p>‘ppmsmpmsparser is a function to allow users to parse their ppms and mpms data more efficiently. Allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file. The user also has the option to pick between 4 different kinds of files: heat capacity, magnetic suceptibility, 4-prode resistivity, and thermal transport.</p>
+<p>args: This function has two inputs: ‘inputfile’ and ‘outputfile’. ‘inputfile’ should be a .dat file. ‘outputfile’ should be a string which will be the name of the final output file.</p>
+<p>return: this fucntion does not return anything. It saves outputs into a file called outputfile.</p>
+<p>exceptions: will throw an exception if the input file is not a file.</p>
 </dd></dl>
 
 </section>
