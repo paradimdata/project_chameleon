@@ -7,11 +7,13 @@ import argparse
 
 def non4dstem(data_folder,outputs_folder):
     """
-    A function to take 2D and 3D STEM file formats and turn them into 2D readable .png image files. 
+    'non4dstem' is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy 'load' function. 
+ 
+    args: This function has two inputs: 'data_folder' and 'outputs_folder'. 'data_folder' should be a folder holding all non 4D files that are being processed. 'outputs_folder' is a string which will be the name out the folder that holds all the processed images.
 
-    args: data_folder is the only input and it holds the 2D and 3D files that will be converted into .png images
-    return: this function does not return anything. Instead it just saves converted files as .png images
-    exceptions: will throw an exception if the input file is not a folder
+    return: this function does not return anything. It saves converted files as .png images in the folder labeled 'output_folder'.
+
+    exceptions: will throw an exception if the 'data_folder' is not a folder.
     """
     count = 0
 

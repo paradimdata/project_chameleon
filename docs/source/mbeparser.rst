@@ -8,3 +8,4 @@ This module contains a function called 'mbeparser'. This function was designed t
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: main

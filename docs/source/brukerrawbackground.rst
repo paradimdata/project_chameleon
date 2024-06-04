@@ -8,3 +8,4 @@ This module contains a function called 'brukerrawbackground'. This function take
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: main

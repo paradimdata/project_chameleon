@@ -11,9 +11,11 @@ Welcome to the documentation for Project Chameleon. Project Chameleon is a packa
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Modules
 
    modules
+
+Project Chameleon is written and maintained by Peter Cauchy. Project Chameleon is a part of research done by the Platform for the Acelerated Research, Analysis, and Discovery of Interfaced Materials. 
 
 Indices and tables
 ==================

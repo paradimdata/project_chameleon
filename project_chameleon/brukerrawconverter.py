@@ -15,12 +15,14 @@ def export_metadata(f, meta):
 #Converts input file into a text file title "output_file.txt"
 def brukerrawconverter(input_file, output_file):
     """
-    A function that takes an input file, extracts the data from the input, and writes it to the output file.
-    This function should work for all file types that the xylib library can handle, but it is primarily being used for Bruker RAW and Bruker XRD formats here.
+    'brukerrawconverter' is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
+    This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib. 
 
-    args: first argument is input_file. Input_file is one of the supported file types. Second arguemnt is output_file. Output_file is a string that will be used for the name of the output file that is created in the function
-    return: does not return anything. Saves output_file as a text file
-    exceptions: will throw an exception if the input_file is not a file
+    args: This function has two inputs: 'input_file' and 'output_file'. 'Input_file' should be a Bruker .raw or Bruker .UXD file. 'Output_file' is a string that will be used for the name of the output file that is created in the function
+    
+    return: does not return anything. Saves 'output_file' as a text file.
+    
+    exceptions: will throw an exception if the 'input_file' is not a file.
     """
 
     #Check if input is a file

@@ -6,11 +6,13 @@ import argparse
 
 def rheedconverter(file_name, output_file):
     """
-    A function to allow RHEED users to convert 16 bpp .img images into 8 bpp easily readable .jpeg images
+    'rheedconverter' is a function to allow RHEED users to convert 16 bpp .img images into 8 bpp more easily readable .jpeg images
 
-    args: takes one .img file with a 685 byte header and of size 480 x 640
-    return: does not return anything. Saves image as .jpeg file
-    exception: will throw an exception if the input file is not a .img file 
+    args: This function has two inputs: 'file_name' and 'output_file'. 'file_name' should be a rheed .img file. This function has been designed to handle images with dimensions of 1024x1024 as that is the standard size for RHEED images used for developing this function. 'output_file' is a string which will be the name of the final output file. 
+
+    return: this function does not return anything. The output is saved as an image file.
+
+    exception: will throw an exception if the input file is not a .img file.
     """
 
     #Make sure input is a .img file
