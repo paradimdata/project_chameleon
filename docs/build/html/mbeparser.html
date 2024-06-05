@@ -89,17 +89,17 @@
              
   <section id="molecular-beam-epitaxy">
 <h1>Molecular Beam Epitaxy<a class="headerlink" href="#molecular-beam-epitaxy" title="Link to this heading"></a></h1>
-<p>This module contains a function called ‘mbeparser’. This function was designed to parser through the .txt files in a large molecular beam epitaxy folder to extract the important files. Users can then graph any of the important files that they choose. This function also calls a secondary function, ‘find_shutter_value’. This function is used to decipher which shutters are open during the MBE run that is being parsed.</p>
+<p>This module contains a function called <code class="docutils literal notranslate"><span class="pre">mbeparser()</span></code>. This function was designed to parser through the .txt files in a large molecular beam epitaxy folder to extract the important files. Users can then graph any of the important files that they choose. This function also calls a secondary function, ‘find_shutter_value’. This function is used to decipher which shutters are open during the MBE run that is being parsed.</p>
 <dl class="py function" id="module-mbeparser">
 <dt class="sig sig-object py" id="mbeparser.find_shutter_values">
 <span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">find_shutter_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shutter_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.find_shutter_values" title="Link to this definition"></a></dt>
-<dd><p>‘find_shutter_values’ is a function that deciphers what shutters are open on a specific MBE run from the number given in the shutter control value text file. The number given is a combination of numbers that are 2 raised to an exponent.</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">find_shutter_values</span></code> is a function that deciphers what shutters are open on a specific MBE run from the number given in the shutter control value text file. The number given is a combination of numbers that are 2 raised to an exponent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Args<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Takes a integer value</p>
+<dd class="field-odd"><p>This function has one input: <code class="docutils literal notranslate"><span class="pre">shutter_input</span></code>. <code class="docutils literal notranslate"><span class="pre">shutter_input</span></code> is an integer value.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>returns an array of the decompose exponents that make up the original shutter value</p>
+<dd class="field-even"><p>returns an array of the decompose exponents that make up the original shutter value.</p>
 </dd>
 <dt class="field-odd">Exceptions<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -110,11 +110,11 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="mbeparser.mbeparser">
 <span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">mbeparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.mbeparser" title="Link to this definition"></a></dt>
-<dd><p>‘mbeparser()’ is a function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
+<dd><p><code class="docutils literal notranslate"><span class="pre">mbeparser()</span></code> is a function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
 and non useful data, then query the useful data for specific files. When the function is run, the user can choose from three different actions: graph a chosen file, graph and save a chosen file, and check a specific setpoint. These actions can be repeated until the user chooses to exit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Args<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This function has one input: ‘file_folder’. ‘file_folder’ should be the folder containing all .txt files generated during the MBE run.</p>
+<dd class="field-odd"><p>This function has one input: <code class="docutils literal notranslate"><span class="pre">file_folder</span></code>. <code class="docutils literal notranslate"><span class="pre">file_folder</span></code> should be the folder containing all .txt files generated during the MBE run.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Does not return anything. Sorts data into two subdirectories within main directory. Displays graph of chosen file.</p>

@@ -89,21 +89,21 @@
              
   <section id="bruker-xrd-raw">
 <h1>Bruker XRD RAW<a class="headerlink" href="#bruker-xrd-raw" title="Link to this heading"></a></h1>
-<p>This module contains a function called ‘brukerrawconverter’. This function takes either Bruker .raw or Bruker .UXD files, extracts the data and metadata, and saves all extracted data to a .txt file.</p>
+<p>This module contains a function called <code class="docutils literal notranslate"><span class="pre">brukerrawconverter()</span></code>. This function takes either Bruker .raw or Bruker .UXD files, extracts the data and metadata, and saves all extracted data to a .txt file.</p>
 <dl class="py function" id="module-brukerrawconverter">
 <dt class="sig sig-object py" id="brukerrawconverter.brukerrawconverter">
 <span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">brukerrawconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.brukerrawconverter" title="Link to this definition"></a></dt>
-<dd><p>‘brukerrawconverter’ is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
+<dd><p><code class="docutils literal notranslate"><span class="pre">brukerrawconverter</span></code> is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
 This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Args<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This function has two inputs: ‘input_file’ and ‘output_file’. ‘Input_file’ should be a Bruker .raw or Bruker .UXD file. ‘Output_file’ is a string that will be used for the name of the output file that is created in the function</p>
+<dd class="field-odd"><p>this function has two inputs: <code class="docutils literal notranslate"><span class="pre">input_file</span></code> and <code class="docutils literal notranslate"><span class="pre">output_file</span></code>. <code class="docutils literal notranslate"><span class="pre">input_file</span></code> should be a Bruker .raw or Bruker .UXD file. <code class="docutils literal notranslate"><span class="pre">Output_file</span></code> is a string that will be used for the name of the output file that is created in the function</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>does not return anything. Saves ‘output_file’ as a text file.</p>
+<dd class="field-even"><p>does not return anything. Saves <code class="docutils literal notranslate"><span class="pre">output_file</span></code> as a text file.</p>
 </dd>
 <dt class="field-odd">Exceptions<span class="colon">:</span></dt>
-<dd class="field-odd"><p>will throw an exception if the ‘input_file’ is not a file.</p>
+<dd class="field-odd"><p>will throw an exception if the <code class="docutils literal notranslate"><span class="pre">input_file</span></code> is not a file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -111,7 +111,18 @@ This function has been designed for Bruker .raw and Bruker .UXD files, but may w
 <dl class="py function">
 <dt class="sig sig-object py" id="brukerrawconverter.export_metadata">
 <span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">export_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.export_metadata" title="Link to this definition"></a></dt>
-<dd><p>‘export_metadata’ is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">export_metadata</span></code> is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Args<span class="colon">:</span></dt>
+<dd class="field-odd"><p>this function has two inputs: <code class="docutils literal notranslate"><span class="pre">f</span></code> and <code class="docutils literal notranslate"><span class="pre">meta</span></code>. <code class="docutils literal notranslate"><span class="pre">f</span></code> is a file that can be written to. <code class="docutils literal notranslate"><span class="pre">meta</span></code> is the section of data that the metadata needs to be extracted from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>this function does not return anything. Metadata exported is writen to the file <code class="docutils literal notranslate"><span class="pre">f</span></code>.</p>
+</dd>
+<dt class="field-odd">Exceptions<span class="colon">:</span></dt>
+<dd class="field-odd"><p>none</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

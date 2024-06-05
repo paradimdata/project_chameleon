@@ -88,20 +88,20 @@
              
   <section id="non-4d-scanning-transmission-electron-microscopy">
 <h1>Non-4D Scanning Transmission Electron Microscopy<a class="headerlink" href="#non-4d-scanning-transmission-electron-microscopy" title="Link to this heading"></a></h1>
-<p>This module constains a function called ‘non4dstem’. ‘non4dstem’ is designed to handle files associated with STEM that are not 4 dimension scans. This function has been designed around 2D and 3D .dm4, .ser, and .emd files. All files to be input should be put into a folder and the function will process each image in the folder. This function should be able to process any filetypes that can be processed by the hyperspy ‘load’ function. All outputs will be held in the folder named by the user input ‘output_folder’.</p>
+<p>This module constains a function called <code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code>. <code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code> is designed to handle files associated with STEM that are not 4 dimension scans. This function has been designed around 2D and 3D .dm4, .ser, and .emd files. All files to be input should be put into a folder and the function will process each image in the folder. This function should be able to process any filetypes that can be processed by the hyperspy <code class="docutils literal notranslate"><span class="pre">load</span></code> function. All outputs will be held in the folder named by the user input <code class="docutils literal notranslate"><span class="pre">output_folder</span></code>.</p>
 <dl class="py function" id="module-non4dstem">
 <dt class="sig sig-object py" id="non4dstem.non4dstem">
 <span class="sig-prename descclassname"><span class="pre">non4dstem.</span></span><span class="sig-name descname"><span class="pre">non4dstem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#non4dstem.non4dstem" title="Link to this definition"></a></dt>
-<dd><p>‘non4dstem’ is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy ‘load’ function.</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">non4dstem</span></code> is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy ‘load’ function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Args<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This function has two inputs: ‘data_folder’ and ‘outputs_folder’. ‘data_folder’ should be a folder holding all non 4D files that are being processed. ‘outputs_folder’ is a string which will be the name out the folder that holds all the processed images.</p>
+<dd class="field-odd"><p>This function has two inputs: <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> and <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code>. <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> should be a folder holding all non 4D files that are being processed. <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code> is a string which will be the name out the folder that holds all the processed images.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>this function does not return anything. It saves converted files as .png images in the folder labeled ‘output_folder’.</p>
+<dd class="field-even"><p>this function does not return anything. It saves converted files as .png images in the folder labeled <code class="docutils literal notranslate"><span class="pre">output_folder</span></code>.</p>
 </dd>
 <dt class="field-odd">Exceptions<span class="colon">:</span></dt>
-<dd class="field-odd"><p>will throw an exception if the ‘data_folder’ is not a folder.</p>
+<dd class="field-odd"><p>will throw an exception if the <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> is not a folder.</p>
 </dd>
 </dl>
 </dd></dl>

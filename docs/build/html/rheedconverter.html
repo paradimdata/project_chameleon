@@ -88,14 +88,14 @@
              
   <section id="reflection-high-energy-electron-diffraction">
 <h1>Reflection High Energy Electron Diffraction<a class="headerlink" href="#reflection-high-energy-electron-diffraction" title="Link to this heading"></a></h1>
-<p>This module contains a function called ‘rheedconverter’. ‘rheedconverter’ takes a 16bpp RHEED .img file as an input. The function then converts this image into an 8bpp image file that is more easily readable. Please note this function was design for .img files with dimensions of 1024x1024 as that is the standard size of the the images that this function was developed with.</p>
+<p>This module contains a function called <code class="docutils literal notranslate"><span class="pre">rheedconverter()</span></code>. <code class="docutils literal notranslate"><span class="pre">rheedconverter()</span></code> takes a 16bpp RHEED .img file as an input. The function then converts this image into an 8bpp image file that is more easily readable. Please note this function was design for .img files with dimensions of 1024x1024 as that is the standard size of the the images that this function was developed with.</p>
 <dl class="py function" id="module-rheedconverter">
 <dt class="sig sig-object py" id="rheedconverter.rheedconverter">
 <span class="sig-prename descclassname"><span class="pre">rheedconverter.</span></span><span class="sig-name descname"><span class="pre">rheedconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rheedconverter.rheedconverter" title="Link to this definition"></a></dt>
-<dd><p>‘rheedconverter’ is a function to allow RHEED users to convert 16 bpp .img images into 8 bpp more easily readable .jpeg images</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">rheedconverter()</span></code> is a function to allow RHEED users to convert 16 bpp .img images into 8 bpp more easily readable .jpeg images</p>
 <dl class="field-list simple">
 <dt class="field-odd">Args<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This function has two inputs: ‘file_name’ and ‘output_file’. ‘file_name’ should be a rheed .img file. This function has been designed to handle images with dimensions of 1024x1024 as that is the standard size for RHEED images used for developing this function. ‘output_file’ is a string which will be the name of the final output file.</p>
+<dd class="field-odd"><p>This function has two inputs: <code class="docutils literal notranslate"><span class="pre">file_name</span></code> and <code class="docutils literal notranslate"><span class="pre">output_file</span></code>. <code class="docutils literal notranslate"><span class="pre">file_name</span></code> should be a rheed .img file. This function has been designed to handle images with dimensions of 1024x1024 as that is the standard size for RHEED images used for developing this function. <code class="docutils literal notranslate"><span class="pre">output_file</span></code> is a string which will be the name of the final output file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>this function does not return anything. The output is saved as an image file.</p>
