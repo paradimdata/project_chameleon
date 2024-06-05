@@ -43,10 +43,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         output_file = data.get('output_file')
         temp_name =''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=10))+'.img'
 
-        with open(file_bytes, 'r') as json_file:
-            json_data = json.load(json_file)
-            encoded_data = json_data['file_data']
-            decoded_data = base64.b64decode(encoded_data)
+        decoded_data = base64.b64decode(file_bytes)
         with open(temp_name, 'wb') as output_file:
             output_file.write(decoded_data)
         rheedconverter(temp_name,output_file)
