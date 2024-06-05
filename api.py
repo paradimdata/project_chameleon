@@ -1,6 +1,11 @@
 from fastapi import FastAPI, HTTPException, Body, Header
 import os
 import requests as r
+import json
+from requests import get
+import base64 
+import string 
+import random
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -17,20 +22,37 @@ def authorized(access_token, endpoint_id, params):
     return False # or throw not authorized exception
 
 @app.post('/rheedconverter')
-def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):
-    if 'file_name' not in data or 'output_file' not in data:
-        raise HTTPException(status_code=400, detail='Missing parameters')
+def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):   
+    if ('file_name' ^ 'file_bytes') not in data or 'output_file' not in data:
+        raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
-    file_name = data.get('file_name')
-    output_file = data.get('output_file')
+    if 'file_name' in data:
+        file_name = data.get('file_name')
+        output_file = data.get('output_file')
 
-    if not os.path.isfile(file_name):
-        raise HTTPException(status_code=400, detail='Local path is not a valid file')
+        if not os.path.isfile(file_name):
+            raise HTTPException(status_code=400, detail='Local path is not a valid file')
 
-    result = rheedconverter(file_name, output_file)
+        result = rheedconverter(file_name, output_file)
+    
+    if 'file_bytes' in data:
+        file_bytes = data.get('file_bytes')
+        output_file = data.get('output_file')
+        temp_name =''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=10))+'.img'
+
+        with open(file_bytes, 'r') as json_file:
+            json_data = json.load(json_file)
+            encoded_data = json_data['file_data']
+            decoded_data = base64.b64decode(encoded_data)
+        with open(temp_name, 'wb') as output_file:
+            output_file.write(decoded_data)
+        rheedconverter(temp_name,output_file)
+        os.remove(temp_name)
+
+
     if result is None:
         return {'message': 'Image converted successfully'}
     else:
