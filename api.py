@@ -23,7 +23,7 @@ def authorized(access_token, endpoint_id, params):
 
 @app.post('/rheedconverter')
 def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):   
-    if ('file_name' in data ^ 'file_bytes' in data) not in data or 'output_file' not in data:
+    if (('file_name' in data) ^ ('file_bytes' in data)) not in data or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
