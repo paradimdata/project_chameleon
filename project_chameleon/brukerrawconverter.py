@@ -5,7 +5,13 @@ import os
 #Function gets the metadata and writes it to a file. Used in main function
 def export_metadata(f, meta):
     """
-   'export_metadata' is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.
+   ``export_metadata`` is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.
+
+   :args: this function has two inputs: ``f`` and ``meta``. ``f`` is a file that can be written to. ``meta`` is the section of data that the metadata needs to be extracted from. 
+
+   :return: this function does not return anything. Metadata exported is writen to the file ``f``.
+
+   :exceptions: none
     """
     for i in range(meta.size()):
         key = meta.get_key(i)
@@ -15,14 +21,14 @@ def export_metadata(f, meta):
 #Converts input file into a text file title "output_file.txt"
 def brukerrawconverter(input_file, output_file):
     """
-    'brukerrawconverter' is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
+    ``brukerrawconverter`` is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
     This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib. 
 
-    args: This function has two inputs: 'input_file' and 'output_file'. 'Input_file' should be a Bruker .raw or Bruker .UXD file. 'Output_file' is a string that will be used for the name of the output file that is created in the function
+    :args: this function has two inputs: ``input_file`` and ``output_file``. ``input_file`` should be a Bruker .raw or Bruker .UXD file. ``Output_file`` is a string that will be used for the name of the output file that is created in the function
     
-    return: does not return anything. Saves 'output_file' as a text file.
+    :return: does not return anything. Saves ``output_file`` as a text file.
     
-    exceptions: will throw an exception if the 'input_file' is not a file.
+    :exceptions: will throw an exception if the ``input_file`` is not a file.
     """
 
     #Check if input is a file

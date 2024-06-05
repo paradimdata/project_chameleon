@@ -94,19 +94,35 @@
 <dt class="sig sig-object py" id="mbeparser.find_shutter_values">
 <span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">find_shutter_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shutter_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.find_shutter_values" title="Link to this definition"></a></dt>
 <dd><p>‘find_shutter_values’ is a function that deciphers what shutters are open on a specific MBE run from the number given in the shutter control value text file. The number given is a combination of numbers that are 2 raised to an exponent.</p>
-<p>args: Takes a integer value</p>
-<p>return: returns an array of the decompose exponents that make up the original shutter value</p>
-<p>exceptions: None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Args<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Takes a integer value</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns an array of the decompose exponents that make up the original shutter value</p>
+</dd>
+<dt class="field-odd">Exceptions<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="mbeparser.mbeparser">
 <span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">mbeparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.mbeparser" title="Link to this definition"></a></dt>
-<dd><p>A function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
+<dd><p>‘mbeparser()’ is a function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
 and non useful data, then query the useful data for specific files. When the function is run, the user can choose from three different actions: graph a chosen file, graph and save a chosen file, and check a specific setpoint. These actions can be repeated until the user chooses to exit.</p>
-<p>args: This function has one input: ‘file_folder’. ‘file_folder’ should be the folder containing all .txt files generated during the MBE run.</p>
-<p>return: Does not return anything. Sorts data into two subdirectories within main directory. Displays graph of chosen file.</p>
-<p>exceptions: will throw an exception if the input is not a file folder. Will throw an exception if files in the folder are not text files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Args<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This function has one input: ‘file_folder’. ‘file_folder’ should be the folder containing all .txt files generated during the MBE run.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Does not return anything. Sorts data into two subdirectories within main directory. Displays graph of chosen file.</p>
+</dd>
+<dt class="field-odd">Exceptions<span class="colon">:</span></dt>
+<dd class="field-odd"><p>will throw an exception if the input is not a file folder. Will throw an exception if files in the folder are not text files.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

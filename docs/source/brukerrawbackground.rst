@@ -2,7 +2,7 @@
 Bruker Raw Background Subtraction
 ==================================
 
-This module contains a function called 'brukerrawbackground'. This function takes takes a sample file and a background file and subtracts the background file from the sample file to create a background subtracted data set. The function takes either .csv or Bruker .raw files as an input and outputs plots of the sample data, background data, and background subtracted data, as well as a .csv file of the background subtracted data.
+This module contains a function called ``brukerrawbackground()``. This function takes takes a sample file and a background file and subtracts the background file from the sample file to create a background subtracted data set. The function takes either .csv or Bruker .raw files as an input and outputs plots of the sample data, background data, and background subtracted data, as well as a .csv file of the background subtracted data.
 
 .. automodule:: brukerrawbackground
    :members:

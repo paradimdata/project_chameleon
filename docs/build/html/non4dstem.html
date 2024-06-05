@@ -93,9 +93,17 @@
 <dt class="sig sig-object py" id="non4dstem.non4dstem">
 <span class="sig-prename descclassname"><span class="pre">non4dstem.</span></span><span class="sig-name descname"><span class="pre">non4dstem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#non4dstem.non4dstem" title="Link to this definition"></a></dt>
 <dd><p>‘non4dstem’ is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy ‘load’ function.</p>
-<p>args: This function has two inputs: ‘data_folder’ and ‘outputs_folder’. ‘data_folder’ should be a folder holding all non 4D files that are being processed. ‘outputs_folder’ is a string which will be the name out the folder that holds all the processed images.</p>
-<p>return: this function does not return anything. It saves converted files as .png images in the folder labeled ‘output_folder’.</p>
-<p>exceptions: will throw an exception if the ‘data_folder’ is not a folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Args<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This function has two inputs: ‘data_folder’ and ‘outputs_folder’. ‘data_folder’ should be a folder holding all non 4D files that are being processed. ‘outputs_folder’ is a string which will be the name out the folder that holds all the processed images.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>this function does not return anything. It saves converted files as .png images in the folder labeled ‘output_folder’.</p>
+</dd>
+<dt class="field-odd">Exceptions<span class="colon">:</span></dt>
+<dd class="field-odd"><p>will throw an exception if the ‘data_folder’ is not a folder.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
