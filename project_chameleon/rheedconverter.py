@@ -40,11 +40,10 @@ def rheedconverter(file_name, output_file):
     im_temp = im_temp * 255
    
     #Adjust to unsigned integers and save as a jpeg
-    with open(output_file, 'wb') as f:
-        im_uint8_scaled = im_temp.astype(np.uint8)
-        plt.axis('off')
-        plt.imshow(im_uint8_scaled)
-        plt.savefig(output_file)
+    im_uint8_scaled = im_temp.astype(np.uint8)
+    plt.axis('off')
+    plt.imshow(im_uint8_scaled)
+    plt.savefig(output_file)
 
 def main():
     parser = argparse.ArgumentParser()

@@ -47,7 +47,8 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(decoded_data)
             temp_name = temp_file.name + '.img'
-        output_file = os.path.join(tempfile.gettempdir(), 'output.png')
+        os.rename(temp_file.name, temp_name)
+        output_file = os.path.join(tempfile.gettempdir(), output_file)
         rheedconverter(temp_name, output_file)
         os.remove(temp_name)
 
