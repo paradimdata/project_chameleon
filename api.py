@@ -6,6 +6,7 @@ from requests import get
 import base64 
 import string 
 import random
+import tempfile
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -41,14 +42,13 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
     if 'file_bytes' in data:
         file_bytes = data.get('file_bytes')
         output_file = data.get('output_file')
-        temp_name =''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=10))+'.img'
-        padded_bytes = file_bytes + '==='
-        padded_bytes = padded_bytes[:len(file_bytes) + (4 - len(file_bytes) % 4) % 4]
 
         decoded_data = base64.b64decode(file_bytes)
-        with open(temp_name, 'wb') as output_file:
-            output_file.write(decoded_data)
-        rheedconverter(temp_name,output_file)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(decoded_data)
+            temp_name = temp_file.name
+        output_file = os.path.join(tempfile.gettempdir(), 'output.png')
+        rheedconverter(temp_name, output_file)
         os.remove(temp_name)
 
 
