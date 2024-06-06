@@ -46,7 +46,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         decoded_data = base64.b64decode(file_bytes)
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(decoded_data)
-            temp_name = temp_file.name
+            temp_name = temp_file.name + '.img'
         output_file = os.path.join(tempfile.gettempdir(), 'output.png')
         rheedconverter(temp_name, output_file)
         os.remove(temp_name)
