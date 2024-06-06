@@ -29,6 +29,8 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
     
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
+    
+    result = None
 
     if 'file_name' in data:
         file_name = data.get('file_name')
@@ -51,7 +53,6 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         output_file = os.path.join(tempfile.gettempdir(), output_file)
         rheedconverter(temp_name, output_file)
         os.remove(temp_name)
-
 
     if result is None:
         return {'message': 'Image converted successfully'}
