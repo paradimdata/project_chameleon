@@ -70,7 +70,10 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
             out = None
 
     if result is None:
-        return {'message': 'Image converted successfully'}, out
+        if out:
+            return {'message': 'Image converted successfully'}, out
+        else:
+            return {'message': 'Image converted successfully'}
     else:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
