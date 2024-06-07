@@ -54,6 +54,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         result = rheedconverter(temp_name, output_file)
         os.remove(temp_name)
 
+    out = None
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
             with open(output_file, 'rb') as file:
@@ -65,7 +66,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
             with open('rheed_out_json', 'w') as json_file:
                 json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
-        elif data.get('output_type') == 'file':
+        else:
             out = None
 
     if result is None:
