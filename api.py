@@ -58,18 +58,18 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         if data.get('output_type') == 'raw':
             with open(output_file, 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
-                return encoded_data
+                out = encoded_data
         elif data.get('output_type') == 'JSON':
             with open(output_file, 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
             with open('rheed_out_json', 'w') as json_file:
                 json.dump({"file_data": encoded_data}, json_file)
-                return json_file
+                out = json_file
         elif data.get('output_type') == 'file':
-            return None
+            out = None
 
     if result is None:
-        return {'message': 'Image converted successfully'}
+        return {'message': 'Image converted successfully'}, out
     else:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
