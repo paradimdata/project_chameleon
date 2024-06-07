@@ -27,10 +27,11 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
     if not (('file_name' in data) ^ ('file_bytes' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
+    if ('output_type' in data) and not ('raw' or 'JSON' or 'file') in 'output_type':
+        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
-    
-    result = None
 
     if 'file_name' in data:
         file_name = data.get('file_name')
@@ -38,7 +39,6 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
 
         if not os.path.isfile(file_name):
             raise HTTPException(status_code=400, detail='Local path is not a valid file')
-
         result = rheedconverter(file_name, output_file)
     
     if 'file_bytes' in data:
@@ -51,8 +51,22 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
             temp_name = temp_file.name + '.img'
         os.rename(temp_file.name, temp_name)
         output_file = os.path.join(tempfile.gettempdir(), output_file)
-        rheedconverter(temp_name, output_file)
+        result = rheedconverter(temp_name, output_file)
         os.remove(temp_name)
+
+    if 'output_type' in data:
+        if data.get('output_type') == 'raw':
+            with open(output_file, 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                return encoded_data
+        elif data.get('output_type') == 'JSON':
+            with open(output_file, 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+            with open('rheed_out_json', 'w') as json_file:
+                json.dump({"file_data": encoded_data}, json_file)
+                return json_file
+        elif data.get('output_type') == 'file':
+            return None
 
     if result is None:
         return {'message': 'Image converted successfully'}
