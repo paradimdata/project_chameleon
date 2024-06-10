@@ -7,6 +7,7 @@ import base64
 import string 
 import random
 import tempfile
+import urllib.request
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -24,6 +25,8 @@ def authorized(access_token, endpoint_id, params):
 
 @app.post('/rheedconverter')
 def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):   
+
+    #EXCEPTIONS
     if not (('file_name' in data) ^ ('file_bytes' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
@@ -36,6 +39,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
+    #INPUTS
     if 'file_name' in data:
         file_name = data.get('file_name')
         output_file = data.get('output_file')
@@ -57,17 +61,26 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         result = rheedconverter(temp_name, output_file)
         os.remove(temp_name)
 
+    if 'file_url' in data:
+        temp_name = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=10))+'.img'
+        url = data.get('file_url')
+        urllib.request.urlretrieve(url, filename=temp_name)
+        result = rheedconverter(temp_name, output_file)
+
+    #OUTPUTS
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
             with open(output_file, 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 out = encoded_data
+                os.remove(output_file)
         elif data.get('output_type') == 'JSON':
             with open(output_file, 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
             with open('rheed_out_json', 'w') as json_file:
                 json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
+            os.remove(output_file)
         else:
             out = None
 
