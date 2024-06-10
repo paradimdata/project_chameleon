@@ -54,7 +54,6 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         result = rheedconverter(temp_name, output_file)
         os.remove(temp_name)
 
-    out = None
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
             with open(output_file, 'rb') as file:
