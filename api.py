@@ -27,7 +27,7 @@ def authorized(access_token, endpoint_id, params):
 def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):   
 
     #EXCEPTIONS
-    if not (('file_name' in data) ^ ('file_bytes' in data)) or 'output_file' not in data:
+    if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
     if 'output_type' in data: 
