@@ -27,8 +27,11 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
     if not (('file_name' in data) ^ ('file_bytes' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if ('output_type' in data) and not (('raw' or 'JSON' or 'file') in data.get('output_type')):
-        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data: 
+        if not 'JSON' in data.get('output_type'):
+            if not 'raw' in data.get('output_type'):
+                if not 'file' in data.get('output_type'):
+                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
