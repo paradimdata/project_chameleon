@@ -85,6 +85,8 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
             os.remove(output_file)
         else:
             out = None
+    else:
+        out = None
 
     if result is None:
         if out:
