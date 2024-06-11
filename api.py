@@ -62,10 +62,10 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         os.remove(temp_name)
 
     if 'file_url' in data:
-        temp_name = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=10))+'.img'
         url = data.get('file_url')
-        urllib.request.urlretrieve(url, filename=temp_name)
-        result = rheedconverter(temp_name, output_file)
+        urllib.request.urlretrieve(url, filename = 'temp_name.img') 
+        result = rheedconverter('temp_name.img', output_file)
+        os.remove('temp_name.img')
 
     #OUTPUTS
     if 'output_type' in data:
