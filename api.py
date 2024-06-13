@@ -292,22 +292,82 @@ def brukerraw_convert_route(data: dict = Body(...), access_token: str = Header(.
     
 @app.post('/mbeparser')
 def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
-    if 'folder_name' not in data:
-        raise HTTPException(status_code=400, detail='Missing parameters')
+
+    #EXCEPTIONS
+    if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)):
+        raise HTTPException(status_code=400, detail='Incorrect number of parameters')
+    
+    if 'output_type' in data: 
+        if not 'JSON' in data.get('output_type'):
+            if not 'raw' in data.get('output_type'):
+                if not 'file' in data.get('output_type'):
+                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
-    folder = data.get('folder_name')
+    #INPUTS
+    if 'folder_name' in data:
+        folder = data.get('folder_name')
+        if not os.path.isdir(folder):
+            raise HTTPException(status_code=400, detail='Local path is not a valid file')
+        result = mbeparser(folder)
 
-    if not os.path.isdir(folder):
-        raise HTTPException(status_code=400, detail='Local path is not a valid file')
+    if 'folder_bytes' in data:
+        folder_bytes = data.get('folder_bytes')
+        decoded_data = base64.b64decode(folder_bytes)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
+            temp_folder.write(decoded_data)
+            temp_name = temp_folder.name + '.zip'
+        os.rename(temp_folder.name, temp_name)
+        if not os.path.exists('temp_dir'):
+            os.makedirs('temp_dir')
+        with zipfile.ZipFile(temp_name, 'r') as zip_ref:
+            zip_ref.extractall('temp_dir')
+        folder = 'temp_dir'
+        result = mbeparser(folder)
 
-    result = mbeparser(folder)
-    if result is None:
-        return {'message': 'MBE data folder parsed successfully'}
+    if 'folder_url' in data:
+        folder_url = data.get('folder_url')
+        urllib.request.urlretrieve(folder_url, filename = 'temp_dir') 
+        folder = 'temp_dir'
+        result = mbeparser(folder)
+
+    if 'output_type' in data:
+        if data.get('output_type') == 'raw':
+            with zipfile.ZipFile('stem4d_output.zip', 'w') as zipf:
+                for root, dirs, files in os.walk(folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, os.path.relpath(file_path, folder))
+            with open('stem4d_output.zip', 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                out = encoded_data
+                os.remove(folder)
+        elif data.get('output_type') == 'JSON':
+            with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
+                for root, dirs, files in os.walk(folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, os.path.relpath(file_path, folder))
+            with open('stem4d_output.zip', 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+            with open('mbe_out_json', 'w') as json_file:
+                json.dump({"file_data": encoded_data}, json_file)
+                out = json_file
+            os.remove(folder)
+        else:
+            out = None
     else:
-        raise HTTPException(status_code=500, detail=f'Failed to parse folder')
+        out = None
+
+    if result is None:
+        if out:
+            return {'message': 'Image converted successfully'}, out
+        else:
+            return {'message': 'Image converted successfully'}
+    else:
+        raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/non4dstem')
 def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(...)):
