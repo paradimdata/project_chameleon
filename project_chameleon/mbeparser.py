@@ -47,6 +47,7 @@ def mbeparser(file_folder):
     #Create two folders to sort all of the mbe text files into and add them into the current file folder. Useful folder will contain all the files that contain useful data. Useless folder will contain only files that contain no relevant data. 
     useless_folder = os.path.join(file_folder, "useless")
     useful_folder = os.path.join(file_folder, "useful")
+    output_folder = os.path.join(file_folder, "output")
     for folder in [useless_folder, useful_folder]:
         os.makedirs(folder, exist_ok=True)
         
@@ -122,7 +123,7 @@ def mbeparser(file_folder):
                         plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
             plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
-            plt.savefig(filechoice + '.png')
+            plt.savefig(output_folder + filechoice + '.png')
         elif('3' in user_input):
             for file_name in file_list:
                 if('Setpoint' in file_name):
