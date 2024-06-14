@@ -130,12 +130,12 @@ def brukerbackground_convert_route(data: dict = Body(...), access_token: str = H
         sample_ext = data.get('sample_input_type')
 
     if 'background_file_name' in data:
-        background = data.get('background_file')
+        background = data.get('background_file_name')
         if not os.path.isfile(background):
             raise HTTPException(status_code=400, detail='Local path is not a valid file')
 
     if 'sample_file_name' in data:    
-        sample = data.get('sample_file')
+        sample = data.get('sample_file_name')
         if not os.path.isfile(sample):
             raise HTTPException(status_code=400, detail='Local path is not a valid file')
         
