@@ -385,7 +385,8 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS
-    if 'file_name' in data:
+    result = None
+    if 'folder_name' in data:
         file_folder = data.get('folder_name')
         output_folder = data.get('output_folder')
 
@@ -393,7 +394,7 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
             raise HTTPException(status_code=400, detail='Local path is not a valid directory')
         result = non4dstem(file_folder, output_folder)
     
-    if 'file_bytes' in data:
+    if 'folder_bytes' in data:
         folder_bytes = data.get('folder_bytes')
         output_folder = data.get('output_folder')
 
@@ -410,7 +411,7 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         result = non4dstem(folder, output_folder)
         os.remove(folder)
 
-    if 'file_url' in data:
+    if 'folder_url' in data:
         folder_url = data.get('folder_url')
         output_folder = data.get('output_folder')
 
