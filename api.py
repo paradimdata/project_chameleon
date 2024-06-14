@@ -335,12 +335,12 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
 
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
-            with zipfile.ZipFile('stem4d_output.zip', 'w') as zipf:
+            with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(folder):
                     for file in files:
                         file_path = os.path.join(root, file)
                         zipf.write(file_path, os.path.relpath(file_path, folder))
-            with open('stem4d_output.zip', 'rb') as file:
+            with open('mbe_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 out = encoded_data
                 os.remove(folder)
@@ -397,16 +397,18 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         folder_bytes = data.get('folder_bytes')
         output_folder = data.get('output_folder')
 
-        decoded_files = {}
-        os.mkdir('temp_name')
-        for key, value in folder_bytes.items():
-            decoded_files[key] = base64.b64decode(value)
-        for filename, decoded_content in decoded_files.items():
-            file_path = os.path.join('temp_name', filename)
-            with open(file_path, 'wb') as file:
-                file.write(decoded_content)
-        result = non4dstem('temp_name', output_folder)
-        os.remove('temp_name')
+        decoded_data = base64.b64decode(folder_bytes)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
+            temp_folder.write(decoded_data)
+            temp_name = temp_folder.name + '.zip'
+        os.rename(temp_folder.name, temp_name)
+        if not os.path.exists('temp_dir'):
+            os.makedirs('temp_dir')
+        with zipfile.ZipFile(temp_name, 'r') as zip_ref:
+            zip_ref.extractall('temp_dir')
+        folder = 'temp_dir'
+        result = non4dstem(folder, output_folder)
+        os.remove(folder)
 
     if 'file_url' in data:
         folder_url = data.get('folder_url')
@@ -419,27 +421,25 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
     #OUTPUTS
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
-            all_entries = os.listdir(output_folder)
-            files = [entry for entry in all_entries if os.path.isfile(os.path.join(output_folder, entry))]
-            encoded_files = {}
-            for file_path in files:
-                if os.path.isfile(file_path):
-                    with open(file_path, 'rb') as file:
-                        encoded_data = base64.b64encode(file.read()).decode('utf-8')
-                        encoded_files[os.path.basename(file_path)] = encoded_data
-            out = encoded_files
-            os.remove(output_folder)
+            with zipfile.ZipFile('non4dstem_output.zip', 'w') as zipf:
+                for root, dirs, files in os.walk(output_folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, os.path.relpath(file_path, output_folder))
+            with open('non4dstem_output.zip', 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                out = encoded_data
+                os.remove(output_folder)
         elif data.get('output_type') == 'JSON':
-            all_entries = os.listdir(output_folder)
-            files = [entry for entry in all_entries if os.path.isfile(os.path.join(output_folder, entry))]
-            encoded_files = {}
-            for file_path in files:
-                if os.path.isfile(file_path):
-                    with open(file_path, 'rb') as file:
-                        encoded_data = base64.b64encode(file.read()).decode('utf-8')
-                        encoded_files[os.path.basename(file_path)] = encoded_data
+            with zipfile.ZipFile('non4stem_output.zip', 'w') as zipf:
+                for root, dirs, files in os.walk(output_folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, os.path.relpath(file_path, output_folder))
+            with open('stem4d_output.zip', 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
             with open('non4dstem_out_json', 'w') as json_file:
-                json.dump({"file_data": encoded_files}, json_file)
+                json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
             os.remove(output_folder)
         else:
