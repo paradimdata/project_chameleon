@@ -390,8 +390,8 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         file_folder = data.get('folder_name')
         output_folder = data.get('output_folder')
 
-        #if not os.path.isdir(file_folder):
-            #raise HTTPException(status_code=400, detail='Local path is not a valid directory')
+        if not os.path.isdir(file_folder):
+            raise HTTPException(status_code=400, detail='Local path is not a valid directory')
         result = non4dstem(file_folder, output_folder)
     
     if 'folder_bytes' in data:
@@ -522,9 +522,9 @@ def ppmsmpms_convert_route(data: dict = Body(...), access_token: str = Header(..
 
     if result is None:
         if out:
-            return {'message': 'Image converted successfully'}, out
+            return {'message': 'File converted successfully'}, out
         else:
-            return {'message': 'Image converted successfully'}
+            return {'message': 'File converted successfully'}
     else:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
