@@ -47,7 +47,7 @@ def mbeparser(file_folder):
     #Create two folders to sort all of the mbe text files into and add them into the current file folder. Useful folder will contain all the files that contain useful data. Useless folder will contain only files that contain no relevant data. 
     useless_folder = os.path.join(file_folder, "useless")
     useful_folder = os.path.join(file_folder, "useful")
-    output_folder = os.path.join(file_folder, "output")
+    output_folder = os.path.join(file_folder, "output_folder")
     for folder in [useless_folder, useful_folder,output_folder]:
         os.makedirs(folder, exist_ok=True)
         
@@ -55,7 +55,7 @@ def mbeparser(file_folder):
     for filename in os.listdir(file_folder):
         if filename.endswith('.txt'):
             filepath = os.path.join(file_folder, filename)
-        elif ('use' in filename):
+        elif ('use' in filename or 'output_folder' in filename):
             continue
         else:
             raise ValueError("ERROR: bad data. Expected .txt file")
