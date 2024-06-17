@@ -343,7 +343,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
             with open('mbe_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 out = encoded_data
-                os.remove(folder)
+                os.rmdir(folder)
                 os.remove('mbe_output.zip')
         elif data.get('output_type') == 'JSON':
             f = open("mbe_output.zip")
