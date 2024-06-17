@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Body, Header
-import os
+import os, shutil
 import requests as r
 import json
 from requests import get
@@ -343,7 +343,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
             with open('mbe_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 out = encoded_data
-                os.rmdir(folder)
+                shutil.rmtree(folder)
                 os.remove('mbe_output.zip')
         elif data.get('output_type') == 'JSON':
             f = open("mbe_output.zip")
