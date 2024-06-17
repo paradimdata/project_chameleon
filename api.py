@@ -347,17 +347,18 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
                 os.remove('mbe_output.zip')
         elif data.get('output_type') == 'JSON':
             f = open("mbe_output.zip")
-            with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
-                for root, dirs, files in os.walk(folder):
-                    for file in files:
-                        file_path = os.path.join(root, file)
-                        zipf.write(file_path, os.path.relpath(file_path, folder))
-            with open('stem4d_output.zip', 'rb') as file:
+            with ZipFile('mbe_output.zip', 'w') as zip_object:
+                for folder_name, sub_folders, file_names in os.walk(folder):
+                    for filename in file_names:
+                        file_path = os.path.join(folder_name, filename)
+                        zip_object.write(file_path, os.path.basename(file_path))
+            with open('mbe_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
             with open('mbe_out_json', 'w') as json_file:
                 json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
-            os.remove(folder)
+            shutil.rmtree(folder)
+            os.remove('mbe_output.zip')
 
         else:
             out = None
