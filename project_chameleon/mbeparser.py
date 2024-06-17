@@ -48,7 +48,7 @@ def mbeparser(file_folder):
     useless_folder = os.path.join(file_folder, "useless")
     useful_folder = os.path.join(file_folder, "useful")
     output_folder = os.path.join(file_folder, "output")
-    for folder in [useless_folder, useful_folder]:
+    for folder in [useless_folder, useful_folder,output_folder]:
         os.makedirs(folder, exist_ok=True)
         
     #Iterate through all the file names in the main folder so that they can be sorted. in the loop make sure files are text files
