@@ -335,6 +335,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
 
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
+            open("mbe_output.zip", "w")
             with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(folder):
                     for file in files:
@@ -345,6 +346,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
                 out = encoded_data
                 os.remove(folder)
         elif data.get('output_type') == 'JSON':
+            open("mbe_output.zip", "w")
             with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(folder):
                     for file in files:
@@ -356,6 +358,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
                 json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
             os.remove(folder)
+
         else:
             out = None
     else:
