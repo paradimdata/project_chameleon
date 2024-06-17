@@ -6,7 +6,7 @@ from requests import get
 import base64 
 import tempfile
 import urllib.request
-import zipfile
+from zipfile import ZipFile
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -335,18 +335,18 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
 
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
-            open("mbe_output.zip", "w")
-            with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
-                for root, dirs, files in os.walk(folder):
-                    for file in files:
-                        file_path = os.path.join(root, file)
-                        zipf.write(file_path, os.path.relpath(file_path, folder))
+            with ZipFile('mbe_output.zip', 'w') as zip_object:
+                for folder_name, sub_folders, file_names in os.walk(folder):
+                    for filename in file_names:
+                        file_path = os.path.join(folder_name, filename)
+                        zip_object.write(file_path, os.path.basename(file_path))
             with open('mbe_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 out = encoded_data
                 os.remove(folder)
+                os.remove('mbe_output.zip')
         elif data.get('output_type') == 'JSON':
-            open("mbe_output.zip", "w")
+            f = open("mbe_output.zip")
             with zipfile.ZipFile('mbe_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(folder):
                     for file in files:
