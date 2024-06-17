@@ -346,7 +346,6 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
                 shutil.rmtree(folder)
                 os.remove('mbe_output.zip')
         elif data.get('output_type') == 'JSON':
-            f = open("mbe_output.zip")
             with ZipFile('mbe_output.zip', 'w') as zip_object:
                 for folder_name, sub_folders, file_names in os.walk(folder):
                     for filename in file_names:
