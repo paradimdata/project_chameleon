@@ -74,6 +74,7 @@ def mbeparser(file_folder):
 
     #After files have been sorted, move into the useful folder and list all the useful files
     Useful_directory_path = str(file_folder) + '/useful/'
+    Output_directory_path = str(file_folder) + '/output_folder/'
     file_list = os.listdir(Useful_directory_path)
     #for file_name in file_list:
      #   if not ('Setpoint' in file_name):
@@ -123,7 +124,7 @@ def mbeparser(file_folder):
                         plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
             plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
             plt.show()
-            plt.savefig(output_folder + filechoice + '.png')
+            plt.savefig(Output_directory_path + filechoice + '.png')
         elif('3' in user_input):
             for file_name in file_list:
                 if('Setpoint' in file_name):
