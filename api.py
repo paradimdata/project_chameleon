@@ -207,6 +207,7 @@ def brukerbackground_convert_route(data: dict = Body(...), access_token: str = H
 
     if result is None:
         if out:
+            print('out')
             return {'message': 'Background subtracted files generated successfully'}, out
         else:
             return {'message': 'Background subtracted files generated successfully'}
