@@ -589,7 +589,7 @@ def stem4d_convert_route(data: dict = Body(...), access_token: str = Header(...)
             with open('stem4d_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 out = encoded_data
-                os.remove(output_file)
+            os.remove(output_file)
         elif data.get('output_type') == 'JSON':
             with zipfile.ZipFile('stem4d_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(output_file):
