@@ -58,7 +58,7 @@ def mbeparser(file_folder):
         elif ('use' in filename or 'output_folder' in filename):
             continue
         else:
-            raise ValueError("ERROR: bad data. Expected .txt file")
+            continue
 
         # Sort files into folders based on name. There are a couple of key words that appear in file names that we can use to sort the files. 
         if ('_Shutter_Control.Value.txt' in filename):
