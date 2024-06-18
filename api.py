@@ -334,7 +334,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
         folder = 'temp_dir'
         result = mbeparser(folder)
 
-    #OUTPUTSu
+    #OUTPUTS
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
             with ZipFile('mbe_output.zip', 'w') as zip_object:
@@ -370,9 +370,9 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
 
     if result is None:
         if out:
-            return {'message': 'Image converted successfully'}, out
+            return {'message': 'Files processed successfully'}, out
         else:
-            return {'message': 'Image converted successfully'}
+            return {'message': 'Files processed successfully'}
     else:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
