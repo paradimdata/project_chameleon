@@ -6,6 +6,7 @@ from requests import get
 import base64 
 import tempfile
 import urllib.request
+import zipfile
 from zipfile import ZipFile
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
