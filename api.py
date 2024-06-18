@@ -304,7 +304,11 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
                 if not 'file' in data.get('output_type'):
                     raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS
