@@ -330,7 +330,9 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
 
     if 'folder_url' in data:
         folder_url = data.get('folder_url')
-        urllib.request.urlretrieve(folder_url, filename = 'temp_dir') 
+        urllib.request.urlretrieve(folder_url, filename = 'temp.zip')
+        with zipfile.ZipFile('temp.zip', 'r') as zip_ref:
+            zip_ref.extractall('temp_dir') 
         folder = 'temp_dir'
         result = mbeparser(folder)
 
