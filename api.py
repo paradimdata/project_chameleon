@@ -333,6 +333,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
         folder = 'temp_dir'
         result = mbeparser(folder)
 
+    #OUTPUTSu
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
             with ZipFile('mbe_output.zip', 'w') as zip_object:
