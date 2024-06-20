@@ -447,9 +447,9 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         urllib.request.urlretrieve(folder_url, filename = 'non4dstem_data.zip')
         with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
             zip_ref.extractall('non4d') 
-        folder = 'non4d'
+        folder = 'non4d/non4dstem_data'
         result = non4dstem(folder, output_folder)
-        os.remove('non4d')
+        shutil.rmtree('non4d')
 
     #OUTPUTS
     if 'output_type' in data:
