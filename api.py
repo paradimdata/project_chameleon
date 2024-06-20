@@ -428,7 +428,10 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         folder_url = data.get('folder_url')
         output_folder = data.get('output_folder')
 
-        urllib.request.urlretrieve(folder_url, filename = 'temp_name') 
+        urllib.request.urlretrieve(folder_url, filename = 'temp.zip')
+        with zipfile.ZipFile('temp.zip', 'r') as zip_ref:
+            zip_ref.extractall('temp_name') 
+        folder = 'temp_name'
         result = non4dstem('temp_name', output_folder)
         os.remove('temp_name')
 
