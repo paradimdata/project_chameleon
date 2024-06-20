@@ -467,7 +467,7 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
             with zipfile.ZipFile('non4stem_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(output_folder):
                     for file in files:
-                        file_path = os.path.join(root, file)
+                        file_path = os.path.join(root, files)
                         zipf.write(file_path, os.path.relpath(file_path, output_folder))
             with open('non4dstem_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
