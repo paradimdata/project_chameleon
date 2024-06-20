@@ -464,7 +464,7 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
                 out = encoded_data
                 shutil.rmtree(output_folder)
         elif data.get('output_type') == 'JSON':
-            with zipfile.ZipFile('non4stem_output.zip', 'w') as zipf:
+            with zipfile.ZipFile('non4dstem_output.zip', 'w') as zipf:
                 for root, dirs, files in os.walk(output_folder):
                     for file in files:
                         file_path = os.path.join(root, file)
