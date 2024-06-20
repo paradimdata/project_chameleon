@@ -40,7 +40,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
     if 'folder_bytes' in data:
         del auth_data['folder_bytes']
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS
@@ -127,7 +127,7 @@ def brukerbackground_convert_route(data: dict = Body(...), access_token: str = H
     if 'folder_bytes' in data:
         del auth_data['folder_bytes']
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS 
@@ -239,7 +239,7 @@ def brukerraw_convert_route(data: dict = Body(...), access_token: str = Header(.
     if 'folder_bytes' in data:
         del auth_data['folder_bytes']
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS
@@ -410,7 +410,7 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
     if 'folder_bytes' in data:
         del auth_data['folder_bytes']
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS
@@ -504,7 +504,7 @@ def ppmsmpms_convert_route(data: dict = Body(...), access_token: str = Header(..
     if 'folder_bytes' in data:
         del auth_data['folder_bytes']
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     #INPUTS
@@ -580,7 +580,7 @@ def stem4d_convert_route(data: dict = Body(...), access_token: str = Header(...)
     if 'folder_bytes' in data:
         del auth_data['folder_bytes']
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
+    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     if 'file_name' in data:
