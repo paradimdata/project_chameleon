@@ -349,7 +349,7 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
         urllib.request.urlretrieve(folder_url, filename = 'temp.zip')
         with zipfile.ZipFile('temp.zip', 'r') as zip_ref:
             zip_ref.extractall('temp_dir') 
-        folder = 'temp_dir'
+        folder = 'temp_dir' 
         result = mbeparser(folder)
 
     #OUTPUTS
@@ -436,9 +436,9 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
             os.makedirs('temp_dir')
         with zipfile.ZipFile(temp_name, 'r') as zip_ref:
             zip_ref.extractall('temp_dir')
-        folder = 'temp_dir'
+        folder = 'temp_dir/' + os.listdir('temp_dir')[0]
         result = non4dstem(folder,output_folder)
-        shutil.rmtree(folder)
+        shutil.rmtree('temp_dir')
 
     if 'folder_url' in data:
         folder_url = data.get('folder_url')
@@ -446,10 +446,10 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
 
         urllib.request.urlretrieve(folder_url, filename = 'non4dstem_data.zip')
         with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
-            zip_ref.extractall('non4d') 
-        folder = 'non4d/non4dstem_data'
+            zip_ref.extractall('temp_dir') 
+        folder = 'temp_dir/' + os.listdir('temp_dir')[0]
         result = non4dstem(folder, output_folder)
-        shutil.rmtree('non4d')
+        shutil.rmtree('temp_dir')
 
     #OUTPUTS
     if 'output_type' in data:
