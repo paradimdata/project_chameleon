@@ -444,12 +444,12 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         folder_url = data.get('folder_url')
         output_folder = data.get('output_folder')
 
-        urllib.request.urlretrieve(folder_url, filename = 'temp.zip')
-        with zipfile.ZipFile('temp.zip', 'r') as zip_ref:
-            zip_ref.extractall('temp_name') 
-        folder = 'temp_name'
+        urllib.request.urlretrieve(folder_url, filename = 'non4dstem_data.zip')
+        with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
+            zip_ref.extractall('non4d') 
+        folder = 'non4d'
         result = non4dstem(folder, output_folder)
-        os.remove('temp_name')
+        os.remove('non4d')
 
     #OUTPUTS
     if 'output_type' in data:
