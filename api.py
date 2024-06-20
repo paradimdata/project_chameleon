@@ -437,8 +437,8 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
         with zipfile.ZipFile(temp_name, 'r') as zip_ref:
             zip_ref.extractall('temp_dir')
         folder = 'temp_dir'
-        result = non4dstem(folder, output_folder)
-        os.remove(folder)
+        result = non4dstem(folder,output_folder)
+        shutil.rmtree(folder)
 
     if 'folder_url' in data:
         folder_url = data.get('folder_url')
