@@ -469,7 +469,7 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
                     for file in files:
                         file_path = os.path.join(root, file)
                         zipf.write(file_path, os.path.relpath(file_path, output_folder))
-            with open('stem4d_output.zip', 'rb') as file:
+            with open('non4dstem_output.zip', 'rb') as file:
                 encoded_data = base64.b64encode(file.read()).decode('utf-8')
             with open('non4dstem_out_json', 'w') as json_file:
                 json.dump({"file_data": encoded_data}, json_file)
