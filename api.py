@@ -36,6 +36,10 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
                 if not 'file' in data.get('output_type'):
                     raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
@@ -119,6 +123,10 @@ def brukerbackground_convert_route(data: dict = Body(...), access_token: str = H
             if not '.csv' in data.get('sample_input_type'):
                 raise HTTPException(status_code=400, detail='Incorrect file extension: sample_input_type options are .raw and .csv')
             
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
@@ -227,6 +235,10 @@ def brukerraw_convert_route(data: dict = Body(...), access_token: str = Header(.
                 if not 'file' in data.get('output_type'):
                     raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
@@ -394,6 +406,10 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
                 if not 'file' in data.get('output_type'):
                     raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
@@ -484,6 +500,10 @@ def ppmsmpms_convert_route(data: dict = Body(...), access_token: str = Header(..
                 if not 'file' in data.get('output_type'):
                     raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
@@ -556,6 +576,10 @@ def stem4d_convert_route(data: dict = Body(...), access_token: str = Header(...)
                 if not 'file' in data.get('output_type'):
                     raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
+    auth_data = dict(data)
+    if 'folder_bytes' in data:
+        del auth_data['folder_bytes']
+
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", data):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
