@@ -482,9 +482,9 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
 
     if result is None:
         if out:
-            return {'message': 'Image converted successfully'}, out
+            return {'message': 'Images converted successfully'}, out
         else:
-            return {'message': 'Image converted successfully'}
+            return {'message': 'Images converted successfully'}
     else:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
