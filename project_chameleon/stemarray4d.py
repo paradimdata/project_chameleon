@@ -77,6 +77,10 @@ def stemarray4d(file_name,output_name):
             
         if (str(output_name) in filename) and ('vBF' in filename): 
             shutil.move(filepath, os.path.join(output_folder, filename))
+        elif (str(output_name) in filename) and ('_mean_DP' in filename):
+            shutil.move(filepath, os.path.join(output_folder, filename))
+        elif (str(output_name) in filename) and ('_max_DP' in filename):
+            shutil.move(filepath, os.path.join(output_folder, filename))
         else:  
             continue
 
