@@ -171,9 +171,9 @@ def brukerbackground_convert_route(data: dict = Body(...), access_token: str = H
         background = 'background_temp_name' + background_ext
 
     if 'sample_file_url' in data:
-        background_file_url = data.get('background_file_url')
-        urllib.request.urlretrieve(background_file_url, filename = 'background_temp_name' + sample_ext) 
-        background = 'background_temp_name' + sample_ext
+        sample_file_url = data.get('sample_file_url')
+        urllib.request.urlretrieve(sample_file_url, filename = 'sample_temp_name' + sample_ext) 
+        sample = 'sample_temp_name' + sample_ext
 
     output_file = data.get('output_file')
     result = brukerrawbackground(background, sample, output_file)
