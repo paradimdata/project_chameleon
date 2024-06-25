@@ -1,4 +1,5 @@
-<h1 style="text-align: center;">Project Chameleon</h1>
+![Chameleon](Chameleon_logo.png)
+
 
 Project Chameleon is a collection of Python scripts written to assist in data processing primarily for material science research. The scripts contain funtions that help convert, parse, and query different file formats that are commmonly found in material science research. This repository includes all scripts that are a part of Project Chameleon, an API that calls all functions in Project Chameleon, and a Dockerfile that installs and runs Project Chameleon and it's API.
 
