@@ -173,19 +173,101 @@ The Project Chameleon API has built in security. This security is written for th
 ### Endpoints
 
 #### `POST /rheedconverter`
-- This endpoint copies files from a source directory to a local path.
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
 - JSON data with the `file_name` and `output_file` parameters must be provided in the request body.
 - `file_name` can be used interchangeably with `file_bytes` or `file_url`
 - Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
 - Example usage:
 
 ```bash
-curl -X POST \
-http://localhost:5020/rheedconverter -H \
+curl -X POST http://localhost:5020/rheedconverter -H \
 "Content-Type: application/json" -H \
-"access-token: X9g218KJ9AwKG4KRPHbKUJzYK-FLBS8neybUEV6cO_w" \
+"access-token: XXXXXX" \
 -d '{"file_name":/app/tests/data/image1.img","output_file": "urltest_out.png"}'
 ```
+
+#### `POST /brukerrawbackground`
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
+- JSON data with the `background_file_name`, `sample_file_name`, and `output_file` parameters must be provided in the request body.
+- `background_file_name` can be used interchangeably with `background_file_bytes` or `background_file_url`
+- `sample_file_name` can be used interchangeably with `sample_file_bytes` or `sample_file_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- This function can take sample and background files as either .raw files or .csv files. This can be designated by `background_input_type` and `sample_input_type` with options `raw` and `csv`. The function defaults to .raw inputs. 
+- Example usage:
+
+```bash
+curl -X POST http://localhost:5020/brukerrawbackground \
+-H "Content-Type: application/json" \
+-H "access-token: XXXXXX" \
+-d '{"background_file_name":"/app/tests/data/background_test.csv","sample_file_name":"/app/tests/data/sample_test.csv""background_input_type":".csv","sample_input_type":".csv"}'
+```
+#### `POST /brukerrawconverter`
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
+- JSON data with the `file_name` and `output_file` parameters must be provided in the request body.
+- `file_name` can be used interchangeably with `file_bytes` or `file_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- This function can take both .raw and .uxd file types. This can be designated by `file_input_type` with options `raw` and `uxd`.
+- Example usage:
+
+```bash
+curl -X POST http://localhost:5020/brukerrawconverter \
+-H "Content-Type: application/json" \
+-H "access-token: XXXXXX" \
+-d '{"file_name":"/app/tests/data/test.raw","output_file":"brukerraw_out.txt","output_type":"JSON"}'
+```
+#### `POST /mbeparser`
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
+- JSON data with the `folder_name` parameter must be provided in the request body.
+- `folder_name` can be used interchangeably with `folder_bytes` or `folder_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- Example usage:
+
+```bash
+curl -X POST http://localhost:5020/mbeparser \
+-H "Content-Type: application/json" \
+-H "access-token: XXXXXX" \
+-d '{"folder_name":"/app/tests/data/mbe_example"}'
+```
+#### `POST /non4dstem`
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
+- JSON data with the `folder_name` and `output_folder` parameters must be provided in the request body.
+- `folder_name` can be used interchangeably with `folder_bytes` or `folder_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- Example usage:
+
+```bash
+curl -X POST http://localhost:5020/non4dstem \
+-H "Content-Type: application/json" \
+-H "access-token: XXXXXX" \
+-d '{"folder_name":"/app/tests/data/non4dstem_test","output_folder":"non4dstem_test_out"}'
+```
+#### `POST /ppmsmpms`
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
+- JSON data with the `file_name` and `output_file` parameters must be provided in the request body.
+- `file_name` can be used interchangeably with `file_bytes` or `file_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- Example usage:
+
+```bash
+curl -X POST http://localhost:5020/ppmsmpms \
+-H "Content-Type: application/json" \
+-H "access-token: XXXXXX" \
+-d '{"file_name":"/app/tests/data/Magnetic.dat","output_file": "test_out.txt","output_type":"JSON"}'
+```
+#### `POST /stemarray4d`
+- By default, this endpoint takes files from a source directory and outputs them to a local path.
+- JSON data with the `file_name` and `output_file` parameters must be provided in the request body.
+- `file_name` can be used interchangeably with `file_bytes` or `file_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- Example usage:
+
+```bash
+curl -X POST http://localhost:5020/ppmsmpms \
+-H "Content-Type: application/json" \
+-H "access-token: XXXXXX" \
+-d '{"file_name":"/app/tests/data/Magnetic.dat","output_file": "test_out.txt","output_type":"JSON"}'
+```
+
 
 
 This project was developed as part of the NSF platform, PARADIM (NSF award 2039380, the PARADIM MIP, and NSF award 2129051, the VariMat Cyberinfrastructure Pilot).
