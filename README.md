@@ -157,7 +157,8 @@ The Project Chameleon API has built in security. This security is written for th
 - `file_name` can be used interchangeably with `file_bytes` or `file_url`
 - Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
 - Example usage:
-- ```bash
+
+```bash
 curl -X POST \
 http://localhost:5020/rheedconverter -H \
 "Content-Type: application/json" -H \
@@ -167,4 +168,5 @@ http://localhost:5020/rheedconverter -H \
 
 
 This project was developed as part of the NSF platform, PARADIM (NSF award 2039380, the PARADIM MIP, and NSF award 2129051, the VariMat Cyberinfrastructure Pilot).
+
 ![PARADIM](PARADIM_LOGO.png)
