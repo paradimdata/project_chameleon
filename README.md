@@ -262,10 +262,10 @@ curl -X POST http://localhost:5020/ppmsmpms \
 - Example usage:
 
 ```bash
-curl -X POST http://localhost:5020/ppmsmpms \
+curl -X POST http://localhost:5020/stemarray4d \
 -H "Content-Type: application/json" \
--H "access-token: XXXXXX" \
--d '{"file_name":"/app/tests/data/Magnetic.dat","output_file": "test_out.txt","output_type":"JSON"}'
+-H "access-token: vx8AePwF1dYj0eqZXiwxCQnef9nHukx2WDXana0De5g" \
+-d '{"file_url":"/app/tests/data/stemarray4d_test.raw","output_file":"stem4d_raw"}'
 ```
 
 
