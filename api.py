@@ -578,7 +578,7 @@ def stem4d_convert_route(data: dict = Body(...), access_token: str = Header(...)
     
     auth_data = dict(data)
     if 'file_bytes' in data:
-        del auth_data['folder_bytes']
+        del auth_data['file_bytes']
 
     if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
         raise HTTPException(status_code=401, detail='Unauthorized')
