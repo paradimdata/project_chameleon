@@ -4,7 +4,7 @@ Project Chameleon is a collection of Python scripts written to assist in data pr
 
 ## Working functions held in the repository:
 - 4D STEM: documented and converted to series of 2D slices 
-- NON 4D STEM: Data graphed and converted to png (Experiencing difficulties)
+- NON 4D STEM: Data graphed and converted to png 
 - XRD: Bruker RAW/UXD to CSV
 - RHEED: 16 bpp images to TIF/PNG
 - MBE: Data sorted and graphed
