@@ -1,7 +1,8 @@
-# project_chameleon
-Repository for Project Chameleon conversion scripts
+<h1 style="text-align: center;">Project Chameleon</h1>
 
-## Working conversion functions held in the repository:
+Project Chameleon is a collection of Python scripts written to assist in data processing primarily for material science research. The scripts contain funtions that help convert, parse, and query different file formats that are commmonly found in material science research. This repository includes all scripts that are a part of Project Chameleon, an API that calls all functions in Project Chameleon, and a Dockerfile that installs and runs Project Chameleon and it's API.
+
+## Working functions held in the repository:
 - 4D STEM: documented and converted to series of 2D slices 
 - NON 4D STEM: Data graphed and converted to png (Experiencing difficulties)
 - XRD: Bruker RAW/UXD to CSV
@@ -9,7 +10,7 @@ Repository for Project Chameleon conversion scripts
 - MBE: Data sorted and graphed
 - PPMS/MPMS: Relevant lines extracted and saved
 
-## Conversions still in progress
+## Functions still in progress
 - ARPES
 - JEOL SEM
 - EBSD
@@ -130,3 +131,40 @@ Navigate to this repositories directory and install the `project_chameleon` pack
 	$ poetry install
 	
 It is also possible to skip the create and activate step, and poetry will automatically create one when you run `poetry install` as seen above. 
+
+
+## API for Project Chameleon
+
+This API provides a convenient and reasonably secure way to call any Project Chameleon functions on files from a local directory, base64 encoded files, or urls of files, that can be output to a local directory as well as returned as base64 enconded bytes, or a json containing base64 encoded bytes. It's built using FastAPI and supports secure validation of inputs.
+
+### Running the API
+
+- Save the provided code in a Python file (e.g., `api.py`).
+- Run the API using uvicorn:
+
+```bash
+uvicorn api:app --host 0.0.0.0 --port 5020 --reload
+```
+
+### Security
+The Project Chameleon API has built in security. This security is written for the John's Hopkins system that it has been developed to run on, but could easily be adjusted to work for other systems. Each API call must include an access token, `access-token`, which can be generated at the [PARADIM website](data.paradim.org/poly/api/token). Tokens only last two minutes, so new tokens must be generated frequently. 
+
+### Endpoints
+
+#### `POST /rheedconverter`
+- This endpoint copies files from a source directory to a local path.
+- JSON data with the `file_name` and `output_file` parameters must be provided in the request body.
+- `file_name` can be used interchangeably with `file_bytes` or `file_url`
+- Adding `output_type` allows for output to be either base64 encoded bytes or JSON. Options are `raw` which corresponds to bytes or `JSON` which corresponds to JSON.  
+- Example usage:
+- ```bash
+curl -X POST \
+http://localhost:5020/rheedconverter -H \
+"Content-Type: application/json" -H \
+"access-token: X9g218KJ9AwKG4KRPHbKUJzYK-FLBS8neybUEV6cO_w" \
+-d '{"file_name":/app/tests/data/image1.img","output_file": "urltest_out.png"}'
+```
+
+
+This project was developed as part of the NSF platform, PARADIM (NSF award 2039380, the PARADIM MIP, and NSF award 2129051, the VariMat Cyberinfrastructure Pilot).
+![PARADIM](PARADIM_LOGO.png)
