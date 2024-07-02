@@ -147,7 +147,7 @@ uvicorn api:app --host 0.0.0.0 --port 5020 --reload
 ```
 
 ### Security
-The Project Chameleon API has built in security. This security is written for the John's Hopkins system that it has been developed to run on, but could easily be adjusted to work for other systems. Each API call must include an access token, `access-token`, which can be generated at the [PARADIM website](data.paradim.org/poly/api/token). Tokens only last two minutes, so new tokens must be generated frequently. 
+The Project Chameleon API has built in security. This security is written for the Johns Hopkins system that it has been developed to run on, but could easily be adjusted to work for other systems. Each API call must include an access token, `access-token`, which can be generated at the [PARADIM website](https://data.paradim.org/poly/api/token). Tokens only last two minutes, so new tokens must be generated frequently. 
 
 ### Functionality
 
