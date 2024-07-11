@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Body, Header
+from fastapi.middleware.cors import CORSMiddleware
 import os, shutil
 import requests as r
 import json
@@ -17,6 +18,19 @@ from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
+
+origins = [
+    "http://portal.data.paradim.org",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def authorized(access_token, endpoint_id, params):
     if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
