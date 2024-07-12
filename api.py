@@ -114,8 +114,8 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
                 json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
             os.remove(output_file)
-        else:
-            out = None
+        elif data.get('output_type') == 'file':
+            out = output_file
     else:
         out = None
 
