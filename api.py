@@ -10,6 +10,7 @@ import urllib.request
 import zipfile
 from zipfile import ZipFile
 from flask import jsonify
+from flask_cors import CORS
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -19,6 +20,7 @@ from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
+CORS(app)
 
 origins = [
     "http://portal.data.paradim.org",
@@ -29,7 +31,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
