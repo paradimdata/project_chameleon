@@ -9,8 +9,6 @@ import tempfile
 import urllib.request
 import zipfile
 from zipfile import ZipFile
-from flask import Flask, jsonify
-from flask_cors import CORS
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -20,7 +18,6 @@ from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
-CORS(app)
 
 origins = [
     "http://portal.data.paradim.org",
@@ -54,7 +51,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
         # Handle POST request
         data = r.get_json()
         # Your existing POST endpoint logic here
-        return jsonify({ 'message': 'Success' }) 
+        return { 'message': 'Success' }
 
     #EXCEPTIONS
     if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
