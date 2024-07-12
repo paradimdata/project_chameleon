@@ -9,7 +9,7 @@ import tempfile
 import urllib.request
 import zipfile
 from zipfile import ZipFile
-from flask import jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
@@ -117,8 +117,8 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
                 json.dump({"file_data": encoded_data}, json_file)
                 out = json_file
             os.remove(output_file)
-        elif data.get('output_type') == 'file':
-            out = output_file
+        else:
+            out = None
     else:
         out = None
 
