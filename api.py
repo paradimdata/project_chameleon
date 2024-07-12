@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Body, Header
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import os, shutil
 import requests as r
 import json
@@ -9,8 +9,7 @@ import tempfile
 import urllib.request
 import zipfile
 from zipfile import ZipFile
-from flask import Flask, jsonify
-from flask_cors import CORS
+from flask import jsonify
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -20,7 +19,6 @@ from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
-CORS(app)
 
 origins = [
     "http://portal.data.paradim.org",
@@ -31,7 +29,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
