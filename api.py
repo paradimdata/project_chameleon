@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Body, Header
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 import os, shutil
 import requests as r
 import json
