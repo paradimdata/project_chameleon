@@ -9,6 +9,8 @@ import tempfile
 import urllib.request
 import zipfile
 from zipfile import ZipFile
+from flask import Flask, jsonify
+from flask_cors import CORS
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
 from project_chameleon.brukerrawconverter import brukerrawconverter
@@ -18,6 +20,7 @@ from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
+CORS(app)
 
 origins = [
     "http://portal.data.paradim.org",
@@ -38,7 +41,20 @@ def authorized(access_token, endpoint_id, params):
     return False # or throw not authorized exception
 
 @app.post('/rheedconverter')
-def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):   
+def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):  
+
+    if r.method == 'OPTIONS':
+        # Handle preflight requests
+        response = app.make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
+        return response
+    elif r.method == 'POST':
+        # Handle POST request
+        data = r.get_json()
+        # Your existing POST endpoint logic here
+        return jsonify({ 'message': 'Success' }) 
 
     #EXCEPTIONS
     if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
