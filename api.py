@@ -121,7 +121,7 @@ def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...))
 
     if result is None:
         if out:
-            return {'message': 'Image converted successfully'}, out
+            return out
         else:
             return {'message': 'Image converted successfully'}
     else:
