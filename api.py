@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Body, Header
+from fastapi import FastAPI, HTTPException, Body, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 import os, shutil
 import requests as r
@@ -40,14 +40,14 @@ def authorized(access_token, endpoint_id, params):
 @app.post('/rheedconverter')
 def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):  
 
-    if r.method == 'OPTIONS':
+    if Request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
         return response
-    elif r.method == 'POST':
+    elif Request.method == 'POST':
         # Handle POST request
         data = r.get_json()
         # Your existing POST endpoint logic here
