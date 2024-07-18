@@ -85,7 +85,7 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
         if 'file_url' in data:
             file_url = data.get('file_url')
             output_file = data.get('output_file')
-            print(output_file)
+            print(file_url)
             try:
                 response = r.get(file_url)
                 response.raise_for_status()  # Raise an HTTPError for bad responses
