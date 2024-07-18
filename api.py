@@ -19,14 +19,9 @@ from project_chameleon.ppmsmpms import ppmsmpmsparser
 
 app = FastAPI()
 
-origins = [
-    "http://portal.data.paradim.org",
-    "http://localhost:8080",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:8080"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,99 +33,89 @@ def authorized(access_token, endpoint_id, params):
     return False # or throw not authorized exception
 
 @app.post('/rheedconverter')
-def rheed_convert_route(data: dict = Body(...), access_token: str = Header(...)):  
+def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):  
 
-    if Request.method == 'OPTIONS':
+    if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
         return response
-    elif Request.method == 'POST':
-        # Handle POST request
-        data = r.get_json()
-        # Your existing POST endpoint logic here
-        return { 'message': 'Success' }
+    elif request.method == 'POST':
+        #EXCEPTIONS
+        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+            raise HTTPException(status_code=400, detail='Incorrect number of parameters')
+        
+        if 'output_type' in data: 
+            if not 'JSON' in data.get('output_type'):
+                if not 'raw' in data.get('output_type'):
+                    if not 'file' in data.get('output_type'):
+                        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+        
+        auth_data = dict(data)
+        if 'folder_bytes' in data:
+            del auth_data['folder_bytes']
 
-    #EXCEPTIONS
-    if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
-        raise HTTPException(status_code=400, detail='Incorrect number of parameters')
-    
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
-    
-    auth_data = dict(data)
-    if 'folder_bytes' in data:
-        del auth_data['folder_bytes']
+        if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
+            raise HTTPException(status_code=401, detail='Unauthorized')
 
-    if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
-        raise HTTPException(status_code=401, detail='Unauthorized')
+        #INPUTS
+        if 'file_name' in data:
+            file_name = data.get('file_name')
+            output_file = data.get('output_file')
 
-    #INPUTS
-    if 'file_name' in data:
-        file_name = data.get('file_name')
-        output_file = data.get('output_file')
+            if not os.path.isfile(file_name):
+                raise HTTPException(status_code=400, detail='Local path is not a valid file')
+            result = rheedconverter(file_name, output_file)
+        
+        if 'file_bytes' in data:
+            file_bytes = data.get('file_bytes')
+            output_file = data.get('output_file')
 
-        if not os.path.isfile(file_name):
-            raise HTTPException(status_code=400, detail='Local path is not a valid file')
-        result = rheedconverter(file_name, output_file)
-    
-    if 'file_bytes' in data:
-        file_bytes = data.get('file_bytes')
-        output_file = data.get('output_file')
+            decoded_data = base64.b64decode(file_bytes)
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(decoded_data)
+                temp_name = temp_file.name + '.img'
+            os.rename(temp_file.name, temp_name)
+            output_file = os.path.join(tempfile.gettempdir(), output_file)
+            result = rheedconverter(temp_name, output_file)
+            os.remove(temp_name)
 
-        decoded_data = base64.b64decode(file_bytes)
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(decoded_data)
-            temp_name = temp_file.name + '.img'
-        os.rename(temp_file.name, temp_name)
-        output_file = os.path.join(tempfile.gettempdir(), output_file)
-        result = rheedconverter(temp_name, output_file)
-        os.remove(temp_name)
+        if 'file_url' in data:
+            file_url = data.get('file_url')
+            output_file = data.get('output_file')
 
-    if 'file_url' in data:
-        file_url = data.get('file_url')
-        output_file = data.get('output_file')
-        try:
-            response = r.get(file_url)
-            response.raise_for_status()  # Raise an HTTPError for bad responses
-            with open('temp_name.img', 'wb') as f:
-                f.write(response.content)
-        except r.exceptions.RequestException as e:
-                raise HTTPException(status_code=500, detail=f"Failed to retrieve the file: {e}") 
-        result = rheedconverter('temp_name.img', output_file)
-        os.remove('temp_name.img')
+            urllib.request.urlretrieve(file_url, filename = 'temp_name.img') 
+            result = rheedconverter('temp_name.img', output_file)
+            os.remove('temp_name.img')
 
-    #OUTPUTS
-    if 'output_type' in data:
-        if data.get('output_type') == 'raw':
-            with open(output_file, 'rb') as file:
-                encoded_data = base64.b64encode(file.read()).decode('utf-8')
-                out = encoded_data
+        #OUTPUTS
+        if 'output_type' in data:
+            if data.get('output_type') == 'raw':
+                with open(output_file, 'rb') as file:
+                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                    out = encoded_data
+                    os.remove(output_file)
+            elif data.get('output_type') == 'JSON':
+                with open(output_file, 'rb') as file:
+                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                with open('rheed_out_json', 'w') as json_file:
+                    json.dump({"file_data": encoded_data}, json_file)
+                    out = json_file
                 os.remove(output_file)
-        elif data.get('output_type') == 'JSON':
-            with open(output_file, 'rb') as file:
-                encoded_data = base64.b64encode(file.read()).decode('utf-8')
-            with open('rheed_out_json', 'w') as json_file:
-                json.dump({"file_data": encoded_data}, json_file)
-                out = json_file
-            os.remove(output_file)
-        elif data.get('output_type') == 'file':
-            out = output_file
-    else:
-        out = None
-
-    if result is None:
-        if out:
-            return out
+            elif data.get('output_type') == 'file':
+                out = output_file
         else:
-            return {'message': 'Image converted successfully'}
-    else:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+            out = None
+
+        if result is None:
+            if out:
+                return out
+            else:
+                return {'message': 'Image converted successfully'}
+        else:
+            raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/brukerrawbackground')
 def brukerbackground_convert_route(data: dict = Body(...), access_token: str = Header(...)):
