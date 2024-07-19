@@ -21,9 +21,14 @@ def rheedconverter(file_name, output_file):
     
     file_size = os.path.getsize(file_name)
     if file_size < 1000000:
-        header_bytes = 685
-        file_width = 480
-        file_height = 640
+        if file_size == 615040:
+            header_bytes = 320
+            file_width = 480
+            file_height = 640
+        else:
+            header_bytes = 685
+            file_width = 480
+            file_height = 640
     else:
         header_bytes = 640
         file_width = 1024
