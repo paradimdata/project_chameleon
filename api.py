@@ -89,7 +89,7 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
             if 'download?' in file_url:
                 url_with_token = file_url.split('?')
                 url = url_with_token[0]
-                token = url_with_token[1]
+                token = url_with_token[1].split('=')[1]
             try:
                 print(url)
                 print(token)
