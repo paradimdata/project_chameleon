@@ -91,6 +91,8 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
                 url = url_with_token[0]
                 token = url_with_token[1]
             try:
+                print(url)
+                print(token)
                 if token:
                     headers = {'Girder-Token': {token}}
                     response = r.get(url, headers=headers)
