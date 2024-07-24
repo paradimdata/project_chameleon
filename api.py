@@ -86,20 +86,9 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
             file_url = data.get('file_url')
             output_file = data.get('output_file')
             print(file_url)
-            if 'download?' in file_url:
-                url_with_token = file_url.split('?')
-                url = url_with_token[0]
-                token = url_with_token[1].split('=')[1]
             try:
-                print(url)
-                print(token)
-                if token:
-                    headers = {'Girder-Token': {token}}
-                    response = r.get(url, headers=headers)
-                    response.raise_for_status()  # Raise an HTTPError for bad responses
-                else:
-                    response = r.get(file_url)
-                    response.raise_for_status()  # Raise an HTTPError for bad responses
+                response = r.get(file_url)
+                response.raise_for_status()  # Raise an HTTPError for bad responses
                 with open('temp_name.img', 'wb') as f:
                     f.write(response.content)
             except r.exceptions.RequestException as e:
