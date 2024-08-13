@@ -91,6 +91,7 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
                 response.raise_for_status()  # Raise an HTTPError for bad responses
                 with open('temp_name.img', 'wb') as f:
                     f.write(response.content)
+                print("Request was successful!")
             except r.exceptions.RequestException as e:
                     raise HTTPException(status_code=500, detail=f"Failed to retrieve the file: {e}") 
             result = rheedconverter('temp_name.img', output_file)
