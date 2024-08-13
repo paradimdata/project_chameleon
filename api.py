@@ -87,13 +87,19 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
             output_file = data.get('output_file')
             print(file_url)
             try:
+                print("try")
                 response = r.get(file_url)
+                print("response")
                 with open('temp_name.img', 'wb') as f:
+                    print("open")
                     f.write(response.content)
                 print("Request was successful!")
             except r.exceptions.RequestException as e:
-                    raise HTTPException(status_code=500, detail=f"Failed to retrieve the file: {e}") 
+                print('except')
+                raise HTTPException(status_code=500, detail=f"Failed to retrieve the file") 
+            print("end try/except")
             result = rheedconverter('temp_name.img', output_file)
+            print("result")
             os.remove('temp_name.img')
 
         #OUTPUTS
