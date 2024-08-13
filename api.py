@@ -8,6 +8,7 @@ import base64
 import tempfile
 import urllib.request
 import zipfile
+import traceback
 from zipfile import ZipFile
 from project_chameleon.rheedconverter import rheedconverter
 from project_chameleon.brukerrawbackground import brukerrawbackground
@@ -96,7 +97,10 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
                 print("Request was successful!")
             except r.exceptions.RequestException as e:
                 print('except')
-                raise HTTPException(status_code=500, detail=f"Failed to retrieve the file") 
+                traceback.print_exc()
+                custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
+                print(custom_message)
+                raise RuntimeError(custom_message) from e
             print("end try/except")
             result = rheedconverter('temp_name.img', output_file)
             print("result")
