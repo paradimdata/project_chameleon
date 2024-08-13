@@ -88,7 +88,6 @@ def rheed_convert_route(request: Request, data: dict = Body(...), access_token: 
             print(file_url)
             try:
                 response = r.get(file_url)
-                response.raise_for_status()  # Raise an HTTPError for bad responses
                 with open('temp_name.img', 'wb') as f:
                     f.write(response.content)
                 print("Request was successful!")
