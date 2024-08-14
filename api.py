@@ -34,7 +34,7 @@ def authorized(access_token, endpoint_id, params):
     return False # or throw not authorized exception
 
 @app.post('/rheedconverter')
-def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):  
+async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):  
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
