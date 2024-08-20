@@ -27,4 +27,5 @@ RUN git clone https://github.com/paradimdata/project_chameleon.git .
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py 
 
 EXPOSE 5020
+EXPOSE 8080
 #CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5020"]
