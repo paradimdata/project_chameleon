@@ -88,8 +88,11 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             output_file = data.get('output_file')
             print(file_url)
             try:
+                print('try')
                 response = r.get(file_url)
+                print('response')
                 with open('temp_name.img', 'wb') as f:
+                    print('open')
                     f.write(response.content)
             except r.exceptions.RequestException as e:
                 traceback.print_exc()
@@ -98,8 +101,11 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
                 else:
                     custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
                 raise RuntimeError(custom_message) from e
+            print('result')
             result = rheedconverter('temp_name.img', output_file)
+            print('converted')
             os.remove('temp_name.img')
+            print('removed')
 
         #OUTPUTS
         if 'output_type' in data:
