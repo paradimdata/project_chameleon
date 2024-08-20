@@ -89,7 +89,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             print(file_url)
             try:
                 print('try')
-                response = r.get(file_url)
+                response = r.get(file_url, timeout = 10)
                 print('response')
                 with open('temp_name.img', 'wb') as f:
                     print('open')
