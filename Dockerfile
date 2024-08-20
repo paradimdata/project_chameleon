@@ -3,8 +3,8 @@ FROM python:3.12-slim
 # Install necessary system dependencies
 RUN apt-get update && \
     apt-get install -y gnupg2 curl && \
-    curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --dearmor -o /usr/share/keyrings/debian-archive-keyring.gpg && \
-    curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc | gpg --dearmor -o /usr/share/keyrings/debian-security-archive-keyring.gpg
+    curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --batch --no-tty --dearmor -o /usr/share/keyrings/debian-archive-keyring.gpg && \
+    curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc | gpg --batch --no-tty --dearmor -o /usr/share/keyrings/debian-security-archive-keyring.gpg
 RUN apt-get update && \
     apt-get install -y git gcc python3-dev libhdf5-dev pkg-config swig g++ build-essential libboost-all-dev && \
     apt-get clean && \
