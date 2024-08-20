@@ -40,7 +40,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
         # Handle preflight requests
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
-        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
         return response
     elif request.method == 'POST':
