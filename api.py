@@ -48,11 +48,8 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
         if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
-        if 'output_type' in data: 
-            if not 'JSON' in data.get('output_type'):
-                if not 'raw' in data.get('output_type'):
-                    if not 'file' in data.get('output_type'):
-                        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+        if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
         
         auth_data = dict(data)
         if 'folder_bytes' in data:
@@ -141,11 +138,8 @@ def brukerbackground_convert_route(data: dict = Body(...), access_token: str = H
     if not (('background_file_name' in data) ^ ('background_file_bytes' in data) ^ ('background_file_url' in data)) or not (('sample_file_name' in data) ^ ('sample_file_bytes' in data) ^ ('sample_file_url' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
                 
     if 'background_input_type' in data:
         if not '.raw' in data.get('background_input_type'):
@@ -263,11 +257,8 @@ def brukerraw_convert_route(data: dict = Body(...), access_token: str = Header(.
     if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     auth_data = dict(data)
     if 'folder_bytes' in data:
@@ -344,11 +335,8 @@ def MBE_parser_route(data: dict = Body(...), access_token: str = Header(...)):
     if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)):
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     auth_data = dict(data)
     if 'folder_bytes' in data:
@@ -434,11 +422,8 @@ def non4dstem_convert_route(data: dict = Body(...), access_token: str = Header(.
     if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)) or 'output_folder' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     auth_data = dict(data)
     if 'folder_bytes' in data:
@@ -528,11 +513,8 @@ def ppmsmpms_convert_route(data: dict = Body(...), access_token: str = Header(..
     if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     auth_data = dict(data)
     if 'folder_bytes' in data:
@@ -604,11 +586,8 @@ def stem4d_convert_route(data: dict = Body(...), access_token: str = Header(...)
     if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     
-    if 'output_type' in data: 
-        if not 'JSON' in data.get('output_type'):
-            if not 'raw' in data.get('output_type'):
-                if not 'file' in data.get('output_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
     
     auth_data = dict(data)
     if 'file_bytes' in data:

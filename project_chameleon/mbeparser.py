@@ -76,9 +76,6 @@ def mbeparser(file_folder):
     Useful_directory_path = str(file_folder) + '/useful/'
     Output_directory_path = str(file_folder) + '/output_folder/'
     file_list = os.listdir(Useful_directory_path)
-    #for file_name in file_list:
-     #   if not ('Setpoint' in file_name):
-      #      print(file_name)
 
     loopholder = 1
     while loopholder > 0:
