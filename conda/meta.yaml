@@ -1,0 +1,70 @@
+package:
+  name: chameleon
+  version: "1.0.0"
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: |
+    mkdir build
+    cd build
+    sudo apt update
+    sudo apt install gcc
+    brew install swig
+    brew install boost
+    cp -r project_chameleon $PREFIX/lib/python$PY_VER/site-packages/chameleon
+    cp -r data $PREFIX/lib/python$PY_VER/site-packages/data
+  matrix:
+    - os: linux
+      arch: x86_64
+    - os: osx
+      arch: x86_64
+    - os: osx
+      arch: arm64
+
+requirements:
+  build:
+    - python=3.12
+    - git
+    - gcc
+    - gxx_linux-64  # For compiling C++ code
+    - swig
+    - hdf5
+    - pkg-config
+    - libboost
+    - make  # For build-essential
+    - cmake  # For build-essential
+    - libgcc  # For build-essential
+
+
+  host:
+    - python=3.12
+    - pip
+
+  run:
+    - python=3.12
+    - uvicorn
+    - fastapi
+    - matplotlib
+    - numpy
+    - hyperspy
+    - py4dstem
+    - pandas
+    - xylib-py
+    - hdf5
+    - libboost
+
+test:
+  imports:
+    - chameleon
+  commands:
+    - python -c "import chameleon"
+
+about:
+  home: chameleon
+
+channels:
+  - conda-forge
+  - defaults
