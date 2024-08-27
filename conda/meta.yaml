@@ -3,22 +3,30 @@ package:
   version: "1.0.0"
 
 source:
-  path: ..
+  path: ../
 
 build:
   number: 0
   script: |
+    mkdir -p build
+    cd build
+    cmake ..
+    make
+    make install
+
+    git clone https://github.com/wojdyr/xylib.git
+    cd xylib
     mkdir build
     cd build
-    sudo apt update
-    sudo apt install gcc
-    brew install swig
-    brew install boost
-    cp -r project_chameleon $PREFIX/lib/python$PY_VER/site-packages/chameleon
-    cp -r data $PREFIX/lib/python$PY_VER/site-packages/data
+    cmake ..
+    make
+    make install
+
+    cp -r ../project_chameleon $PREFIX/lib/python$PY_VER/site-packages/chameleon
+    cp -r ../data $PREFIX/lib/python$PY_VER/site-packages/data
+
+
   matrix:
-    - os: linux
-      arch: x86_64
     - os: osx
       arch: x86_64
     - os: osx
@@ -28,15 +36,14 @@ requirements:
   build:
     - python=3.12
     - git
-    - gcc
-    - gxx_linux-64  # For compiling C++ code
+    - clang
     - swig
     - hdf5
     - pkg-config
     - libboost
+    - pip
     - make  # For build-essential
     - cmake  # For build-essential
-    - libgcc  # For build-essential
 
 
   host:
@@ -52,15 +59,17 @@ requirements:
     - hyperspy
     - py4dstem
     - pandas
-    - xylib-py
     - hdf5
     - libboost
+    - pip
 
 test:
   imports:
     - chameleon
+    - xylib
   commands:
     - python -c "import chameleon"
+    - python -c "import xylib"
 
 about:
   home: chameleon
