@@ -275,12 +275,8 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     wb = wb = load_workbook(filename = workbook_name)
     ws = wb.active
     #Find first open row
-    while starting_cell == 0:
-        cell = ws.cell(row=starting_row, column=first_col)
-        if not cell.value:
-            starting_cell = 1
-        else:
-            starting_row = starting_row + 1
+    while ws.cell(row=starting_row, column=1).value:  
+        starting_row += 1
     #Make the row "Error" if wavenote cant be read
     if w == None:
         ws.row_dimensions[starting_row].height = 40

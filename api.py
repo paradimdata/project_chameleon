@@ -30,6 +30,7 @@ app.add_middleware(
 
 def authorized(access_token, endpoint_id, params):
     if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
+        print('Authorized')
         return True
     return False # or throw not authorized exception
 
@@ -38,6 +39,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
+        print('Options')
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
@@ -59,6 +61,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
+        print('Input')
         if 'file_name' in data:
             file_name = data.get('file_name')
             output_file = data.get('output_file')
@@ -81,6 +84,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             os.remove(temp_name)
 
         if 'file_url' in data:
+            print('Post')
             file_url = data.get('file_url')
             output_file = data.get('output_file')
             print(file_url)
