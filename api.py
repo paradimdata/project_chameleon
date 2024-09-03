@@ -39,7 +39,6 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
-        print('Options')
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
@@ -84,17 +83,10 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             os.remove(temp_name)
 
         if 'file_url' in data:
-            print('Post')
             file_url = data.get('file_url')
             output_file = data.get('output_file')
-            print(file_url)
             try:
-                print('try')
-                response = r.get(file_url, timeout = 10)
-                print('response')
-                with open('temp_name.img', 'wb') as f:
-                    print('open')
-                    f.write(response.content)
+                urllib.request.urlretrieve(file_url, filename = 'temp_name.img')
             except r.exceptions.RequestException as e:
                 traceback.print_exc()
                 if e.response is not None:
@@ -102,11 +94,8 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
                 else:
                     custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
                 raise RuntimeError(custom_message) from e
-            print('result')
             result = rheedconverter('temp_name.img', output_file)
-            print('converted')
             os.remove('temp_name.img')
-            print('removed')
 
         #OUTPUTS
         if 'output_type' in data:
