@@ -305,8 +305,15 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
         if 'file_url' in data:
             file_url = data.get('file_url')
             output_file = data.get('output_file')
-
-            urllib.request.urlretrieve(file_url, filename = 'temp_name' + input_ext) 
+            try:
+                urllib.request.urlretrieve(file_url, filename = 'temp_name' + input_ext)
+            except r.exceptions.RequestException as e:
+                traceback.print_exc()
+                if e.response is not None:
+                    custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
+                else:
+                    custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
+                raise RuntimeError(custom_message) from e 
             result = brukerrawconverter('temp_name' + input_ext, output_file)
             os.remove('temp_name' + input_ext)
 
@@ -331,7 +338,7 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
 
         if result is None:
             if out:
-                return {'message': 'File converted successfully'}, out
+                return out
             else:
                 return {'message': 'File converted successfully'}
         else:
