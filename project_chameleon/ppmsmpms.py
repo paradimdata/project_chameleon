@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 import os
 
-def ppmsmpmsparser(inputfile, outputfile):
+def ppmsmpmsparser(inputfile, outputfile, user_input = None):
     """
     ``ppmsmpmsparser()`` is a function to allow users to parse their ppms and mpms data more efficiently. Allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file. The user also has the option to pick between 4 different kinds of files: heat capacity, magnetic suceptibility, 4-prode resistivity, and thermal transport.
 
@@ -40,7 +40,8 @@ def ppmsmpmsparser(inputfile, outputfile):
             count += 1
 
     #Take user input to choose which loop to enter
-    user_input = input("Which file type is this? \n (1)Heat Capacity \n (2)AC Magnetic Susceptibility \n (3)4-Probe Resistivity \n (4)Thermal Transport \n (Input the number of your choice) \n") 
+    if user_input == None:
+        user_input = input("Which file type is this? \n (1)Heat Capacity \n (2)AC Magnetic Susceptibility \n (3)4-Probe Resistivity \n (4)Thermal Transport \n (Input the number of your choice) \n") 
 
     #4-PROBE LOOP
     if('3' in user_input):
