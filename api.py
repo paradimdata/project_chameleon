@@ -566,17 +566,17 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
+        output_file = data.get('output_file')
+        value_name = data.get('value_name')
         if 'file_name' in data:
             file_name = data.get('file_name')
-            output_file = data.get('output_file')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
-            result = ppmsmpmsparser(file_name, output_file)
+            result = ppmsmpmsparser(file_name, output_file, value_name)
         
         if 'file_bytes' in data:
             file_bytes = data.get('file_bytes')
-            output_file = data.get('output_file')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -584,15 +584,14 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
                 temp_name = temp_file.name + '.dat'
             os.rename(temp_file.name, temp_name)
             output_file = os.path.join(tempfile.gettempdir(), output_file)
-            result = ppmsmpmsparser(temp_name, output_file)
+            result = ppmsmpmsparser(temp_name, output_file, value_name)
             os.remove(temp_name)
 
         if 'file_url' in data:
             file_url = data.get('file_url')
-            output_file = data.get('output_file')
 
             urllib.request.urlretrieve(file_url, filename = 'temp_name.dat') 
-            result = ppmsmpmsparser('temp_name.dat', output_file)
+            result = ppmsmpmsparser('temp_name.dat', output_file, value_name)
             os.remove('temp_name.dat')
 
         #OUTPUTS
