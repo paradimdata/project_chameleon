@@ -2,15 +2,21 @@ import os.path
 import os
 import time
 import htmdec_formats
+import h5py
+import subprocess
+from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from configparser import ParsingError
 from pandas import DataFrame
+import matplotlib.pyplot as plt
+import numpy as np
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 from openpyxl.styles import Border, Side
 from openpyxl.styles import Font, Alignment
+from PyQt5.QtWidgets import QApplication, QLabel, QTextEdit, QVBoxLayout, QWidget
 
 def get_sec(time_str):
     """Get seconds from time."""
@@ -60,7 +66,7 @@ def build_arpes_workbook(workbook_name):
             cell.border = thin_border
     #Put values in cells, make bold and centered. Column 1 then column 2
     for col in range(first_col, row_1_last_col):
-        if row_1[col] == '':
+        if row_1[col - 1] == '':
             continue
         else:
             cell = ws.cell(row=1, column=col)
@@ -139,6 +145,7 @@ def get_wavenote_values(wavenote_file):
             if '.pxt' in l:
                 scan_number = l
                 #[File, Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
+        os.remove(data_file)
         return [scan_number,lines[28].split('=')[1],lines[29].split('=')[1],m_ti.split(' ')[4], lines[27].split('=')[1],
                 lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 lines[35],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
@@ -229,7 +236,11 @@ def get_jaina_values(jaina_file, date_time = None):
         return ['[' + jaina_lines[1][1] + ',' + jaina_lines[1][2] + ']',jaina_lines[1][14]]
     else:
         while time_found < 1:
-            if (get_sec(date_time[1]) > get_sec(jaina_lines[count][0][10:18]) - 60) and (get_sec(date_time[1]) < get_sec(jaina_lines[count][0][10:18])):
+            if count > len(jaina_lines[0]):
+                count = 0
+            elif not jaina_lines[count][0][10:18]:
+                count = count + 1
+            elif (get_sec(date_time[1]) > get_sec(jaina_lines[count][0][10:18]) - 60) and (get_sec(date_time[1]) < get_sec(jaina_lines[count][0][10:18])):
                 time_found = 1
                 #[(Diode A,Diode B), Pressure]
                 return ['[' + jaina_lines[count][1] + ',' + jaina_lines[count][2] + ']',jaina_lines[count][14]]
@@ -275,8 +286,12 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     wb = wb = load_workbook(filename = workbook_name)
     ws = wb.active
     #Find first open row
-    while ws.cell(row=starting_row, column=1).value:  
-        starting_row += 1
+    while starting_cell == 0:
+        cell = ws.cell(row=starting_row, column=first_col)
+        if not cell.value:
+            starting_cell = 1
+        else:
+            starting_row = starting_row + 1
     #Make the row "Error" if wavenote cant be read
     if w == None:
         ws.row_dimensions[starting_row].height = 40
@@ -326,9 +341,9 @@ def arpes_folder_workbook(folder_name, workbook_name):
     jaina_logs = []
     varian_logs = []
     #Set directory paths based on directory structure, get all files from directories
-    wavenote_directory = folder_name + '/ARPES Data Files/'
-    jaina_directory = folder_name + '/Cadillac Equipment Readings/Server 1 Jaina/'
-    varian_directory = folder_name + '/Cadillac Equipment Readings/Server 2 Varian/'
+    wavenote_directory = folder_name + '/'
+    jaina_directory = folder_name + '/../../../.././ARPES Log Data/Jaina Cadillac/'
+    varian_directory = folder_name + '/../../../.././ARPES Log Data/Varian Cadillac/'
     wavenote_names = os.listdir(wavenote_directory)
     jaina_names = os.listdir(jaina_directory)
     varian_names = os.listdir(varian_directory)
@@ -336,7 +351,7 @@ def arpes_folder_workbook(folder_name, workbook_name):
     for name in wavenote_names:
         if not 'moly' in name:
             wavenote_names.remove(name)
-    sorted_waves = sorted(wavenote_names, key=lambda x: int(x.split('_')[2].split('.')[0]))
+    sorted_waves = sorted(wavenote_names, key=lambda x: int(x.split('_')[1].split('.')[0]))
     #Make sure files in directories are just the files we want
     for f in jaina_names:
         if f.endswith('.log'):
@@ -350,3 +365,183 @@ def arpes_folder_workbook(folder_name, workbook_name):
     for f in sorted_waves:
         if f.endswith('.pxt'):
             insert_scan_row(wavenote_directory + f,jaina_logs[0],varian_logs[0],workbook_name)
+    
+
+def single_log_grapher(log_file, scan_folder, log_type, value):
+
+    colors = ['red', 'blue', 'orange', 'green', 'purple', 'yellow', 'brown', 'pink', 'light blue', 'beige', 'light green']
+    jaina_values = ['Timestamp', 'DiodeA', 'DiodeB', 'Heater', 'HeaterSetPoint', 'HeaterRange', 'OutputMode', 'RampMode', 'RampRate', 
+                    'ZoneRampRate', 'CryoTemp', 'CryoLSetPt', 'CryoHSetPt', 'IG_Val', 'ARPES_IG', 'ARPES_PG1', 'ARPES_PG2', 
+                    'Mono_IG', 'Mono_PG1', 'Mono_PG2', 'SD_IG', 'SD_PG1', 'SD_PG2', 'TC_IG', 'TC_PG1', 'TC_PG2']
+    varian_values = ['Timestamp', 'X_status', 'X', 'Y_status', 'Y', 'Z_status', 'Z', 'Theta_status', 'Theta', 'Phi_status', 
+                     'Phi', 'Omega', 'ManipLimitCheck', 'ManipSES', 'ARPES_Slit']
+
+    value_index = 0
+    log_lines = []
+
+    if not log_file.endswith('.log'):
+        raise ValueError("ERROR: log file must end with '.log'")
+    if not os.path.isdir(scan_folder):
+        raise ValueError("ERROR: scan folder must be a folder")
+    
+    if log_type.lower() == 'jaina':
+        values = jaina_values
+    elif log_type.lower() == 'varian':
+        values = varian_values
+    else:
+        raise ValueError("Invalid log type")
+
+    # Find value index
+    for i, item in enumerate(values):
+        if item == value:
+            value_index = i
+            break
+    else:
+        raise ValueError(f"Value '{value}' not found in log type '{log_type}'")
+
+    with open(log_file, 'r') as file:
+        log_lines = file.readlines()
+
+    # Extracting value data and time data
+    value_data = [line.split()[value_index + 1] for line in log_lines]  # Assuming space-separated logs
+    time_data = [line.split()[1] for line in log_lines[1:]]  # Assuming 'Timestamp' is first column
+    # Convert time data to seconds
+    new_time = [get_sec(item) for item in time_data if item]
+    length = len(log_lines) - 2
+    log_start_date = log_lines[1].split()[0][:10]
+    log_end_date = log_lines[length].split()[0][:10]
+    adjusted_log_start_date = log_start_date[6:10] + '-' + log_start_date[0:2] + '-' + log_start_date[3:5]
+    adjusted_log_end_date = log_end_date[6:10] + '-' + log_end_date[0:2] + '-' + log_end_date[3:5]
+
+    # Filter .pxt files
+    waves = [os.path.join(scan_folder, name) for name in os.listdir(scan_folder) if name.endswith('.pxt')]
+
+    segment_times = []
+
+    for item in waves:
+        try:
+            end_time = os.path.getmtime(item)
+            scan_end = datetime.fromtimestamp(end_time)
+            dataset = htmdec_formats.ARPESDataset.from_file(item)
+            
+            log_file_path = os.path.join(os.path.dirname(item), "log_data_holder.txt")
+            with open(log_file_path, "w") as f:
+                f.write(dataset._metadata)
+            with open(log_file_path, 'r') as file:
+                lines = file.readlines()
+            os.remove(log_file_path)
+
+            # Start date, start time, [End data, end time]
+            scan_end_str = scan_end.strftime('%Y-%m-%d %H:%M:%S')
+            scan_times = [lines[28].split('=')[1].strip(), lines[29].split('=')[1].strip(), scan_end_str.split(' ')]
+
+            # Handle segment times
+            if scan_times[0] == adjusted_log_start_date and scan_times[2][0] == adjusted_log_end_date:
+                segment_times.append((scan_times[1], scan_times[2][1]))
+            elif scan_times[0] == adjusted_log_start_date:
+                segment_times.append((scan_times[1], '23:59:59'))
+            elif scan_times[2][0] == adjusted_log_end_date:
+                segment_times.append(('00:00:01', scan_times[2][1]))
+                
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+    
+    # Convert time and value data into numpy arrays
+    x_values = np.array(new_time) / 3600
+    y_values = np.array(value_data[1:], dtype=float)  # Ensure y_values are all numeric
+    
+    previous_end_time = None
+    first_start_time = get_sec(segment_times[0][0]) / 3600
+    if x_values[0] < first_start_time:
+        # There is a gap before the first segment
+        gap_mask = (x_values < first_start_time)
+        plt.plot(x_values[gap_mask], y_values[gap_mask], linestyle='-', color='grey', label='Initial Gap')
+        plt.scatter(x_values[gap_mask], y_values[gap_mask], color='grey', edgecolor='grey')
+
+    for i, (start_time, end_time) in enumerate(segment_times):
+        start_sec = get_sec(start_time) / 3600
+        end_sec = get_sec(end_time) / 3600
+
+        if previous_end_time is not None and start_sec > previous_end_time:
+            gap_mask = (x_values > previous_end_time) & (x_values < start_sec)
+            plt.plot(x_values[gap_mask], y_values[gap_mask], linestyle='-', color='grey', label='Gap')
+            plt.scatter(x_values[gap_mask], y_values[gap_mask], color='grey', edgecolor='grey')
+
+        segment_mask = (x_values >= start_sec) & (x_values <= end_sec)
+        x_segment = x_values[segment_mask]
+        y_segment = y_values[segment_mask]
+
+        plt.plot(x_segment, y_segment, linestyle='-', color=colors[i], label=f'Scan {i+1}')
+        plt.scatter(x_segment, y_segment, color=colors[i], edgecolor=colors[i])
+
+        previous_end_time = end_sec
+
+    # Final segment for values greater than the last end time
+    final_mask = x_values >= get_sec(segment_times[-1][1]) / 3600
+    x_segment = x_values[final_mask]
+    y_segment = y_values[final_mask]
+
+    # Plot legend and save the figure
+    plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
+    plt.xlabel('Time (hours)')
+    plt.ylabel('Y Values')
+    
+    plt.savefig('plot.png', bbox_inches='tight', dpi=500)
+    plt.show()
+
+def arpes_previewer(pxt_file):
+
+    if not pxt_file.endswith('.pxt'):
+        raise ValueError("ERROR: input file must end with '.pxt'")
+
+    app = QApplication([])
+    window = QWidget()
+    layout = QVBoxLayout()
+
+    command = [
+        "htmdec-formats", 
+        "pxt-to-hdf5", 
+        pxt_file, 
+        "data_holder.hdf5"
+    ]
+    # Execute the command
+    subprocess.run(command, check=True)
+    filename = "data_holder.hdf5"
+    with h5py.File(filename, "r") as f:
+        a_group_key = list(f.keys())[0]
+        data = list(f[a_group_key])
+        data = list(f[a_group_key])
+        array = np.array(data)
+        dimensions = array.shape
+        ds_obj = f[a_group_key]      # returns as a h5py dataset object
+        ds_arr = f[a_group_key][()]  # returns as a numpy array
+    ds_arr = np.squeeze(ds_arr)
+    os.remove(filename)
+    plt.imshow(ds_arr, cmap='gray', interpolation='nearest')
+    plt.title('Greyscale Intensity Map')
+    plt.show()
+
+    dataset = htmdec_formats.ARPESDataset.from_file(pxt_file)
+    log_file_path = os.path.join(os.path.dirname(pxt_file), "log_data_holder.txt")
+    with open(log_file_path, "w") as f:
+        f.write(dataset._metadata)
+    with open(log_file_path, 'r') as file:
+        lines = file.readlines()
+    os.remove(log_file_path)
+
+    display_label = pxt_file.split('/')
+    if len(display_label) > 1:
+        final_label = display_label[-1]
+    else:
+        final_label = display_label
+    label = QLabel(final_label + ' Metadata')
+    # Create a QTextEdit for displaying multi-line text
+    text_edit = QTextEdit()
+    text_edit.setPlainText(''.join(lines))  # Join list of lines into a single string
+    # Add widgets to layout
+    layout.addWidget(label)
+    layout.addWidget(text_edit)
+    window.setLayout(layout)
+    # Show the window
+    window.show()
+    app.exec_()
