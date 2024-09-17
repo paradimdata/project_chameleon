@@ -1,0 +1,104 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2758
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\margl1440\margr1440\vieww21080\viewh4380\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 XYLIB Install Instructions for an ARM Machine
+\f1\b0 \
+\
+These instructions were written from an installation of XYLIB in a conda environment. For best results it is suggested that a condo environment is used when following instructions and that all commands are executed in a conda environment.\
+\
+
+\f0\b Instructions\
+
+\f1\b0 1. Install Homebrew(Brew) and add it to PATH:\
+Command: \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 /bin/bash -c "$(curl -fsSL {\field{\*\fldinst{HYPERLINK "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"}}{\fldrslt https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh}})"
+\f2 \
+                    
+\f1 (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/pcauchy1/.zprofile 
+\f2 \
+	        
+\f1 eval "$(/opt/homebrew/bin/brew shellenv)"\
+The second and third commands are generated after the command to install brew is run and can be copy/pasted from there.\
+\
+2. Install pip in your environment:\
+Command (for a conda environment): conda install pip\
+\
+3. Make sure you have python 3.5 or later installed. To check your python version do \'93python --version\'94. If you need to update your python version do so.\
+Command: conda update python\
+\
+4. Make sure you have Xcode command line tools installed. Run the command to install command line tools. If you already have them installed you will receive a message saying \'93command line tools are already installed:\
+Command: xcode-select --install\
+\
+5. Install cmake\
+Command: brew install cmake\
+\
+6. Install git or GitHub desktop. Whichever one you choose will be used to clone the xylib directory from GitHub later. These directions were based on using GitHub desktop. Git may already be installed on some systems. To check do git --version\
+\
+7. Install swig\
+Command: brew install swig\
+\
+8.  Install zlib and export the flags so zlib can be properly found by compilers. It is possible zlib will already be installed. If so, you will just get a message saying it is already installed. \
+Command: brew install zlib\
+	        export LDFLAGS="-L/opt/homebrew/opt/zlib/lib"\
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 	        export CPPFLAGS="-I/opt/homebrew/opt/zlib/include"\
+\
+9. Install wxWidgets.\
+Command: brew install wxwidgets\
+\
+10. Clone the xylib repository and cd into it.\
+\
+11. Install boost. Installing boost must be done manually. XYlib requires boost 1.78. 1.78 is not a version of boost that can be installed from brew so it must be done manually.\
+Command: curl -LO\'a0{\field{\*\fldinst{HYPERLINK "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz%5C"}}{\fldrslt \strokec2 https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz\\}}\
+	        tar -xvzf boost_1_78_0.tar.gz\
+	        cd boost_1_78_0\
+	        ./bootstrap.sh\
+	        ./b2 install --prefix=/opt/homebrew/opt/boost@1.78\
+After completing these commands, cd back to your xylib directory\
+\
+12. Run cmake in the xylib directory.\
+Command: cmake .\
+\
+13. Build the setup.py file. \
+Command: python setup.py build_ext --include-dirs=/opt/homebrew/opt/boost@1.78/include --library-dirs=/opt/homebrew/opt/boost@1.78/lib\
+\
+14. Pip install xylib. To run the command make sure you are still in the xylib directory.\
+Command: pip install .\
+\
+
+\f0\b Trouble shooting
+\f1\b0 \
+Here are a couple of things to try if these instructions do not work.\
+\
+1.Brew cleanup to clean up excess files\
+Command: brew cleanup\
+\
+2. Try resetting flags for boost.\
+Command: export CXXFLAGS=\'94-I/opt/homebrew/include\'94\
+	        export LDFLAGS=\'94-L/opt/homebrew/lib\'94\
+\
+3. Explicitly include boost path.\
+Command: export BOOST_INCLUDEDIR=/opt/homebrew/include\
+	        export BOOST_LIBRARYDIR=/opt/homebrew/lib
+\f2 \strokec2 \
+\
+
+\f1 \strokec2 4. Restart terminal and system.
+\f2 \strokec2 \
+\
+
+\f1 \strokec2 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \
+
+\f2 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1 \cf0 \strokec2 \
+\
+}
