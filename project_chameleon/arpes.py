@@ -153,7 +153,7 @@ def get_wavenote_values(wavenote_file):
         print(f"An error occurred while parsing the configuration: {e}")
         return None
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"An unexpected error occurred in wavenote try: {e}")
         return None
 
 
@@ -444,7 +444,7 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
                 segment_times.append(('00:00:01', scan_times[2][1]))
                 
         except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+            print(f"An unexpected error occurred in item loop: {e}")
     
     # Convert time and value data into numpy arrays
     x_values = np.array(new_time) / 3600
