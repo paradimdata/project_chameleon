@@ -4,6 +4,7 @@ import time
 import htmdec_formats
 import h5py
 import subprocess
+import traceback
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from configparser import ParsingError
@@ -126,6 +127,9 @@ def get_wavenote_values(wavenote_file):
     """
     #Initialization and error handling
     lines = []
+    run_mode_information = []
+    current_row = []
+    column = 0
     if not wavenote_file.endswith('.pxt'):
         raise ValueError("ERROR: input file must end with '.pxt'")
     #Create new file to hold output from HTMDEC 
@@ -146,14 +150,31 @@ def get_wavenote_values(wavenote_file):
                 scan_number = l
                 #[File, Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
         os.remove(data_file)
-        return [scan_number,lines[28].split('=')[1],lines[29].split('=')[1],m_ti.split(' ')[4], lines[27].split('=')[1],
+        if not '=' in lines[40]:
+            for l in lines[41:]:
+                #[Point (Degree), X, Y, Z, Theta, Phi]
+                current_row.append(l)
+                column += 1
+                if column == 6:
+                    run_mode_information.append(current_row)
+                    current_row = []
+                    column = 0
+
+            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],m_ti.split(' ')[3], lines[27].split('=')[1],
+                run_mode_information[0][4], run_mode_information[0][5],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
+                'Manipulator Scan',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+        else:
+            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],m_ti.split(' ')[3], lines[27].split('=')[1],
                 lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 lines[35],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+        return r
     except ParsingError as e:
         print(f"An error occurred while parsing the configuration: {e}")
+        traceback.print_exc()
         return None
     except Exception as e:
-        print(f"An unexpected error occurred in wavenote try: {e}")
+        print(f"An unexpected error occurred in get_wavenote_values: {e}")
+        traceback.print_exc()
         return None
 
 
@@ -180,10 +201,8 @@ def get_varian_values(varian_file, date_time = None):
     length = len(varian_lines) - 1
     #Pre processing to make values easier to manage
     while count < length:
-        varian_lines[count] = varian_lines[count].replace(' ','')
-        varian_lines[count] = varian_lines[count].replace('\n','')
-        varian_lines[count] = varian_lines[count].split("\t")
-        count = count + 1
+        varian_lines[count] = varian_lines[count].replace(' ','').replace('\n','').split("\t")
+        count += 1
     count = 2
     #If time is given, align varian values to time, otherwise take first row
     if date_time == None:
@@ -199,7 +218,7 @@ def get_varian_values(varian_file, date_time = None):
                         str(Decimal(varian_lines[count][6]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ')',
                         varian_lines[count][8],varian_lines[count][10],varian_lines[count][14]]
             else:
-                count = count + 1
+                count += 1
 
 def get_jaina_values(jaina_file, date_time = None):
     """
@@ -219,19 +238,18 @@ def get_jaina_values(jaina_file, date_time = None):
 
     if not jaina_file.endswith('.log'):
         raise ValueError("ERROR: input file must end with '.log'")
-    #Open and read lines from file
+    #Ope == Nonen and read lines from file
     with open(jaina_file, 'r') as file:
         jaina_lines = file.readlines()
     length = len(jaina_lines) - 1 
     #Preprocessing of lines to make values more manageable
     while count < length:
-        jaina_lines[count] = jaina_lines[count].replace(' ','')
-        jaina_lines[count] = jaina_lines[count].replace('\n','')
-        jaina_lines[count] = jaina_lines[count].split("\t")
-        count = count + 1
+        if isinstance(jaina_lines[count], str):
+            jaina_lines[count] = jaina_lines[count].replace(' ','').replace('\n','').split("\t")
+            count += 1
     count = 2
     #If time is given, align varian values to time, otherwise take first row
-    if date_time == None:
+    if date_time:
         #[(Diode A,Diode B), Pressure]
         return ['[' + jaina_lines[1][1] + ',' + jaina_lines[1][2] + ']',jaina_lines[1][14]]
     else:
@@ -239,13 +257,13 @@ def get_jaina_values(jaina_file, date_time = None):
             if count > len(jaina_lines[0]):
                 count = 0
             elif not jaina_lines[count][0][10:18]:
-                count = count + 1
+                count += 1
             elif (get_sec(date_time[1]) > get_sec(jaina_lines[count][0][10:18]) - 60) and (get_sec(date_time[1]) < get_sec(jaina_lines[count][0][10:18])):
                 time_found = 1
                 #[(Diode A,Diode B), Pressure]
                 return ['[' + jaina_lines[count][1] + ',' + jaina_lines[count][2] + ']',jaina_lines[count][14]]
             else:
-                count = count + 1
+                count += 1
 
 def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     """
@@ -277,9 +295,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     if w != None:
         date = w[1]
         time = w[2]
-        date = date.replace('-','/')
-        date = date.replace('\n','')
-        time = time.replace('\n','')
+        date = date.replace('-','/').replace('\n','').replace('\n','')
         j = get_jaina_values(jaina_file,[date,time])
         v = get_varian_values(varian_file,[date,time])
     #Make the workbook and open it
@@ -291,7 +307,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
         if not cell.value:
             starting_cell = 1
         else:
-            starting_row = starting_row + 1
+            starting_row += 1
     #Make the row "Error" if wavenote cant be read
     if w == None:
         ws.row_dimensions[starting_row].height = 40
@@ -349,7 +365,7 @@ def arpes_folder_workbook(folder_name, workbook_name):
     varian_names = os.listdir(varian_directory)
     #Organize .pxt files to be in the correct order
     for name in wavenote_names:
-        if not 'moly' in name:
+        if not '.pxt' in name:
             wavenote_names.remove(name)
     sorted_waves = sorted(wavenote_names, key=lambda x: int(x.split('_')[1].split('.')[0]))
     #Make sure files in directories are just the files we want
@@ -444,7 +460,7 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
                 segment_times.append(('00:00:01', scan_times[2][1]))
                 
         except Exception as e:
-            print(f"An unexpected error occurred in item loop: {e}")
+            print(f"An unexpected error occurred in single log grapher item loop: {e}")
     
     # Convert time and value data into numpy arrays
     x_values = np.array(new_time) / 3600
