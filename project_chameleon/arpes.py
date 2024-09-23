@@ -137,6 +137,10 @@ def get_wavenote_values(wavenote_file):
     #Get date modified from wavenote file for the end time 
     ti_m = os.path.getmtime(wavenote_file)
     m_ti = time.ctime(ti_m) 
+    if ':' in m_ti.split(' ')[3]:
+        end_time = m_ti.split(' ')[3]
+    else:
+        end_time = m_ti.split(' ')[4]
     #Read .pxt, write to file, read lines from file, split up lines for relevant data
     try:
         dataset = htmdec_formats.ARPESDataset.from_file(wavenote_file)
@@ -150,7 +154,7 @@ def get_wavenote_values(wavenote_file):
                 scan_number = l
                 #[File, Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
         os.remove(data_file)
-        if not '=' in lines[40]:
+        if (not '=' in lines[35]) and ('[' in lines[35]):
             for l in lines[41:]:
                 #[Point (Degree), X, Y, Z, Theta, Phi]
                 current_row.append(l)
@@ -160,13 +164,17 @@ def get_wavenote_values(wavenote_file):
                     current_row = []
                     column = 0
 
-            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],m_ti.split(' ')[3], lines[27].split('=')[1],
+            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
                 run_mode_information[0][4], run_mode_information[0][5],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 'Manipulator Scan',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+        elif (not '=' in lines[35]) and (not '[' in lines[35]):
+            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
+                lines[41].split('=')[1], lines[42].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
+                'Normal Mode',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         else:
-            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],m_ti.split(' ')[3], lines[27].split('=')[1],
+            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
                 lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
-                lines[35],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+                lines[35].split('=')[1],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         return r
     except ParsingError as e:
         print(f"An error occurred while parsing the configuration: {e}")
@@ -191,34 +199,67 @@ def get_varian_values(varian_file, date_time = None):
     """
     #Initialization and error handling
     varian_lines = []
-    count = 0
     time_found = 0
+
     if not varian_file.endswith('.log'):
         raise ValueError("ERROR: input file must end with '.log'")
+
+    #Make sure the date in date_time matches the date of the log file. If not, find the log file that does match
+    if date_time:
+        varian_folder = os.listdir(os.path.dirname(varian_file))
+        if '/' in varian_file:
+            varian_name = varian_file.split('/')[-1].split('.')[0]
+        else: 
+            varian_name = varian_file.split('.')[0]
+        varian_name = varian_name.replace('-','/')
+        if varian_name != date_time[0]:
+            for item in varian_folder:
+                if '.log' in item:
+                    if item.split('.')[0].replace('-','/') == date_time[0]:
+                        varian_file = os.path.join(os.path.dirname(varian_file), item)
+                        break
+                    else:
+                        continue
+                        
     #Open log, read lines
     with open(varian_file, 'r') as file:
         varian_lines = file.readlines()
-    length = len(varian_lines) - 1
-    #Pre processing to make values easier to manage
-    while count < length:
-        varian_lines[count] = varian_lines[count].replace(' ','').replace('\n','').split("\t")
-        count += 1
-    count = 2
+    varian_lines = varian_lines[1:]
     #If time is given, align varian values to time, otherwise take first row
     if date_time == None:
         #[(x,y,z),Theta,Phi,Analyzer Slit](Theta and Phi no longer used)
-        return ['(' + varian_lines[1][2] + ',' + varian_lines[1][4] + ',' + varian_lines[1][6] + ')',varian_lines[1][8],varian_lines[1][10],varian_lines[1][14]]
+        return ['(' + str(Decimal(varian_lines[1].replace(' ','').replace('\n','').split("\t")[2]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
+                        str(Decimal(varian_lines[1].replace(' ','').replace('\n','').split("\t")[4]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
+                        str(Decimal(varian_lines[1].replace(' ','').replace('\n','').split("\t")[6]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ')',
+                        varian_lines[1].replace(' ','').replace('\n','').split("\t")[8],varian_lines[1].replace(' ','').replace('\n','').split("\t")[10],
+                        varian_lines[1].replace(' ','').replace('\n','').split("\t")[14]]
     else:
         while time_found < 1:
-            if (get_sec(date_time[1]) > get_sec(varian_lines[count][0][10:18]) - 60) and (get_sec(date_time[1]) < get_sec(varian_lines[count][0][10:18])):
-                time_found = 1
-                #[(x,y,z),Theta,Phi,Analyzer Slit](Theta and Phi no longer used)
-                return ['(' + str(Decimal(varian_lines[count][2]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
-                        str(Decimal(varian_lines[count][4]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
-                        str(Decimal(varian_lines[count][6]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ')',
-                        varian_lines[count][8],varian_lines[count][10],varian_lines[count][14]]
-            else:
-                count += 1
+            length = len(varian_lines)
+            #Once length is 5 or less just look through all the items. Should avoid missing on edge cases
+            if length <= 5:
+                for item in varian_lines:
+                    if (get_sec(date_time[1]) >= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30) and (get_sec(date_time[1]) <= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30):
+                        return ['(' + str(Decimal(item.replace(' ','').replace('\n','').split("\t")[2]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
+                        str(Decimal(item.replace(' ','').replace('\n','').split("\t")[4]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
+                        str(Decimal(item.replace(' ','').replace('\n','').split("\t")[6]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ')',
+                        item.replace(' ','').replace('\n','').split("\t")[8],item.replace(' ','').replace('\n','').split("\t")[10],
+                        item.replace(' ','').replace('\n','').split("\t")[14]]
+            middle = length // 2
+            if (get_sec(date_time[1]) > get_sec(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30): 
+                #If the time is more than 30 seconds greater than the middle, take higher half of array
+                varian_lines = varian_lines[middle:]
+            elif (get_sec(date_time[1]) < get_sec(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30):
+                #If the time is more than 30 seconds less than the middle, take lower half of array
+                varian_lines = varian_lines[:middle]
+            elif (get_sec(date_time[1]) >= get_sec(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30) and (get_sec(date_time[1]) <= get_sec(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30):
+                return ['(' + str(Decimal(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[2]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
+                        str(Decimal(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[4]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
+                        str(Decimal(varian_lines[middle].replace(' ','').replace('\n','').split("\t")[6]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ')',
+                        varian_lines[middle].replace(' ','').replace('\n','').split("\t")[8],varian_lines[middle].replace(' ','').replace('\n','').split("\t")[10],
+                        varian_lines[middle].replace(' ','').replace('\n','').split("\t")[14]]
+
+
 
 def get_jaina_values(jaina_file, date_time = None):
     """
@@ -233,37 +274,54 @@ def get_jaina_values(jaina_file, date_time = None):
     """
     #Initialization and error handling
     jaina_lines = []
-    count = 0
     time_found = 0
 
     if not jaina_file.endswith('.log'):
         raise ValueError("ERROR: input file must end with '.log'")
-    #Ope == Nonen and read lines from file
+    
+    #Make sure the date in date_time matches the date of the log file. If not, find the log file that does match
+    if date_time:
+        jaina_folder = os.listdir(os.path.dirname(jaina_file))
+        if '/' in jaina_file:
+            jaina_name = jaina_file.split('/')[-1].split('.')[0]
+        else: 
+            jaina_name = jaina_file.split('.')[0]
+        jaina_name = jaina_name.replace('-','/')
+        if jaina_name != date_time[0]:
+            for item in jaina_folder:
+                if '.log' in item:
+                    if item.split('.')[0].replace('-','/') == date_time[0]:
+                        jaina_file = os.path.join(os.path.dirname(jaina_file), item)
+                        break
+                    else:
+                        continue
+
     with open(jaina_file, 'r') as file:
         jaina_lines = file.readlines()
-    length = len(jaina_lines) - 1 
-    #Preprocessing of lines to make values more manageable
-    while count < length:
-        if isinstance(jaina_lines[count], str):
-            jaina_lines[count] = jaina_lines[count].replace(' ','').replace('\n','').split("\t")
-            count += 1
-    count = 2
+    jaina_lines = jaina_lines[1:]
     #If time is given, align varian values to time, otherwise take first row
-    if date_time:
+    if date_time == None:
         #[(Diode A,Diode B), Pressure]
-        return ['[' + jaina_lines[1][1] + ',' + jaina_lines[1][2] + ']',jaina_lines[1][14]]
+        return ['[' + jaina_lines[1].replace(' ','').replace('\n','').split("\t")[1] + ',' + jaina_lines[1].replace(' ','').replace('\n','').split("\t")[2] + ']',jaina_lines[1].replace(' ','').replace('\n','').split("\t")[14]]
     else:
+        #Binary search method to find the time closest to the time submitted in date_time
         while time_found < 1:
-            if count > len(jaina_lines[0]):
-                count = 0
-            elif not jaina_lines[count][0][10:18]:
-                count += 1
-            elif (get_sec(date_time[1]) > get_sec(jaina_lines[count][0][10:18]) - 60) and (get_sec(date_time[1]) < get_sec(jaina_lines[count][0][10:18])):
-                time_found = 1
-                #[(Diode A,Diode B), Pressure]
-                return ['[' + jaina_lines[count][1] + ',' + jaina_lines[count][2] + ']',jaina_lines[count][14]]
-            else:
-                count += 1
+            length = len(jaina_lines)
+            #Once length is 5 or less just look through all the items. Should avoid missing on edge cases
+            if length <= 5:
+                for item in jaina_lines:
+                    if (get_sec(date_time[1]) >= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30) and (get_sec(date_time[1]) <= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30):
+                        return ['[' + item.replace(' ','').replace('\n','').split("\t")[1] + ',' + 
+                                item.replace(' ','').replace('\n','').split("\t")[2] + ']',item.replace(' ','').replace('\n','').split("\t")[14]]
+            middle = length // 2
+            if (get_sec(date_time[1]) > get_sec(jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30): 
+                #If the time is more than 30 seconds greater than the middle, take higher half of array
+                jaina_lines = jaina_lines[middle:]
+            elif (get_sec(date_time[1]) < get_sec(jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30):
+                #If the time is more than 30 seconds less than the middle, take lower half of array
+                jaina_lines = jaina_lines[:middle]
+            elif (get_sec(date_time[1]) >= get_sec(jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30) and (get_sec(date_time[1]) <= get_sec(jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30):
+                return ['[' + jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[1] + ',' + jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[2] + ']',jaina_lines[middle].replace(' ','').replace('\n','').split("\t")[14]]
 
 def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     """
@@ -296,6 +354,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
         date = w[1]
         time = w[2]
         date = date.replace('-','/').replace('\n','').replace('\n','')
+        time = time.replace('\n','')
         j = get_jaina_values(jaina_file,[date,time])
         v = get_varian_values(varian_file,[date,time])
     #Make the workbook and open it
