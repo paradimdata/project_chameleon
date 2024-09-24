@@ -152,7 +152,7 @@ def get_wavenote_values(wavenote_file):
         for l in lines[20]:
             if '.pxt' in l:
                 scan_number = l
-                #[File, Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
+                #[File, Start Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
         os.remove(data_file)
         if (not '=' in lines[35]) and ('[' in lines[35]):
             for l in lines[41:]:
