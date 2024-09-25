@@ -238,6 +238,8 @@ def get_varian_values(varian_file, date_time = None):
             length = len(varian_lines)
             #Once length is 5 or less just look through all the items. Should avoid missing on edge cases
             if length <= 5:
+                if length == 0:
+                    raise ValueError("ERROR: Error in varian log file. Time cannot be found")
                 for item in varian_lines:
                     if (get_sec(date_time[1]) >= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30) and (get_sec(date_time[1]) <= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30):
                         return ['(' + str(Decimal(item.replace(' ','').replace('\n','').split("\t")[2]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)) + ',' + 
@@ -309,6 +311,8 @@ def get_jaina_values(jaina_file, date_time = None):
             length = len(jaina_lines)
             #Once length is 5 or less just look through all the items. Should avoid missing on edge cases
             if length <= 5:
+                if length == 0:
+                    raise ValueError("ERROR: Error in jaina log file. Time cannot be found")
                 for item in jaina_lines:
                     if (get_sec(date_time[1]) >= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) - 30) and (get_sec(date_time[1]) <= get_sec(item.replace(' ','').replace('\n','').split("\t")[0][10:18]) + 30):
                         return ['[' + item.replace(' ','').replace('\n','').split("\t")[1] + ',' + 
