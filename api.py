@@ -615,7 +615,7 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
 
         if result is None:
             if out:
-                return {'message': 'File converted successfully'}, out
+                return out
             else:
                 return {'message': 'File converted successfully'}
         else:
