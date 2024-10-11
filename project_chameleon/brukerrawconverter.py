@@ -34,6 +34,12 @@ def brukerrawconverter(input_file, output_file):
     #Check if input is a file
     if os.path.isfile(input_file) is False:
         raise ValueError("ERROR: bad input. Expected file")
+    if not (input_file.endswith('.raw') or input_file.endswith('.uxd')):
+        raise ValueError("ERROR: bad input. Expected .raw file or .uxd file.")
+    if not input_file.endswith('.txt'):
+        raise ValueError("ERROR: Output file should be a text file.")
+    if os.path.getsize(input_file) < 10:
+        raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
     
     #Load input file and create output text file
     d = xylib.load_file(input_file)
