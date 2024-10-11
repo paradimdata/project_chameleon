@@ -15,6 +15,13 @@ def non4dstem(data_folder,outputs_folder):
 
     :exceptions: will throw an exception if the ``data_folder`` is not a folder.
     """
+    if os.path.isdir(data_folder) is False:
+        raise ValueError("ERROR: bad input. Expected folder")
+    if '.' in outputs_folder:
+        raise ValueError("ERROR: Output Folder should not contain '.'")
+    if os.listdir(data_folder) == 0:
+        raise ValueError("ERROR: bad input. Data folder should contain files")
+    
     count = 0
 
     #Create outputs folder
