@@ -25,6 +25,16 @@ def brukerrawbackground(background_input, sample_input, output_name):
         raise ValueError("ERROR: bad input. Expected file")
     if os.path.isfile(sample_input) is False:
         raise ValueError("ERROR: bad input. Expected file")
+    if not (background_input.endswith('.raw') or background_input.endswith('.RAW') or background_input.endswith('.csv')):
+        raise ValueError("ERROR: bad input. Background input file should be a bruker raw file or a csv file.")
+    if not (sample_input.endswith('.raw') or background_input.endswith('.RAW') or background_input.endswith('.csv')):
+        raise ValueError("ERROR: bad input. Sample input file should be a bruker raw file or a csv file.")
+    if os.path.getsize(background_input) < 10:
+        raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
+    if os.path.getsize(sample_input) < 10:
+        raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
+    if '.' in output_name:
+        raise ValueError("ERROR: Output Folder should not contain '.'")
 
     if background_input.endswith('.csv'):
         Background = pd.read_csv(background_input)

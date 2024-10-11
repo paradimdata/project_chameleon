@@ -43,6 +43,8 @@ def mbeparser(file_folder):
     #Make sure input is a folder
     if os.path.isdir(file_folder) is False:
         raise ValueError("ERROR: bad input. Expected folder")
+    if os.listdir(file_folder) == 0:
+        raise ValueError("ERROR: bad input. Data folder should contain files")
     
     #Create two folders to sort all of the mbe text files into and add them into the current file folder. Useful folder will contain all the files that contain useful data. Useless folder will contain only files that contain no relevant data. 
     useless_folder = os.path.join(file_folder, "useless")

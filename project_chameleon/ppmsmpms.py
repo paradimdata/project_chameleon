@@ -16,6 +16,14 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
     #Error if the input file is not a file
     if os.path.isfile(inputfile) is False:
         raise ValueError("ERROR: bad input. Expected file")
+    if not inputfile.endswith('.dat'):
+        raise ValueError("ERROR: bad input. Expected .dat file")
+    if os.path.getsize(inputfile) < 10:
+        raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
+    if not inputfile.endswith('.txt'):
+        raise ValueError("ERROR: outputfile should be a .txt file.")
+    if user_input not in ['1', '2', '3', '4'] and user_input is not None:
+        raise ValueError("ERROR: User Input should be 1, 2, 3, 4, or None")
 
     #Initialize values and open file
     metadata_limit = 0
@@ -42,6 +50,8 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
     #Take user input to choose which loop to enter
     if user_input == None:
         user_input = input("Which file type is this? \n (1)Heat Capacity \n (2)AC Magnetic Susceptibility \n (3)4-Probe Resistivity \n (4)Thermal Transport \n (Input the number of your choice) \n") 
+    if user_input not in ['1', '2', '3', '4'] and user_input is not None:
+        raise ValueError("ERROR: User Input should be 1, 2, 3, 4, or None")
 
     #4-PROBE LOOP
     if('3' in user_input):
