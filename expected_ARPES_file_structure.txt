@@ -1,0 +1,53 @@
+Main Folder 
+    -Analysis
+    -ARPES Log Data
+        -Jaina Cadillac
+            -All Jaina logs here
+        -System Cameras
+        -Varian Cadillac
+            -All Varian logs here
+    -ARPES Raw Data
+        -Material 
+            -Secondary Material 
+                -Sample Folder
+                    -All scans
+    -Data - Other
+
+Example structure
+
+PARADIM 290 - Falson - NbO
+    -Analysis
+    -ARPES Log Data
+        -Jaina Cadillac
+            -2024-07-13.log
+            -2024-07-14.log
+            -2024-07-15.log
+            -.....
+        -System Cameras
+        -Varian Cadillac
+            -2024-07-13.log
+            -2024-07-14.log
+            -2024-07-15.log
+            -.....
+    -ARPES Raw Data
+        -NbO
+            -Al2O3_0001
+                -JF24020
+                    -JF_24020.png
+                    -JF24020_0001.pxt
+                    -JF24020_0002.pxt
+                    -JF24020_0003.pxt
+                    -......
+            -NbO_STO_111
+                -JF24041
+                    -JF_24041.png
+                    -JF24041_0001.pxt
+                    -JF24041_0002.pxt
+                    -JF24041_0003.pxt
+                    -......
+    -Data - Other
+
+Notes
+-There are three folder names that cannot be change: ARPES Log Data, Varian Cadillac, and Jaina Cadillac. All other folder names can vary.
+-No matter folder names, folder structure must stay the same. Within the raw data folder, the .pxt files must be 3 folders deeper. 
+-There are three folders currently uninvolved: Analysis, System Cameras, and Data - Other. This folders have no affect on the program. Their names can be adjusted, data within those folders can be arranged in any way. They can even be removed and it will not affect the program. 
