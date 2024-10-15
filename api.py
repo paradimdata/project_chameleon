@@ -30,12 +30,20 @@ app.add_middleware(
 
 def authorized(access_token, endpoint_id, params):
     if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
-        print('Authorized')
         return True
     return False # or throw not authorized exception
 
 @app.post('/rheedconverter')
-async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):  
+async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -125,7 +133,16 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/brukerrawbackground')
-def brukerbackground_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):
+def brukerbackground_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -252,7 +269,16 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/brukerrawconverter')
-def brukerraw_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):
+def brukerraw_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -345,7 +371,16 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/mbeparser')
-def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):
+def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -441,7 +476,16 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/non4dstem')
-def non4dstem_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):
+def non4dstem_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -541,7 +585,16 @@ def non4dstem_convert_route(request: Request, data: dict = Body(...), access_tok
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/ppmsmpms')
-def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):
+def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -622,7 +675,17 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
 @app.post('/stemarray4d')
-def stem4d_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(...)):
+def stem4d_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
+
     if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
