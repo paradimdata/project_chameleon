@@ -5,7 +5,7 @@ import os
 import sys
 import argparse
 
-def non4dstem(data_folder,outputs_folder):
+def non4dstem(data_folder = None, outputs_folder = None, data_file = None, output_file = None):
     """
     ``non4dstem`` is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy 'load' function. 
  
@@ -15,34 +15,50 @@ def non4dstem(data_folder,outputs_folder):
 
     :exceptions: will throw an exception if the ``data_folder`` is not a folder.
     """
-    if os.path.isdir(data_folder) is False:
+    if data_folder and os.path.isdir(data_folder) is False:
         raise ValueError("ERROR: bad input. Expected folder")
-    if '.' in outputs_folder:
+    if outputs_folder and '.' in outputs_folder:
         raise ValueError("ERROR: Output Folder should not contain '.'")
-    if os.listdir(data_folder) == 0:
+    if output_file and '.' in output_file:
+        raise ValueError("ERROR: Output File should not contain '.'")
+    if data_folder and os.listdir(data_folder) == 0:
         raise ValueError("ERROR: bad input. Data folder should contain files")
+    if data_folder and data_file:
+        raise ValueError("ERROR: Too many inputs. Can only have one of data_folder and data_file")
+    if data_folder and output_file:
+        raise ValueError("ERROR: Incorrect inputs. data_folder in not compatible with output_file")
+    if data_folder and not outputs_folder:
+        raise ValueError("ERROR: Incorrect inputs. data_folder must have an outputs_folder")
+    if outputs_folder and output_file:
+        raise ValueError("ERROR: Too many inputs. Can only have one of outputs_folder and output_file")
     
-    count = 0
+    if data_folder:
+        #Create outputs folder and read in files from data folder
+        count = 0
+        os.makedirs(outputs_folder)
+        for file in glob(data_folder + "/*"):
+            data = hs.load(file)
 
-    #Create outputs folder
-    os.makedirs(outputs_folder)
-    
-    #Make sure input is a folder
-    if os.path.isdir(data_folder) is False:
-        raise ValueError("ERROR: bad input. Expected folder")
-    
-    #Read in files from data folder
-    for file in glob(data_folder + "/*"):
-        data = hs.load(file)
+        #For each file that gets read in, plot and save as a figure
+        print(data)
+        for obj in data:
+            count = count + 1
+            obj.plot()
+            plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}{count}.png")
+            plt.close()
 
-    #For each file that gets read in, plot and save as a figure
-    print(data)
-    for obj in data:
-        count = count + 1
+    elif data_file and output_file:
+        data = hs.load(data_file)
         obj.plot()
-        plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}{count}.png")
+        plt.savefig(f"{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}{output_file}.png")
         plt.close()
-        
+
+    elif data_file and outputs_folder:
+        os.makedirs(outputs_folder)
+        data = hs.load(data_file)
+        obj.plot()
+        plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}.png")
+        plt.close()
 
 def main():
     parser = argparse.ArgumentParser()
