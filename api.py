@@ -307,9 +307,9 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
         if 'file_input_type' in data:
             input_ext = data.get('file_input_type')
 
+        output_file = data.get('output_file')
         if 'file_name' in data:
             file_name = data.get('file_name')
-            output_file = data.get('output_file')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
@@ -317,7 +317,6 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
         
         if 'file_bytes' in data:
             file_bytes = data.get('file_bytes')
-            output_file = data.get('output_file')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -330,7 +329,6 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
 
         if 'file_url' in data:
             file_url = data.get('file_url')
-            output_file = data.get('output_file')
             try:
                 urllib.request.urlretrieve(file_url, filename = 'temp_name' + input_ext)
             except r.exceptions.RequestException as e:
