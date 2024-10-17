@@ -50,14 +50,14 @@ def non4dstem(data_folder = None, outputs_folder = None, data_file = None, outpu
     elif data_file and output_file:
         data = hs.load(data_file)
         data.plot()
-        plt.savefig(f"{os.path.splitext(os.path.split(data_file)[-1])[0]}_{obj.metadata.Signal.signal_type}{output_file}.png")
+        plt.savefig(f"{os.path.splitext(os.path.split(data_file)[-1])[0]}_{data.metadata.Signal.signal_type}{output_file}.png")
         plt.close()
 
     elif data_file and outputs_folder:
         os.makedirs(outputs_folder)
         data = hs.load(data_file)
-        obj.plot()
-        plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(data_file)[-1])[0]}_{obj.metadata.Signal.signal_type}.png")
+        data.plot()
+        plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(data_file)[-1])[0]}_{data.metadata.Signal.signal_type}.png")
         plt.close()
 
 def main():
