@@ -19,8 +19,8 @@ def non4dstem(data_folder = None, outputs_folder = None, data_file = None, outpu
         raise ValueError("ERROR: bad input. Expected folder")
     if outputs_folder and '.' in outputs_folder:
         raise ValueError("ERROR: Output Folder should not contain '.'")
-    if output_file and '.' in output_file:
-        raise ValueError("ERROR: Output File should not contain '.'")
+    #if output_file and '.' in output_file:
+    #    raise ValueError("ERROR: Output File should not contain '.'")
     if data_folder and os.listdir(data_folder) == 0:
         raise ValueError("ERROR: bad input. Data folder should contain files")
     if data_folder and data_file:
