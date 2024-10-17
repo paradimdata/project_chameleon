@@ -648,17 +648,17 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
         #OUTPUTS
         if 'output_type' in data:
             if data.get('output_type') == 'raw':
-                with open(output_file, 'rb') as file:
+                with open(output, 'rb') as file:
                     encoded_data = base64.b64encode(file.read()).decode('utf-8')
                     out = encoded_data
-                    os.remove(output_file)
+                    os.remove(output)
             elif data.get('output_type') == 'JSON':
                 with open(output_file, 'rb') as file:
                     encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 with open('non4dstem_out_json', 'w') as json_file:
                     json.dump({"file_data": encoded_data}, json_file)
                     out = json_file
-                os.remove(output_file)
+                os.remove(output)
             else:
                 out = None
         else:
