@@ -50,7 +50,7 @@ def non4dstem(data_folder = None, outputs_folder = None, data_file = None, outpu
     elif data_file and output_file:
         data = hs.load(data_file)
         data.plot()
-        plt.savefig(f"{os.path.splitext(os.path.split(data_file)[-1])[0]}_{data.metadata.Signal.signal_type}{output_file}.png")
+        plt.savefig(output_file)
         plt.close()
 
     elif data_file and outputs_folder:
