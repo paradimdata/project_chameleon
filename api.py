@@ -68,7 +68,6 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
-        print('Input')
         if 'file_name' in data:
             file_name = data.get('file_name')
             output_file = data.get('output_file')
@@ -653,7 +652,7 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
                     out = encoded_data
                     os.remove(output)
             elif data.get('output_type') == 'JSON':
-                with open(output_file, 'rb') as file:
+                with open(output, 'rb') as file:
                     encoded_data = base64.b64encode(file.read()).decode('utf-8')
                 with open('non4dstem_out_json', 'w') as json_file:
                     json.dump({"file_data": encoded_data}, json_file)
