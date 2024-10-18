@@ -514,7 +514,7 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
 
             if not os.path.isdir(file_folder):
                 raise HTTPException(status_code=400, detail='Local path is not a valid directory')
-            result = non4dstem(data_folder = file_folder, output_folder = output)
+            result = non4dstem(data_folder = file_folder, outputs_folder = output)
         
         if 'folder_bytes' in data:
             folder_bytes = data.get('folder_bytes')
@@ -529,7 +529,7 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
             with zipfile.ZipFile(temp_name, 'r') as zip_ref:
                 zip_ref.extractall('temp_dir')
             folder = 'temp_dir/' + os.listdir('temp_dir')[0]
-            result = non4dstem(data_folder = folder,output_folder = output)
+            result = non4dstem(data_folder = folder,outputs_folder = output)
             shutil.rmtree('temp_dir')
 
         if 'folder_url' in data:
@@ -539,7 +539,7 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
             with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
                 zip_ref.extractall('temp_dir') 
             folder = 'temp_dir/' + os.listdir('temp_dir')[0]
-            result = non4dstem(data_folder = folder, output_folder = output)
+            result = non4dstem(data_folder = folder, outputs_folder = output)
             shutil.rmtree('temp_dir')
 
         #OUTPUTS
