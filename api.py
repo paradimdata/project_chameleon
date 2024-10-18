@@ -573,7 +573,7 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
 
         if result is None:
             if out:
-                return {'message': 'Images converted successfully'}, out
+                return out
             else:
                 return {'message': 'Images converted successfully'}
         else:
