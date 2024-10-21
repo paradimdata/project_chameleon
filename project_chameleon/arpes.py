@@ -163,15 +163,17 @@ def get_wavenote_values(wavenote_file):
                     run_mode_information.append(current_row)
                     current_row = []
                     column = 0
-
+            #Row for Manipulator scan
             r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
                 run_mode_information[0][4], run_mode_information[0][5],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 'Manipulator Scan',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         elif (not '=' in lines[35]) and (not '[' in lines[35]):
+            #Row for Normal Mode
             r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
                 lines[41].split('=')[1], lines[42].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 'Normal Mode',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         else:
+            #Row for Add Dimension
             r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
                 lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 lines[35].split('=')[1],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
@@ -207,6 +209,7 @@ def get_varian_values(varian_file, date_time = None):
     #Make sure the date in date_time matches the date of the log file. If not, find the log file that does match
     if date_time:
         varian_folder = os.listdir(os.path.dirname(varian_file))
+        #Make dates the same format
         if '/' in varian_file:
             varian_name = varian_file.split('/')[-1].split('.')[0]
         else: 
@@ -402,7 +405,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
 
 def arpes_folder_workbook(folder_name, workbook_name):
     """
-    ``arpes_folder_workbook`` is a function that creates a workbook, looks through the folder to see how many scans there are, extracts values from .pxt, jaina, and varian files for each scan, and creates a row with the extracted values for each scan. 
+    ``arpes_folder_workbook`` is a function that creates a workbook, looks through the folder to see how many scans there are, extracts values from .pxt, jaina, and varian files for each scan, and creates a row with the extracted values for each scan. This function calls build_arpes_workbook and insert_scan_row.
 
     :args: This function has two inputs: ``folder_name`` and ``workbook_name``. ``folder_name`` is a string or a path. ``workbook_name`` is a string or a path.
 
@@ -447,7 +450,15 @@ def arpes_folder_workbook(folder_name, workbook_name):
     
 
 def single_log_grapher(log_file, scan_folder, log_type, value):
+    """
+    ``single_log_grapher`` is a function that take a single Varian or Jaina log file from an ARPES scan folder and plots it. The entire log time is graphed and the individual ARPES scans are represented by the different color segements in the plot.
+    :args: This function has four inputs: ``log_file``, ``scan_folder``,``log_type`, and ``value``. ``log_file`` is a string or a path to the log file that will be graphed. ``scan_folder`` is a string or a path to the folder that contains the scans that happen during the log time.``log_type`` is a string that is either Varian or Jaina.``value`` is a string that is the log value that will be graphed.
+    :return: Does not return anything. Displays, plots, and creates a .png file of the plot.
+    :exceptions: Will throw an exception if the input``log_file`` is not a .log file. Will throw an exception if the input ``scan_folder`` is not a directory. Will throw an exception if the input ``log_type`` is not a valid log type. Will throw an exception if the input ``value`` is not a valid value.
+    """
 
+    value_index = 0
+    log_lines = []  
     colors = ['red', 'blue', 'orange', 'green', 'purple', 'yellow', 'brown', 'pink', 'light blue', 'beige', 'light green']
     jaina_values = ['Timestamp', 'DiodeA', 'DiodeB', 'Heater', 'HeaterSetPoint', 'HeaterRange', 'OutputMode', 'RampMode', 'RampRate', 
                     'ZoneRampRate', 'CryoTemp', 'CryoLSetPt', 'CryoHSetPt', 'IG_Val', 'ARPES_IG', 'ARPES_PG1', 'ARPES_PG2', 
@@ -455,14 +466,16 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
     varian_values = ['Timestamp', 'X_status', 'X', 'Y_status', 'Y', 'Z_status', 'Z', 'Theta_status', 'Theta', 'Phi_status', 
                      'Phi', 'Omega', 'ManipLimitCheck', 'ManipSES', 'ARPES_Slit']
 
-    value_index = 0
-    log_lines = []
-
     if not log_file.endswith('.log'):
         raise ValueError("ERROR: log file must end with '.log'")
     if not os.path.isdir(scan_folder):
         raise ValueError("ERROR: scan folder must be a folder")
+    if log_type.lower() != 'jaina' and log_type.lower() != 'varian':
+        raise ValueError("ERROR: Log type must be Jaina or Varian")
+    if not (value in jaina_values or value in varian_values):
+        raise ValueError("ERROR: Value must be a Jaina or Varian value")
     
+    #Assign the right type of variables based on the file type
     if log_type.lower() == 'jaina':
         values = jaina_values
     elif log_type.lower() == 'varian':
@@ -470,7 +483,7 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
     else:
         raise ValueError("Invalid log type")
 
-    # Find value index
+    # Find value index so we know which value we are graphing
     for i, item in enumerate(values):
         if item == value:
             value_index = i
@@ -569,6 +582,12 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
     plt.show()
 
 def arpes_previewer(pxt_file):
+    """
+    ``previewer`` is a function that takes a pxt file as an input and displays the data and metadata from that file.
+    :args: This function has one input: ``pxt_file``. ``pxt_file`` is an ARPES .pxt file that contains data from an ARPES scan.
+    :return: Does not return anything. Displays data and metadata from the file.
+    :exceptions: Will throw an exception if the input``pxt_file`` is not a .pxt file.
+    """
 
     if not pxt_file.endswith('.pxt'):
         raise ValueError("ERROR: input file must end with '.pxt'")
