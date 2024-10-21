@@ -28,6 +28,23 @@ def find_shutter_values(shutter_input):
             return shutter_array
         exponent = exponent - 1
 
+def mbeplot(useful_directory_path, filechoice, shutter_data, output_directory_path = None):
+    graph_path = pathlib.Path(useful_directory_path + filechoice) 
+    data = np.loadtxt(graph_path,skiprows = 1)
+    x_values = (data[:, 0])/3600
+    y_values = data[:, 1]
+    plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
+    plt.xlabel('Time')
+    plt.ylabel('Process Value')
+    plt.title('Plot of ' + filechoice)
+    for index in range(len(shutter_data) - 2): 
+        if find_shutter_values(shutter_data[index + 1][1]):
+                plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
+    plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+    plt.show()
+    if output_directory_path:
+        plt.savefig(output_directory_path + filechoice + '.png')
+
 def mbeparser(file_folder):
     """
     ``mbeparser()`` is a function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
@@ -91,39 +108,14 @@ def mbeparser(file_folder):
                     print(file_name)
             filechoice = input("What file would you like to graph? \n")
             #Load and graph selected files
-            graph_path = pathlib.Path(Useful_directory_path + filechoice) 
-            data = np.loadtxt(graph_path,skiprows = 1)
-            x_values = (data[:, 0])/3600
-            y_values = data[:, 1]
-            plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
-            plt.xlabel('Time')
-            plt.ylabel('Process Value')
-            plt.title('Plot of ' + filechoice)
-            for index in range(len(shutter_data) - 2): 
-                if find_shutter_values(shutter_data[index + 1][1]):
-                        plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
-            plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-            plt.show()
+            mbeplot(Useful_directory_path, filechoice, shutter_data)
         elif('2' in user_input):
             for file_name in file_list:
                 if not ('Setpoint' in file_name):
                     print(file_name)
             filechoice = input("What file would you like to graph? \n")
             #Load and graph selected files
-            graph_path = pathlib.Path(Useful_directory_path + filechoice) 
-            data = np.loadtxt(graph_path,skiprows = 1)
-            x_values = (data[:, 0])/3600
-            y_values = data[:, 1]
-            plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data Points')
-            plt.xlabel('Time')
-            plt.ylabel('Process Value')
-            plt.title('Plot of ' + filechoice)
-            for index in range(len(shutter_data) - 2): 
-                if find_shutter_values(shutter_data[index + 1][1]):
-                        plt.axvspan((shutter_data[index + 1][0]/3600),(shutter_data[index + 2][0]/3600),alpha=0.5, label="Shutter = " + str(find_shutter_values(shutter_data[index + 1][1])),color=(.1,index/len(shutter_data),index/len(shutter_data)))
-            plt.legend(title="Values", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-            plt.show()
-            plt.savefig(Output_directory_path + filechoice + '.png')
+            mbeplot(Useful_directory_path, filechoice, shutter_data, output_directory_path = Output_directory_path)
         elif('3' in user_input):
             for file_name in file_list:
                 if('Setpoint' in file_name):
