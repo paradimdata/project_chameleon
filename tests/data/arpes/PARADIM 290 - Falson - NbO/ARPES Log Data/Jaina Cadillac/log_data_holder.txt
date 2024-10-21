@@ -1,0 +1,44 @@
+[SES]
+Version=1.2.5
+Region Name=nearEFCut_He0_PE5
+Lens Mode=DA30L_08
+Pass Energy=5
+Number of Sweeps=1
+Excitation Energy=21.218
+Energy Scale=Kinetic
+Acquisition Mode=Swept
+Energy Unit=Kinetic
+Center Energy=16.265
+Low Energy=15.6
+High Energy=16.93
+Energy Step=0.00086
+Step Time=205
+Detector First X-Channel=120
+Detector Last X-Channel=927
+Detector First Y-Channel=118
+Detector Last Y-Channel=897
+Number of Slices=390
+File=Z:\PARADIM ARPES Data - 2024\NbO\JF24020_0015.pxt
+Sequence=D:\SES_1.9.4-beta.19_Win64\sequences\Evan_sequence.seq
+Spectrum Name=nearEFCut_He0_PE5
+Instrument=DA30L_VLeed-11150_12207
+Location=u
+User=Evan
+Sample=JF24020_
+Comments=NbO/Al2O3 (0001) on holder I-B09;Near EF cut swept mode ;PE5, MCP 1325 V, base T;He0 0.25;Slit=700 - 0.8mm;Theta=-2, PHI=-15, OMEGA=+30
+Date=2024-07-15
+Time=03:55:30
+Time per Spectrum Channel=82.615
+DetectorMode=ADC
+ThetaX=0
+ThetaY=0
+[Run Mode Information]
+Name=Add Dimension
+
+[User Interface Information]
+[Manipulator]
+X=-0.347
+Y=0.026
+Z=42.149
+Theta=-1.909
+Phi=-14.813
