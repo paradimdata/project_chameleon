@@ -117,9 +117,12 @@ def brukerrawbackground(background_input, sample_input, output_name):
     raw_diff.to_csv(output_name+ '_backgroundSubtracted.csv')
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("background file input", help="the input file for the background data")
-    parser.add_argument("sample file input", help="the input file for the sample data")
-    parser.add_argument("output name", help="the name for all outputs that are saved")
+    parser = argparse.ArgumentParser(description="Process some input files for background and sample data")
+    parser.add_argument("background_file_input", help="the input file for the background data")
+    parser.add_argument("sample_file_input", help="the input file for the sample data")
+    parser.add_argument("output_name", help="the name for all outputs that are saved")
     args = parser.parse_args()
-    brukerrawconverter(args.input, args.output)
+    brukerrawconverter(args.background_file_input, args.sample_file_input, args.output_name)
+
+if __name__ == "__main__":
+    main()

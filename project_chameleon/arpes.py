@@ -5,6 +5,7 @@ import htmdec_formats
 import h5py
 import subprocess
 import traceback
+import argparse
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from configparser import ParsingError
@@ -643,3 +644,13 @@ def arpes_previewer(pxt_file):
     # Show the window
     window.show()
     app.exec_()
+
+def main():
+    parser = argparse.ArgumentParser(description="Process some input files for background and sample data")
+    parser.add_argument("folder_name", help="the input file for the background data")
+    parser.add_argument("workbook_name", help="the input file for the sample data")
+    args = parser.parse_args()
+    arpes_folder_workbook(args.folder_name, args.workbook_name)
+
+if __name__ == "__main__":
+    main()

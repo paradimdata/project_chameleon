@@ -17,6 +17,7 @@ from project_chameleon.mbeparser import mbeparser
 from project_chameleon.non4dstem import non4dstem
 from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
+from project_chameleon.arpes import arpes_folder_workbook
 
 app = FastAPI()
 
@@ -860,3 +861,100 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         else:
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
+
+@app.post('/arpes_workbook')
+def arpes_workbook_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    if request.method == 'OPTIONS':
+        # Handle preflight requests
+        response = app.make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
+        return response
+    elif request.method == 'POST':
+        #EXCEPTIONS
+        if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)) or 'output_file' not in data:
+            raise HTTPException(status_code=400, detail='Incorrect number of parameters')
+        
+        if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+                raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+        
+        auth_data = dict(data)
+        if 'folder_bytes' in data:
+            del auth_data['folder_bytes']
+
+        if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
+            raise HTTPException(status_code=401, detail='Unauthorized')
+
+        #INPUTS
+        result = None
+        output = data.get('output_file')
+        if 'folder_name' in data:
+            file_folder = data.get('folder_name')
+
+            if not os.path.isdir(file_folder):
+                raise HTTPException(status_code=400, detail='Local path is not a valid directory')
+            result = arpes_folder_workbook(file_folder, output)
+        
+        if 'folder_bytes' in data:
+            folder_bytes = data.get('folder_bytes')
+
+            decoded_data = base64.b64decode(folder_bytes)
+            with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
+                temp_folder.write(decoded_data)
+                temp_name = temp_folder.name + '.zip'
+            os.rename(temp_folder.name, temp_name)
+            if not os.path.exists('temp_dir'):
+                os.makedirs('temp_dir')
+            with zipfile.ZipFile(temp_name, 'r') as zip_ref:
+                zip_ref.extractall('temp_dir')
+            folder = 'temp_dir/' + os.listdir('temp_dir')[0]
+            result = arpes_folder_workbook(file_folder, output)
+            shutil.rmtree('temp_dir')
+
+        if 'folder_url' in data:
+            folder_url = data.get('folder_url')
+
+            urllib.request.urlretrieve(folder_url, filename = 'non4dstem_data.zip')
+            with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
+                zip_ref.extractall('temp_dir') 
+            folder = 'temp_dir/' + os.listdir('temp_dir')[0]
+            result = arpes_folder_workbook(file_folder, output)
+            shutil.rmtree('temp_dir')
+
+        #OUTPUTS
+        if 'output_type' in data:
+            if data.get('output_type') == 'raw':
+                with open(output, 'rb') as file:
+                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                    out = encoded_data
+                    os.remove(output)
+            elif data.get('output_type') == 'JSON':
+                with open(output, 'rb') as file:
+                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                with open('ppms_out_json', 'w') as json_file:
+                    json.dump({"file_data": encoded_data}, json_file)
+                    out = json_file
+                os.remove(output)
+            else:
+                out = None
+        else:
+            out = None
+
+        if result is None:
+            if out:
+                return out
+            else:
+                return {'message': 'File converted successfully'}
+        else:
+            raise HTTPException(status_code=500, detail=f'Failed to convert file')
