@@ -950,7 +950,6 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         else:
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
     
-
 @app.post('/arpes_workbook')
 def arpes_workbook_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
 
