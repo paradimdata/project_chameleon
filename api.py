@@ -35,9 +35,8 @@ def authorized(access_token, endpoint_id, params):
         return True
     return False # or throw not authorized exception
 
-@app.post('/rheedconverter')
-async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
-
+# access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
+def common_handler_access_token(request, data, access_token, x_auth_access_token):
     try:
         if 'access_token' in data:
             # JSON overrides header
@@ -53,97 +52,141 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
             opener = urllib.request.build_opener()
             opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            # TODO: does this play well with async?
             urllib.request.install_opener(opener)
     except:
         # We ignore as if this is a problem we will get an error later.
         pass
 
-    if request.method == 'OPTIONS':
+    return access_token
+
+# er = common_handler_early_response(request, data)
+# if not (er is None):
+#     return er
+def common_handler_early_response(request, data):
+   if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
         return response
-    elif request.method == 'POST':
-        #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
-            raise HTTPException(status_code=400, detail='Incorrect number of parameters')
-        
-        if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
-            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
-        
-        auth_data = dict(data)
+    return None
+
+# common_handler_method_auth_check(request, data, access_token)
+def common_handler_method_auth_check(request, data, access_token):
+    if request.method == 'POST':
+        auth_data = dict(data) # make explicit copy
         if 'folder_bytes' in data:
             del auth_data['folder_bytes']
 
         if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
             raise HTTPException(status_code=401, detail='Unauthorized')
+    else:
+        raise HTTPException(status_code=405, detail='Method Not Allowed')
+    # Nothing to return here.
 
-        #INPUTS
-        if 'file_name' in data:
-            file_name = data.get('file_name')
-            output_file = data.get('output_file')
+# input_file,output_file = common_handler_parse_request(request, data)
+def common_handler_parse_request(request, data):
+    #EXCEPTIONS
+    if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        raise HTTPException(status_code=400, detail='Incorrect number of parameters')
 
-            if not os.path.isfile(file_name):
-                raise HTTPException(status_code=400, detail='Local path is not a valid file')
-            result = rheedconverter(file_name, output_file)
-        
-        if 'file_bytes' in data:
-            file_bytes = data.get('file_bytes')
-            output_file = data.get('output_file')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
 
-            decoded_data = base64.b64decode(file_bytes)
+    #INPUTS
+    if 'file_name' in data:
+        file_name = data.get('file_name')
+        output_file = data.get('output_file')
+
+        if not os.path.isfile(file_name):
+            raise HTTPException(status_code=400, detail='Local path is not a valid file')
+        return file_name, output_file
+
+    if 'file_bytes' in data:
+        file_bytes = data.get('file_bytes')
+        output_file = data.get('output_file')
+
+        decoded_data = base64.b64decode(file_bytes)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(decoded_data)
+            temp_name = temp_file.name + '.img'
+        os.rename(temp_file.name, temp_name)
+        return temp_name, output_file
+
+    if 'file_url' in data:
+        file_url = data.get('file_url')
+        output_file = data.get('output_file')
+        try:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(decoded_data)
                 temp_name = temp_file.name + '.img'
-            os.rename(temp_file.name, temp_name)
-            output_file = os.path.join(tempfile.gettempdir(), output_file)
-            result = rheedconverter(temp_name, output_file)
-            os.remove(temp_name)
-
-        if 'file_url' in data:
-            file_url = data.get('file_url')
-            output_file = data.get('output_file')
-            try:
-                urllib.request.urlretrieve(file_url, filename = 'temp_name.img')
-            except r.exceptions.RequestException as e:
-                traceback.print_exc()
-                if e.response is not None:
-                    custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
-                else:
-                    custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
-                raise RuntimeError(custom_message) from e
-            result = rheedconverter('temp_name.img', output_file)
-            os.remove('temp_name.img')
-
-        #OUTPUTS
-        if 'output_type' in data:
-            if data.get('output_type') == 'raw':
-                with open(output_file, 'rb') as file:
-                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
-                    out = encoded_data
-                    os.remove(output_file)
-            elif data.get('output_type') == 'JSON':
-                with open(output_file, 'rb') as file:
-                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
-                with open('rheed_out_json', 'w') as json_file:
-                    json.dump({"file_data": encoded_data}, json_file)
-                    out = json_file
-                os.remove(output_file)
-            elif data.get('output_type') == 'file':
-                out = output_file
-        else:
-            out = None
-
-        if result is None:
-            if out:
-                return out
+            urllib.request.urlretrieve(file_url, filename = temp_name)
+        except r.exceptions.RequestException as e:
+            traceback.print_exc()
+            if e.response is not None:
+                custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
             else:
-                return {'message': 'Image converted successfully'}
+                custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
+            raise RuntimeError(custom_message) from e
+        return temp_name, output_file
+
+    raise HTTPException(status_code=400, 'Malformed parameters')
+
+# common_handler_prepare_output(request, data, input_file, output_file, request)
+def common_handler_prepare_output(request, data, input_file, output_file, result):
+    #OUTPUTS
+    if 'output_type' in data:
+        if data.get('output_type') == 'raw':
+            with open(output_file, 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                out = encoded_data
+                os.remove(output_file)
+        elif data.get('output_type') == 'JSON':
+            with open(output_file, 'rb') as file:
+                encoded_data = base64.b64encode(file.read()).decode('utf-8')
+            with open('rheed_out_json', 'w') as json_file:
+                json.dump({"file_data": encoded_data}, json_file)
+                out = json_file
+            os.remove(output_file)
+        elif data.get('output_type') == 'file':
+            out = output_file
+    else:
+        out = None
+
+    if result is None:
+        if out:
+            return out
         else:
-            raise HTTPException(status_code=500, detail=f'Failed to convert file')
+            return {'message': 'Image converted successfully'}
     
+    raise HTTPException(status_code=500, detail=f'Failed to convert file')
+
+# common_handler_cleanup_request(request, data, input_file, output_file)
+def common_handler_cleanup_request(request, data, input_file, output_file):
+    if not ('file_name' in data) and ('file_bytes' in data or 'file_url' in data):
+        # Cleanup temp input file
+        os.remove(input_file)
+    # Nothing to return
+
+@app.post('/rheedconverter')
+async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
+    access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
+    
+    er = common_handler_early_response(request, data)
+    if not (er is None):
+        return er
+
+    common_handler_method_auth_check(request, data, access_token)
+    input_file,output_file = common_handler_parse_request(request, data)
+    try:
+        result = rheedconverter(input_file, output_file)
+        return common_handler_prepare_output(request, data, input_file, output_file, result)
+    except:
+        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+    finally:
+        common_hander_cleanup_request(request, data, input_file, output_file)
+
 @app.post('/brukerrawbackground')
 def brukerbackground_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
 
