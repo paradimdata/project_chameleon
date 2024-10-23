@@ -47,6 +47,17 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
 
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
+
     if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
@@ -144,6 +155,17 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
             access_token = x_auth_access_token
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -281,6 +303,17 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
 
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
+
     if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
@@ -380,6 +413,17 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
             access_token = x_auth_access_token
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -485,6 +529,17 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
             access_token = x_auth_access_token
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -593,6 +648,17 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
 
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
+
     if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
@@ -685,6 +751,17 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
 
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
+
     if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
@@ -774,6 +851,17 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
             access_token = x_auth_access_token
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
@@ -875,6 +963,17 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
 
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
+
     if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
@@ -971,6 +1070,17 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
             access_token = x_auth_access_token
     except:
         raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
 
     if request.method == 'OPTIONS':
         # Handle preflight requests
