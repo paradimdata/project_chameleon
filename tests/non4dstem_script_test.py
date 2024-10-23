@@ -3,7 +3,7 @@ import pathlib
 import shutil
 import os
 from pathlib import Path
-from project_chameleon.nonfourdimension_stem.non4dstem import non4dstem
+from project_chameleon.non4dstem import non4dstem
 
 def test_non4dstem_basic_output():
     non4dstem_file_path_basic = (
