@@ -39,6 +39,7 @@ def build_arpes_workbook(workbook_name):
     #Error handling
     if not workbook_name.endswith('.xlsx'):
         raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
+    
     #Open the workbook
     wb = Workbook()
     ws = wb.active
@@ -127,12 +128,16 @@ def get_wavenote_values(wavenote_file):
     
     """
     #Initialization and error handling
+    if not wavenote_file.endswith('.pxt'):
+        raise ValueError("ERROR: input file must end with '.pxt'")
+    if os.path.isfile(wavenote_file) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+    
     lines = []
     run_mode_information = []
     current_row = []
     column = 0
-    if not wavenote_file.endswith('.pxt'):
-        raise ValueError("ERROR: input file must end with '.pxt'")
+
     #Create new file to hold output from HTMDEC 
     data_file = os.path.join(os.path.dirname(wavenote_file), "data_holder.txt")
     #Get date modified from wavenote file for the end time 
@@ -201,11 +206,13 @@ def get_varian_values(varian_file, date_time = None):
     
     """
     #Initialization and error handling
-    varian_lines = []
-    time_found = 0
-
     if not varian_file.endswith('.log'):
         raise ValueError("ERROR: input file must end with '.log'")
+    if os.path.isfile(varian_file) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+    
+    varian_lines = []
+    time_found = 0
 
     #Make sure the date in date_time matches the date of the log file. If not, find the log file that does match
     if date_time:
@@ -279,11 +286,13 @@ def get_jaina_values(jaina_file, date_time = None):
     
     """
     #Initialization and error handling
-    jaina_lines = []
-    time_found = 0
-
     if not jaina_file.endswith('.log'):
         raise ValueError("ERROR: input file must end with '.log'")
+    if os.path.isfile(jaina_file) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+    
+    jaina_lines = []
+    time_found = 0
     
     #Make sure the date in date_time matches the date of the log file. If not, find the log file that does match
     if date_time:
@@ -418,6 +427,8 @@ def arpes_folder_workbook(folder_name, workbook_name):
     #Initialization and error handling
     if not os.path.isdir(folder_name):
         raise ValueError("ERROR: folder_name input must be a directory")
+    if os.listdir(folder_name) == 0:
+        raise ValueError("ERROR: bad input. Data folder should contain files")
     if not workbook_name.endswith('.xlsx'):
         raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
 
@@ -453,10 +464,26 @@ def arpes_folder_workbook(folder_name, workbook_name):
 def single_log_grapher(log_file, scan_folder, log_type, value):
     """
     ``single_log_grapher`` is a function that take a single Varian or Jaina log file from an ARPES scan folder and plots it. The entire log time is graphed and the individual ARPES scans are represented by the different color segements in the plot.
+
     :args: This function has four inputs: ``log_file``, ``scan_folder``,``log_type`, and ``value``. ``log_file`` is a string or a path to the log file that will be graphed. ``scan_folder`` is a string or a path to the folder that contains the scans that happen during the log time.``log_type`` is a string that is either Varian or Jaina.``value`` is a string that is the log value that will be graphed.
+    
     :return: Does not return anything. Displays, plots, and creates a .png file of the plot.
+    
     :exceptions: Will throw an exception if the input``log_file`` is not a .log file. Will throw an exception if the input ``scan_folder`` is not a directory. Will throw an exception if the input ``log_type`` is not a valid log type. Will throw an exception if the input ``value`` is not a valid value.
     """
+
+    if not log_file.endswith('.log'):
+        raise ValueError("ERROR: log file must end with '.log'")
+    if os.path.isfile(log_file) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+    if not os.path.isdir(scan_folder):
+        raise ValueError("ERROR: scan folder must be a folder")
+    if os.listdir(scan_folder) == 0:
+        raise ValueError("ERROR: bad input. Data folder should contain files")
+    if log_type.lower() != 'jaina' and log_type.lower() != 'varian':
+        raise ValueError("ERROR: Log type must be Jaina or Varian")
+    if not (value in jaina_values or value in varian_values):
+        raise ValueError("ERROR: Value must be a Jaina or Varian value")
 
     value_index = 0
     log_lines = []  
@@ -466,15 +493,6 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
                     'Mono_IG', 'Mono_PG1', 'Mono_PG2', 'SD_IG', 'SD_PG1', 'SD_PG2', 'TC_IG', 'TC_PG1', 'TC_PG2']
     varian_values = ['Timestamp', 'X_status', 'X', 'Y_status', 'Y', 'Z_status', 'Z', 'Theta_status', 'Theta', 'Phi_status', 
                      'Phi', 'Omega', 'ManipLimitCheck', 'ManipSES', 'ARPES_Slit']
-
-    if not log_file.endswith('.log'):
-        raise ValueError("ERROR: log file must end with '.log'")
-    if not os.path.isdir(scan_folder):
-        raise ValueError("ERROR: scan folder must be a folder")
-    if log_type.lower() != 'jaina' and log_type.lower() != 'varian':
-        raise ValueError("ERROR: Log type must be Jaina or Varian")
-    if not (value in jaina_values or value in varian_values):
-        raise ValueError("ERROR: Value must be a Jaina or Varian value")
     
     #Assign the right type of variables based on the file type
     if log_type.lower() == 'jaina':
@@ -585,13 +603,20 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
 def arpes_previewer(pxt_file):
     """
     ``previewer`` is a function that takes a pxt file as an input and displays the data and metadata from that file.
+
     :args: This function has one input: ``pxt_file``. ``pxt_file`` is an ARPES .pxt file that contains data from an ARPES scan.
+
     :return: Does not return anything. Displays data and metadata from the file.
+
     :exceptions: Will throw an exception if the input``pxt_file`` is not a .pxt file.
     """
 
     if not pxt_file.endswith('.pxt'):
         raise ValueError("ERROR: input file must end with '.pxt'")
+    if os.path.isfile(pxt_file) is False:
+        raise ValueError("ERROR: bad input. Expected file")
+    if os.path.getsize(pxt_file) < 10:
+        raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
 
     app = QApplication([])
     window = QWidget()
