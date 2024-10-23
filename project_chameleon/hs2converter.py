@@ -30,9 +30,9 @@ def hs2converter(file_name, output_file):
     #Read data from file, little endian. Once data is read, invert it, create an image, rotate the image 90 degrees, and save the image
     with open(file_name,"r") as f:
             laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_width,file_height))       
-    laue2 = (25*np.log(laue+1)).astype(dtype=np.uint8)
-    I_max = 255
-    laue = I_max - laue2
+    laue = ((laue/np.max(laue))**(2/3))*255
+    laue = 255 - laue
+    laue = laue.astype(np.uint8)
     im = Image.fromarray(laue)
     im = im.rotate(90)
     im.save(output_file)
