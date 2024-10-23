@@ -1,0 +1,45 @@
+import numpy as np 
+import os
+import matplotlib.pyplot as plt
+from PIL import Image
+import argparse
+
+def hs2converter(file_name, output_file):
+    """
+    ``hs2converter()`` is a function to allow users to convert a difficult to handle 16bpp hs2 to an easily readable 8bpp png image.
+
+    :args: This function has two inputs: ``file_name`` and ``output_file``. ``file_name`` should be a .hs2 file. ``output_file`` should be a string which will be the name of the output .png file. 
+
+    :return: this function does not return anything. The output is saved as an image file.
+
+    :exception: will throw an exception if the input file is not a .hs2 file, or if the input file does not exist.
+    """
+
+    #Make sure input is a .img file
+    if not file_name.endswith('.hs2'):
+        raise ValueError("ERROR: bad input. Expected .hs2 file")
+    if not file_name.endswith('.png'):
+        raise ValueError("ERROR: please make your output file a .png file")
+    if not os.path.isfile(file_name):
+        raise ValueError("ERROR: Input should be a file. Check if your file exists.")
+
+    #Set file size
+    file_width = 256
+    file_height = 256
+
+    #Read data from file, little endian. Once data is read, invert it, create an image, rotate the image 90 degrees, and save the image
+    with open(file_name,"r") as f:
+            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_width,file_height))       
+    laue2 = (25*np.log(laue+1)).astype(dtype=np.uint8)
+    I_max = 255
+    laue = I_max - laue2
+    im = Image.fromarray(laue)
+    im = im.rotate(90)
+    im.save(output_file)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", help="the input file")
+    parser.add_argument("output", help="the output file")
+    args = parser.parse_args()
+    hs2converter(args.input, args.output)

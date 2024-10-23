@@ -18,6 +18,7 @@ from project_chameleon.non4dstem import non4dstem
 from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 from project_chameleon.arpes import arpes_folder_workbook
+from project_chameleon.hs2converter import hs2converter
 
 app = FastAPI()
 
@@ -956,5 +957,103 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
                 return out
             else:
                 return {'message': 'File converted successfully'}
+        else:
+            raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        
+@app.post('/hs2converter')
+async def hs2_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
+
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    if request.method == 'OPTIONS':
+        # Handle preflight requests
+        response = app.make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
+        return response
+    elif request.method == 'POST':
+        #EXCEPTIONS
+        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+            raise HTTPException(status_code=400, detail='Incorrect number of parameters')
+        
+        if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+        
+        auth_data = dict(data)
+        if 'folder_bytes' in data:
+            del auth_data['folder_bytes']
+
+        if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
+            raise HTTPException(status_code=401, detail='Unauthorized')
+
+        #INPUTS
+        if 'file_name' in data:
+            file_name = data.get('file_name')
+            output_file = data.get('output_file')
+
+            if not os.path.isfile(file_name):
+                raise HTTPException(status_code=400, detail='Local path is not a valid file')
+            result = hs2converter(file_name, output_file)
+        
+        if 'file_bytes' in data:
+            file_bytes = data.get('file_bytes')
+            output_file = data.get('output_file')
+
+            decoded_data = base64.b64decode(file_bytes)
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(decoded_data)
+                temp_name = temp_file.name + '.img'
+            os.rename(temp_file.name, temp_name)
+            output_file = os.path.join(tempfile.gettempdir(), output_file)
+            result = hs2converter(temp_name, output_file)
+            os.remove(temp_name)
+
+        if 'file_url' in data:
+            file_url = data.get('file_url')
+            output_file = data.get('output_file')
+            try:
+                urllib.request.urlretrieve(file_url, filename = 'temp_name.hs2')
+            except r.exceptions.RequestException as e:
+                traceback.print_exc()
+                if e.response is not None:
+                    custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
+                else:
+                    custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
+                raise RuntimeError(custom_message) from e
+            result = hs2converter('temp_name.hs2', output_file)
+            os.remove('temp_name.hs2')
+
+        #OUTPUTS
+        if 'output_type' in data:
+            if data.get('output_type') == 'raw':
+                with open(output_file, 'rb') as file:
+                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                    out = encoded_data
+                    os.remove(output_file)
+            elif data.get('output_type') == 'JSON':
+                with open(output_file, 'rb') as file:
+                    encoded_data = base64.b64encode(file.read()).decode('utf-8')
+                with open('rheed_out_json', 'w') as json_file:
+                    json.dump({"file_data": encoded_data}, json_file)
+                    out = json_file
+                os.remove(output_file)
+            elif data.get('output_type') == 'file':
+                out = output_file
+        else:
+            out = None
+
+        if result is None:
+            if out:
+                return out
+            else:
+                return {'message': 'Image converted successfully'}
         else:
             raise HTTPException(status_code=500, detail=f'Failed to convert file')
