@@ -67,7 +67,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -81,17 +81,16 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
-        if 'file_name' in data:
+        output_file = data.get('output')
+        if 'input_name' in data:
             file_name = data.get('file_name')
-            output_file = data.get('output_file')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = rheedconverter(file_name, output_file)
         
-        if 'file_bytes' in data:
+        if 'input_bytes' in data:
             file_bytes = data.get('file_bytes')
-            output_file = data.get('output_file')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -102,9 +101,8 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
             result = rheedconverter(temp_name, output_file)
             os.remove(temp_name)
 
-        if 'file_url' in data:
+        if 'input_url' in data:
             file_url = data.get('file_url')
-            output_file = data.get('output_file')
             try:
                 urllib.request.urlretrieve(file_url, filename = 'temp_name.img')
             except r.exceptions.RequestException as e:
@@ -176,7 +174,7 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('background_file_name' in data) ^ ('background_file_bytes' in data) ^ ('background_file_url' in data)) or not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('background_file_name' in data) ^ ('background_file_bytes' in data) ^ ('background_file_url' in data)) or not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -188,7 +186,7 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
                     raise HTTPException(status_code=400, detail='Incorrect file extension: background_input_type options are .raw and .csv')
         
         if 'input_type' in data:
-            if not '.raw' in data.get('nput_type'):
+            if not '.raw' in data.get('input_type'):
                 if not '.csv' in data.get('input_type'):
                     raise HTTPException(status_code=400, detail='Incorrect file extension: sample_input_type options are .raw and .csv')
                 
@@ -212,7 +210,7 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
             if not os.path.isfile(background):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
 
-        if 'file_name' in data:    
+        if 'input_name' in data:    
             sample = data.get('file_name')
             if not os.path.isfile(sample):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
@@ -226,7 +224,7 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
             os.rename(temp_file.name, background)
             
 
-        if 'file_bytes' in data:
+        if 'input_bytes' in data:
             sample_file_bytes = data.get('file_bytes')
             decoded_data = base64.b64decode(sample_file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -239,17 +237,17 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
             urllib.request.urlretrieve(background_file_url, filename = 'background_temp_name' + background_ext) 
             background = 'background_temp_name' + background_ext
 
-        if 'file_url' in data:
-            sample_file_url = data.get('file_url')
+        if 'input_url' in data:
+            sample_file_url = data.get('input_url')
             urllib.request.urlretrieve(sample_file_url, filename = 'sample_temp_name' + sample_ext) 
             sample = 'sample_temp_name' + sample_ext
 
-        output_file = data.get('output_file')
+        output_file = data.get('output')
         result = brukerrawbackground(background, sample, output_file)
 
         if ('background_file_bytes' in data) or ('file_url' in data):
             os.remove(background)
-        if ('file_bytes' in data) or ('background_file_url' in data):
+        if ('input_bytes' in data) or ('background_file_url' in data):
             os.remove(sample)
 
         #OUTPUT
@@ -323,7 +321,7 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -341,16 +339,16 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
         if 'file_input_type' in data:
             input_ext = data.get('file_input_type')
 
-        output_file = data.get('output_file')
-        if 'file_name' in data:
-            file_name = data.get('file_name')
+        output_file = data.get('output')
+        if 'input_name' in data:
+            file_name = data.get('input_name')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = brukerrawconverter(file_name, output_file)
         
-        if 'file_bytes' in data:
-            file_bytes = data.get('file_bytes')
+        if 'input_bytes' in data:
+            file_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -361,8 +359,8 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
             result = brukerrawconverter(temp_name, output_file)
             os.remove(temp_name)
 
-        if 'file_url' in data:
-            file_url = data.get('file_url')
+        if 'input_url' in data:
+            file_url = data.get('input_url')
             try:
                 urllib.request.urlretrieve(file_url, filename = 'temp_name' + input_ext)
             except r.exceptions.RequestException as e:
@@ -434,7 +432,7 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
         return response
     elif request.method == 'POST':
     #EXCEPTIONS
-        if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)):
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)):
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -449,13 +447,13 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
 
         #INPUTS
         if 'folder_name' in data:
-            folder = data.get('folder_name')
+            folder = data.get('input_name')
             if not os.path.isdir(folder):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = mbeparser(folder)
 
         if 'folder_bytes' in data:
-            folder_bytes = data.get('folder_bytes')
+            folder_bytes = data.get('input_bytes')
             decoded_data = base64.b64decode(folder_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
                 temp_folder.write(decoded_data)
@@ -469,7 +467,7 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
             result = mbeparser(folder)
 
         if 'folder_url' in data:
-            folder_url = data.get('folder_url')
+            folder_url = data.get('input_url')
             urllib.request.urlretrieve(folder_url, filename = 'temp.zip')
             with zipfile.ZipFile('temp.zip', 'r') as zip_ref:
                 zip_ref.extractall('temp_dir') 
@@ -550,7 +548,7 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)) or 'output_folder' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -565,16 +563,16 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
 
         #INPUTS
         result = None
-        output = data.get('output_folder')
-        if 'folder_name' in data:
-            file_folder = data.get('folder_name')
+        output = data.get('output')
+        if 'input_name' in data:
+            file_folder = data.get('input_name')
 
             if not os.path.isdir(file_folder):
                 raise HTTPException(status_code=400, detail='Local path is not a valid directory')
             result = non4dstem(data_folder = file_folder, outputs_folder = output)
         
-        if 'folder_bytes' in data:
-            folder_bytes = data.get('folder_bytes')
+        if 'input_bytes' in data:
+            folder_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(folder_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
@@ -589,8 +587,8 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
             result = non4dstem(data_folder = folder,outputs_folder = output)
             shutil.rmtree('temp_dir')
 
-        if 'folder_url' in data:
-            folder_url = data.get('folder_url')
+        if 'input_url' in data:
+            folder_url = data.get('input_url')
 
             urllib.request.urlretrieve(folder_url, filename = 'non4dstem_data.zip')
             with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
@@ -668,7 +666,7 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -685,16 +683,17 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
         file_ext = '.emd'
         if 'file_input_type' in data:
             file_ext = data.get('file_input_type')
-        output = data.get('output_file')
-        if 'file_name' in data:
-            file_name = data.get('file_name')
+
+        output = data.get('output')
+        if 'input_name' in data:
+            file_name = data.get('input_name')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = non4dstem(data_file = file_name, output_file = output)
         
-        if 'file_bytes' in data:
-            file_bytes = data.get('file_bytes')
+        if 'input_bytes' in data:
+            file_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -705,8 +704,8 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
             result = non4dstem(data_file = temp_name, output_file = output)
             os.remove(temp_name)
 
-        if 'file_url' in data:
-            file_url = data.get('file_url')
+        if 'input_url' in data:
+            file_url = data.get('input_url')
 
             urllib.request.urlretrieve(file_url, filename = 'temp_name' + file_ext) 
             result = non4dstem(data_file = 'temp_name' + file_ext, output_file = output)
@@ -771,7 +770,7 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -785,17 +784,17 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
-        output_file = data.get('output_file')
+        output_file = data.get('output')
         value_name = data.get('value_name')
-        if 'file_name' in data:
-            file_name = data.get('file_name')
+        if 'input_name' in data:
+            file_name = data.get('input_name')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = ppmsmpmsparser(file_name, output_file, value_name)
         
-        if 'file_bytes' in data:
-            file_bytes = data.get('file_bytes')
+        if 'input_bytes' in data:
+            file_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -806,8 +805,8 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
             result = ppmsmpmsparser(temp_name, output_file, value_name)
             os.remove(temp_name)
 
-        if 'file_url' in data:
-            file_url = data.get('file_url')
+        if 'input_url' in data:
+            file_url = data.get('input_url')
 
             urllib.request.urlretrieve(file_url, filename = 'temp_name.dat') 
             result = ppmsmpmsparser('temp_name.dat', output_file, value_name)
@@ -872,30 +871,29 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
                 raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
         
         auth_data = dict(data)
-        if 'file_bytes' in data:
-            del auth_data['file_bytes']
+        if 'input_bytes' in data:
+            del auth_data['input_bytes']
 
         if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
             raise HTTPException(status_code=401, detail='Unauthorized')
 
-        if 'file_name' in data:
-            file_name = data.get('file_name')
-            output_file = data.get('output_file')
+        output_file = data.get('output')
+        if 'input_name' in data:
+            file_name = data.get('input_name')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = stemarray4d(file_name, output_file)
 
-        if 'file_bytes' in data:
-            file_bytes = data.get('file_bytes')
-            output_file = data.get('output_file')
+        if 'input_bytes' in data:
+            file_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -906,9 +904,8 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
             result = stemarray4d(temp_name, output_file)
             os.remove(temp_name)
 
-        if 'file_url' in data:
-            file_url = data.get('file_url')
-            output_file = data.get('output_file')
+        if 'input_url' in data:
+            file_url = data.get('input_url')
 
             urllib.request.urlretrieve(file_url, filename = 'temp_name.raw') 
             result = stemarray4d('temp_name.raw', output_file)
@@ -982,31 +979,31 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('folder_name' in data) ^ ('folder_bytes' in data) ^ ('folder_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
                 raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
         
         auth_data = dict(data)
-        if 'folder_bytes' in data:
-            del auth_data['folder_bytes']
+        if 'input_bytes' in data:
+            del auth_data['input_bytes']
 
         if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
         result = None
-        output = data.get('output_file')
-        if 'folder_name' in data:
-            file_folder = data.get('folder_name')
+        output = data.get('output')
+        if 'input_name' in data:
+            file_folder = data.get('input_name')
 
             if not os.path.isdir(file_folder):
                 raise HTTPException(status_code=400, detail='Local path is not a valid directory')
             result = arpes_folder_workbook(file_folder, output)
         
-        if 'folder_bytes' in data:
-            folder_bytes = data.get('folder_bytes')
+        if 'input_bytes' in data:
+            folder_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(folder_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
@@ -1021,8 +1018,8 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
             result = arpes_folder_workbook(file_folder, output)
             shutil.rmtree('temp_dir')
 
-        if 'folder_url' in data:
-            folder_url = data.get('folder_url')
+        if 'input_url' in data:
+            folder_url = data.get('input_url')
 
             urllib.request.urlretrieve(folder_url, filename = 'non4dstem_data.zip')
             with zipfile.ZipFile('non4dstem_data.zip', 'r') as zip_ref:
@@ -1090,7 +1087,7 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
         return response
     elif request.method == 'POST':
         #EXCEPTIONS
-        if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) or 'output' not in data:
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
         
         if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
@@ -1104,17 +1101,16 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         #INPUTS
-        if 'file_name' in data:
-            file_name = data.get('file_name')
-            output_file = data.get('output_file')
+        output_file = data.get('output')
+        if 'input_name' in data:
+            file_name = data.get('input_name')
 
             if not os.path.isfile(file_name):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
             result = hs2converter(file_name, output_file)
         
-        if 'file_bytes' in data:
-            file_bytes = data.get('file_bytes')
-            output_file = data.get('output_file')
+        if 'input_bytes' in data:
+            file_bytes = data.get('input_bytes')
 
             decoded_data = base64.b64decode(file_bytes)
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -1125,9 +1121,8 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
             result = hs2converter(temp_name, output_file)
             os.remove(temp_name)
 
-        if 'file_url' in data:
-            file_url = data.get('file_url')
-            output_file = data.get('output_file')
+        if 'input_url' in data:
+            file_url = data.get('input_url')
             try:
                 urllib.request.urlretrieve(file_url, filename = 'temp_name.hs2')
             except r.exceptions.RequestException as e:
