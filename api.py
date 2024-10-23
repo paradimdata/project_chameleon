@@ -35,6 +35,111 @@ def authorized(access_token, endpoint_id, params):
         return True
     return False # or throw not authorized exception
 
+# access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
+def common_handler_access_token(request, data, access_token, x_auth_access_token):
+    try:
+        if 'access_token' in data:
+            # JSON overrides header
+            access_token = str(data['access_token'])
+        elif len(access_token) == 0:
+            access_token = x_auth_access_token
+    except:
+        raise HTTPException(status_code=400, detail='Malformed parameters')
+
+    try:
+        if len(str(access_token)) > 0:
+            # Add header when we retrieve URLs
+            # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
+            # TODO: does this play well with async?
+            urllib.request.install_opener(opener)
+    except:
+        # We ignore as if this is a problem we will get an error later.
+        pass
+
+    return access_token
+
+# er = common_handler_early_response(request, data)
+# if not (er is None):
+#     return er
+def common_handler_early_response(request, data):
+   if request.method == 'OPTIONS':
+        # Handle preflight requests
+        response = app.make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, access-token'
+        return response
+    return None
+
+# common_handler_method_auth_check(request, data)
+def common_handler_method_auth_check(request, data):
+    if request.method == 'POST':
+        auth_data = dict(data) # make explicit copy
+        if 'folder_bytes' in data:
+            del auth_data['folder_bytes']
+
+        if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
+            raise HTTPException(status_code=401, detail='Unauthorized')
+    else:
+        raise HTTPException(status_code=405, detail='Method Not Allowed')
+    # Nothing to return here.
+
+# input_file,output_file = common_handler_parse_request(request, data)
+def common_handler_parse_request(request, data):
+    #EXCEPTIONS
+    if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
+        raise HTTPException(status_code=400, detail='Incorrect number of parameters')
+
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
+        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
+
+    #INPUTS
+    if 'file_name' in data:
+        file_name = data.get('file_name')
+        output_file = data.get('output_file')
+
+        if not os.path.isfile(file_name):
+            raise HTTPException(status_code=400, detail='Local path is not a valid file')
+        return file_name, output_file
+
+    if 'file_bytes' in data:
+        file_bytes = data.get('file_bytes')
+        output_file = data.get('output_file')
+
+        decoded_data = base64.b64decode(file_bytes)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(decoded_data)
+            temp_name = temp_file.name + '.img'
+        os.rename(temp_file.name, temp_name)
+        return temp_name, output_file
+
+    if 'file_url' in data:
+        file_url = data.get('file_url')
+        output_file = data.get('output_file')
+        try:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_name = temp_file.name + '.img'
+            urllib.request.urlretrieve(file_url, filename = temp_name)
+        except r.exceptions.RequestException as e:
+            traceback.print_exc()
+            if e.response is not None:
+                custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
+            else:
+                custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
+            raise RuntimeError(custom_message) from e
+        return temp_name, output_file
+
+    raise HTTPException(status_code=400, 'Malformed parameters')
+
+# common_handler_cleanup_request(request, data, input_file, output_file)
+def common_handler_cleanup_request(request, data, input_file, output_file):
+    if not ('file_name' in data) and ('file_bytes' in data or 'file_url' in data):
+        # Cleanup temp input file
+        os.remove(input_file)
+    # Nothing to return
+
 @app.post('/rheedconverter')
 async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
 
