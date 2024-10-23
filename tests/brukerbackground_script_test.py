@@ -3,7 +3,7 @@ import pathlib
 import shutil
 import numpy as np
 from pathlib import Path
-from project_chameleon.XRD.BrukerRAW.brukerrawbackground import brukerrawbackground
+from project_chameleon.brukerrawbackground import brukerrawbackground
 from unittest.mock import patch
 
 def test_brukerbackground_basic_output():
