@@ -64,7 +64,7 @@ def common_handler_access_token(request, data, access_token, x_auth_access_token
 # if not (er is None):
 #     return er
 def common_handler_early_response(request, data):
-   if request.method == 'OPTIONS':
+    if request.method == 'OPTIONS':
         # Handle preflight requests
         response = app.make_response()
         response.headers['Access-Control-Allow-Origin'] = '*'
@@ -131,7 +131,7 @@ def common_handler_parse_request(request, data):
             raise RuntimeError(custom_message) from e
         return temp_name, output_file
 
-    raise HTTPException(status_code=400, 'Malformed parameters')
+    raise HTTPException(status_code=400, detail='Malformed parameters')
 
 # common_handler_prepare_output(request, data, input_file, output_file, request)
 def common_handler_prepare_output(request, data, input_file, output_file, result):
@@ -185,7 +185,7 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_hander_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, output_file)
 
 @app.post('/brukerrawbackground')
 def brukerbackground_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
