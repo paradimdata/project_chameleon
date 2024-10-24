@@ -87,7 +87,7 @@ def common_handler_method_auth_check(request, data, access_token):
     # Nothing to return here.
 
 # input_file,output_file = common_handler_parse_request(request, data)
-def common_handler_parse_request(request, data):
+def common_file_handler_parse_request(request, data, conversion):
     #EXCEPTIONS
     if not (('file_name' in data) ^ ('file_bytes' in data) ^ ('file_url' in data)) or 'output_file' not in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
@@ -96,9 +96,28 @@ def common_handler_parse_request(request, data):
         raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
 
     #INPUTS
+    if conversion == 'rheed':
+        input_ext = '.img'
+    elif conversion == 'brukerraw':
+        input_ext = '.raw'
+        if 'file_input_type' in data:
+            input_ext = data.get('file_input_type')
+    elif conversion == 'non4dstem':
+        input_ext = 'emd'
+        if 'file_input_type' in data:
+            input_ext = data.get('file_input_type')
+    elif conversion == 'ppms':
+        input_ext = '.dat'
+    elif conversion == '4dstem':
+        input_ext = '.raw'
+    elif conversion == 'hs2':
+        input_ext = '.hs2'
+    else:
+        raise HTTPException(status_code=400, detail='Conversion must be from possible file conversion types.')
+
+    output_file = data.get('output_file')
     if 'file_name' in data:
         file_name = data.get('file_name')
-        output_file = data.get('output_file')
 
         if not os.path.isfile(file_name):
             raise HTTPException(status_code=400, detail='Local path is not a valid file')
@@ -106,21 +125,19 @@ def common_handler_parse_request(request, data):
 
     if 'file_bytes' in data:
         file_bytes = data.get('file_bytes')
-        output_file = data.get('output_file')
 
         decoded_data = base64.b64decode(file_bytes)
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(decoded_data)
-            temp_name = temp_file.name + '.img'
+            temp_name = temp_file.name + input_ext
         os.rename(temp_file.name, temp_name)
         return temp_name, output_file
 
     if 'file_url' in data:
         file_url = data.get('file_url')
-        output_file = data.get('output_file')
         try:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_name = temp_file.name + '.img'
+                temp_name = temp_file.name + input_ext
             urllib.request.urlretrieve(file_url, filename = temp_name)
         except r.exceptions.RequestException as e:
             traceback.print_exc()
@@ -134,7 +151,7 @@ def common_handler_parse_request(request, data):
     raise HTTPException(status_code=400, detail='Malformed parameters')
 
 # common_handler_prepare_output(request, data, input_file, output_file, request)
-def common_handler_prepare_output(request, data, input_file, output_file, result):
+def common_file_handler_prepare_output(request, data, input_file, output_file, result):
     #OUTPUTS
     if 'output_type' in data:
         if data.get('output_type') == 'raw':
@@ -178,10 +195,10 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_handler_parse_request(request, data)
+    input_file,output_file = common_file_handler_parse_request(request, data, 'rheed')
     try:
         result = rheedconverter(input_file, output_file)
-        return common_handler_prepare_output(request, data, input_file, output_file, result)
+        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
