@@ -156,10 +156,9 @@ def common_file_handler_parse_request(request, data, conversion):
         except r.exceptions.RequestException as e:
             traceback.print_exc()
             if e.response is not None:
-                custom_message = f"HTTP error occurred: {e.response.status_code} - {e.response.reason} while accessing {file_url}"
+                raise HTTPException(status_code=400, detail=f'Error occured while accessing {file_url}')
             else:
-                custom_message = f"Request failed with an error: {str(e)} while accessing {file_url}"
-            raise RuntimeError(custom_message) from e
+                raise HTTPException(status_code=400, detail=f'Request failed while accessing {file_url}')
         return temp_name, output_file
 
     raise HTTPException(status_code=400, detail='Malformed parameters')
