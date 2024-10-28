@@ -6,6 +6,7 @@ from pathlib import Path
 import csv
 import argparse
 import os
+import shutil
 
 def brukerrawbackground(background_input, sample_input, output_name):
     """
@@ -113,8 +114,28 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.ylabel('Intensity (Arb. Units)')
     plt.show()
     plt.savefig(output_name + '_background_subtracted.png')
-
     raw_diff.to_csv(output_name+ '_backgroundSubtracted.csv')
+
+    output_folder = Path(str(output_name))
+    os.makedirs(output_folder)
+
+    #Sort all the slices into the directory
+    current_directory = os.getcwd()
+    for filename in os.listdir(current_directory):
+        if filename.endswith('.png') or filename.endswith('.csv'):
+            filepath = os.path.join(current_directory, filename)
+        else:
+            continue
+        if (str(output_name) in filename) and ('_raw_data' in filename): 
+            shutil.move(filepath, os.path.join(output_folder, filename))
+        elif (str(output_name) in filename) and ('_background_adjusted' in filename):
+            shutil.move(filepath, os.path.join(output_folder, filename))
+        elif (str(output_name) in filename) and ('_background_subtracted' in filename):
+            shutil.move(filepath, os.path.join(output_folder, filename))
+        elif (str(output_name) in filename) and ('_backgroundSubtracted' in filename):
+            shutil.move(filepath, os.path.join(output_folder, filename))
+        else:  
+            continue
 
 def main():
     parser = argparse.ArgumentParser(description="Process some input files for background and sample data")
