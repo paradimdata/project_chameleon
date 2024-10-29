@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Body, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 import os, shutil
 import requests as r
 import json
@@ -301,7 +302,10 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
     input_file,output_file = common_file_handler_parse_request(request, data, 'rheed')
     try:
         result = rheedconverter(input_file, output_file)
-        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="image/png")
+        else:
+            return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -320,7 +324,10 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
     
     try:
         result = brukerrawconverter(input_file, output_file)
-        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="text/plain")
+        else:
+            return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -338,7 +345,10 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
     
     try:
         result = mbeparser(input_folder)
-        return common_folder_handler_prepare_output(request, data, input_folder, output_folder, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_folder, output_folder, result), media_type="application/zip")
+        else:
+            return common_folder_handler_prepare_output(request, data, input_folder, output_folder, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -357,7 +367,10 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
     
     try:
         result = result = non4dstem(data_folder = input_folder,outputs_folder = output_folder)
-        return common_folder_handler_prepare_output(request, data, input_folder, output_folder, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_folder, output_folder, result), media_type="application/zip")
+        else:
+            return common_folder_handler_prepare_output(request, data, input_folder, output_folder, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -376,7 +389,10 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
 
     try:
         result = non4dstem(data_file = input_file, output_file = output_file)
-        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="image/png")
+        else:
+            return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -400,7 +416,10 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
 
     try:
         result = ppmsmpmsparser(input_file, output_file, value)
-        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="test/plain")
+        else:
+            return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -415,10 +434,13 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, 'rheed')
+    input_file,output_file = common_file_handler_parse_request(request, data, '4dstem')
     try:
         result = stemarray4d(input_file, output_file)
-        return common_folder_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_file, output_file, result), media_type="application/zip")
+        else:
+            return common_folder_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -436,7 +458,10 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
     input_file,output_file = common_folder_handler_parse_request(request, data)
     try:
         result = arpes_folder_workbook(input_file, output_file)
-        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        else:
+            return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -455,7 +480,10 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
 
     try:
         result = hs2converter(input_file, output_file)
-        return common_file_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="image/png")
+        else:
+            return common_file_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
@@ -499,7 +527,10 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
 
     try:
         result = brukerrawbackground(background, input_file, output_file)
-        return common_folder_handler_prepare_output(request, data, input_file, output_file, result)
+        if 'output_type' in data and data.get('output_type') == 'raw':
+            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_file, output_file, result), media_type="application/zip")
+        else:
+            return common_folder_handler_prepare_output(request, data, input_file, output_file, result)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
