@@ -5,7 +5,8 @@ import os, shutil
 import requests as r
 import json
 from requests import get
-import base64 
+from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
+import base64
 import tempfile
 import urllib.request
 import zipfile
@@ -31,27 +32,43 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 def validate_path(source_path: str, allow_nonexistent_leaf: bool = False):
-    source_path = os.path.normpath(source_path)
     # Get the canonical, absolute path of the input path
+    source_path = os.path.normpath(source_path)
     canonical_path = os.path.abspath(source_path)  # Ensure we are working with the absolute path
     # Check the returned absolute path to ensure it is valid
     normalized_canonical_path = os.path.normpath(canonical_path)
     if normalized_canonical_path != canonical_path:
-        raise HTTPException(status_code=400, detail=f"Error: Canonical path '{canonical_path}' violates path constraints.")
+        raise HTTPException(status_code=400, detail=f"Error: Failed to validate path.")
 
     # Open and then immediately close the file or directory to ensure it's valid
     try:
         os.close(os.open(canonical_path, os.O_RDONLY))
     except Exception as e:
         if not allow_nonexistent_leaf:
-            raise HTTPException(status_code=400, detail=f"Error: Failed to access path '{canonical_path}'. Reason: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Error: Failed to validate path. Reason: {str(e)}")
         try:
             # Try parent path if allow_nonexistent_leaf it set
             os.close(os.open(Path(canonical_path).parents[0], os.O_RDONLY))
         except:
-            raise HTTPException(status_code=400, detail=f"Error: Failed to access path '{canonical_path}'. Reason: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Error: Failed to validate path. Reason: {str(e)}")
     return canonical_path
+
+def validate_url(source_url: str):
+    try:
+        # Deconstruct the passed URL
+        parts = urlparse(source_url)
+        # Process the query string into parts
+        qs_parts = parse_qsl(parts.query, keep_blank_values=True, strict_parsing=True)
+        # Remake query string
+        qs = urlencode(qs_parts)
+        # Remake URL
+        canonical_url = urlunparse([parts.scheme,parts.netloc,parts.path,parts.params,qs,parts.fragment])
+        if canonical_url != source_url:
+            raise HTTPException(status_code=400, detail=f"Error: Failed to normalize url.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error: Failed to normalize url. Reason: {str(e)}")
 
 def authorized(access_token, endpoint_id, params):
     if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
@@ -99,8 +116,19 @@ def common_handler_early_response(request, data):
 # common_handler_method_auth_check(request, data, access_token)
 def common_handler_method_auth_check(request, data, access_token):
     if request.method == 'POST':
-        auth_data = dict(data) # make explicit copy
-        if 'folder_bytes' in data:
+        # Paths and URLs must be normalized before calling authorized, since they can be used in authorization decisions
+        # We do this on the request passed to the function, so that future steps do not need to redo the process
+        if 'input_file' in data:
+            data['input_file'] = validate_path(data['input_file'])
+        if 'input_url' in data:
+            data['input_url'] = validate_url(data['input_url'])
+        if 'output_file' in data:
+            data['output_file'] = validate_path(data['output_file'], allow_nonexistent_leaf = True)
+        auth_data = dict(data) # make explicit copy so we can delete items without affecting input request
+        # Remove data, keeping only metadata
+        if 'input_bytes' in auth_data:
+            del auth_data['input_bytes']
+        if 'folder_bytes' in auth_data:
             del auth_data['folder_bytes']
 
         if not authorized(access_token, "org.paradim.data.api.v1.chameleon", auth_data):
@@ -109,63 +137,40 @@ def common_handler_method_auth_check(request, data, access_token):
         raise HTTPException(status_code=405, detail='Method Not Allowed')
     # Nothing to return here.
 
-# input_file,output_file = common_handler_parse_request(request, data)
-def common_file_handler_parse_request(request, data, conversion):
+# input_file,output_file = common_file_handler_parse_request(request, data, input_ext, output_ext)
+def common_file_handler_parse_request(request, data, input_ext, output_ext):
     #EXCEPTIONS
-    if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) in data:
+    if not (('input_file' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) in data:
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
 
-    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
-        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
-    
-    if 'output_dest' in data and data.get('output_dest') == 'file':
-        if not 'output' in data:
-            raise HTTPException(status_code=400, detail='While the output desitination is file, there must be a designated output')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw']):
+        raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON')
 
+    if 'output_dest' in data and all(opt not in data['output_dest'] for opt in ['file', 'caller']):
+            raise HTTPException(status_code=400, detail='Incorrect output_dest: output_dest options are file, caller')
 
-    #INPUTS
-    output_file = data.get('output')
-
-    if conversion == 'rheed':
-        input_ext = '.img'
-        if not 'output' in data:
-            output_file = 'temp.png'
-    elif conversion == 'brukerraw':
-        input_ext = '.raw'
-        if 'file_input_type' in data:
-            input_ext = data.get('file_input_type')
-        if not 'output' in data:
-            output_file = 'temp.txt'
-    elif conversion == 'non4dstem':
-        input_ext = '.emd'
-        if 'file_input_type' in data:
-            input_ext = data.get('file_input_type')
-        if not 'output' in data:
-            output_file = 'temp.png'
-    elif conversion == 'ppms':
-        input_ext = '.dat'
-        if not 'output' in data:
-            output_file = 'temp.txt'
-    elif conversion == '4dstem':
-        input_ext = '.raw'
-        if not 'output' in data:
-            output_file = 'temp'
-    elif conversion == 'hs2':
-        input_ext = '.hs2'
-        if not 'output' in data:
-            output_file = 'temp.png'
+    #HANDLE OUTPUT
+    if 'output_dest' in data and data['output_dest'] == 'file':
+        if not 'output_file' in data:
+            raise HTTPException(status_code=400, detail='When the output destination is file, there must be a designated output file')
+        output_file = validate_path(data['output_file'], allow_nonexistent_leaf=True)
     else:
-        raise HTTPException(status_code=400, detail='Conversion must be from possible file conversion types.')
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_name = temp_file.name + output_ext
+        os.unlink(temp_file.name) # cleanup
+        output_file = temp_name
 
-    if 'input_name' in data:
-        file_name = data.get('input_name')
-        file_name = validate_path(file_name)
+    #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
+    if 'file_input_type' in data:
+        input_ext = data['file_input_type']
+
+    #HANDLE INPUT
+    if 'input_file' in data:
+        file_name = validate_path(data['input_file'])
         return file_name, output_file
 
     if 'input_bytes' in data:
-        file_bytes = data.get('input_bytes')
-
-        decoded_data = base64.b64decode(file_bytes)
+        decoded_data = base64.b64decode(data['input_bytes'])
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(decoded_data)
             temp_name = temp_file.name + input_ext
@@ -173,10 +178,11 @@ def common_file_handler_parse_request(request, data, conversion):
         return temp_name, output_file
 
     if 'input_url' in data:
-        file_url = data.get('input_url')
+        file_url = validate_url(data['input_url'])
         try:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_name = temp_file.name + input_ext
+            os.unlink(temp_file.name) # cleanup
             urllib.request.urlretrieve(file_url, filename = temp_name)
         except r.exceptions.RequestException as e:
             traceback.print_exc()
@@ -188,222 +194,146 @@ def common_file_handler_parse_request(request, data, conversion):
 
     raise HTTPException(status_code=400, detail='Malformed parameters')
 
+# input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
 def common_folder_handler_parse_request(request, data):
     #EXCEPTIONS
-    if not (('input_name' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)):
-            raise HTTPException(status_code=400, detail='Incorrect number of parameters') 
-    
-    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw', 'file']):
-            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON, file')
-    
-    if 'output_dest' in data and data.get('output_dest') == 'file':
-        if not 'output' in data:
-            raise HTTPException(status_code=400, detail='While the output desitination is file, there must be a designated output')
-        
-    #INPUTS
-    if not 'output' in data:
-        output = 'temp'
-    elif 'output' in data:
-        output = data.get('output')
-    if 'input_name' in data:
-        folder = data.get('folder_name')
-        folder = validate_path(folder)
-        return folder, output
+    if not (('input_folder' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)):
+            raise HTTPException(status_code=400, detail='Incorrect number of parameters')
 
-    if 'folder_bytes' in data:
-        folder_bytes = data.get('folder_bytes')
+    if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw']):
+            raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON')
+
+    if 'output_dest' in data and all(opt not in data['output_dest'] for opt in ['folder', 'file', 'caller']):
+            raise HTTPException(status_code=400, detail='Incorrect output_dest: output_dest options are folder, file, caller')
+
+    # HANDLE OUTPUT
+    if 'output_dest' in data and data['output_dest'] == 'folder':
+        if not 'output_folder' in data:
+            raise HTTPException(status_code=400, detail='While the output destination is a folder, there must be a designated output folder')
+        output_folder = validate_path(data['output_folder'], allow_nonexistent_leaf=True)
+        output_file = None # No output file needed
+    elif 'output_dest' in data and data['output_dest'] == 'file':
+        if not 'output_file' in data:
+            raise HTTPException(status_code=400, detail='While the output destination is a file, there must be a designated output file')
+        # Need temporary directory/folder
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_name = temp_file.name
+        os.unlink(temp_file.name) # cleanup
+        output_folder = temp_name
+        output_file = validate_path(data['output_file'], allow_nonexistent_leaf=True)
+    else:
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_name = temp_file.name
+        os.unlink(temp_file.name) # cleanup
+        output_folder = temp_name
+        output_file = output_folder + ".zip"
+
+    # HANDLE INPUT
+    if 'input_folder' in data:
+        input_folder = validate_path(data['input_folder'])
+        return input_folder, output_folder, output_file
+
+    if 'input_bytes' in data:
+        folder_bytes = data['input_bytes']
         decoded_data = base64.b64decode(folder_bytes)
-        with tempfile.NamedTemporaryFile(delete=False) as temp_folder:
-            temp_folder.write(decoded_data)
-            temp_name = temp_folder.name + '.zip'
-        os.rename(temp_folder.name, temp_name)
-        if not os.path.exists('temp_dir'):
-            os.makedirs('temp_dir')
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(decoded_data)
+            temp_folder = temp_file.name
+            temp_name = temp_file.name + '.zip'
+        os.rename(temp_file.name, temp_name)
+        os.makedirs(temp_folder)
         with zipfile.ZipFile(temp_name, 'r') as zip_ref:
-            zip_ref.extractall('temp_dir')
-        folder = 'temp_dir'
-        return folder, output
+            # TODO: zip allows for relative path filenames, so we need to sanitize those, otherwise this might allow overwrite of arbitrary files
+            zip_ref.extractall(temp_folder)
+        os.unlink(temp_name) # cleanup temporary input zip file
+        return temp_folder, output_folder, output_file
 
-    if 'folder_url' in data:
-        folder_url = data.get('folder_url')
-        urllib.request.urlretrieve(folder_url, filename = 'temp.zip')
-        with zipfile.ZipFile('temp.zip', 'r') as zip_ref:
-            zip_ref.extractall('temp_dir') 
-        folder = 'temp_dir' 
-        return folder, output
-
-def common_folder_handler_prepare_output(request, data, input_folder, output_folder, result):
-    if output_folder == None:
-        output_folder = input_folder
-    if 'output_type' in data:
-        if data.get('output_type') == 'raw':
-            if 'output_dest' in data and data.get('output_dest') == 'file':
-                with ZipFile('chameleon_output.zip', 'w') as zip_object:
-                    for folder_name, sub_folders, file_names in os.walk(output_folder):
-                        for filename in file_names:
-                            file_path = os.path.join(folder_name, filename)
-                            zip_object.write(file_path, os.path.basename(file_path))
-                with open('chameleon_output.zip', 'rb') as file:
-                    encoded_data = file.read()
-                if ('folder_bytes' or 'folder_url') in data:
-                    shutil.rmtree(input_folder)
-                os.remove('chameleon_output.zip')
-                with open(output_folder, 'wb') as file:
-                    file.write(encoded_data)
-                out = output_folder
+    if 'input_url' in data:
+        dir_url = validate_url(data['input_url'])
+        try:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_name = temp_file.name + ".zip"
+                temp_folder = temp_file.name
+            os.unlink(temp_file.name) # cleanup
+            urllib.request.urlretrieve(dir_url, filename = temp_name)
+            with zipfile.ZipFile(temp_name, 'r') as zip_ref:
+                # TODO: zip allows for relative path filenames, so we need to sanitize those, otherwise this might allow overwrite of arbitrary files
+                zip_ref.extractall(temp_folder)
+            os.unlink(temp_name) # cleanup temporary input zip file
+        except r.exceptions.RequestException as e:
+            traceback.print_exc()
+            if e.response is not None:
+                raise HTTPException(status_code=400, detail=f'Error occured while accessing {dir_url}')
             else:
-                with ZipFile('chameleon_output.zip', 'w') as zip_object:
-                    for folder_name, sub_folders, file_names in os.walk(output_folder):
-                        for filename in file_names:
-                            file_path = os.path.join(folder_name, filename)
-                            zip_object.write(file_path, os.path.basename(file_path))
-                with open('chameleon_output.zip', 'rb') as file:
-                    encoded_data = file.read()
-                    out = encoded_data
-                if ('folder_bytes' or 'folder_url') in data:
-                    shutil.rmtree(input_folder)
-                os.remove('chameleon_output.zip')
-        elif data.get('output_type') == 'JSON':
-            if 'output_dest' in data and data.get('output_dest') == 'file':
-                with ZipFile('chameleon_output.zip', 'w') as zip_object:
-                    for folder_name, sub_folders, file_names in os.walk(output_folder):
-                        for filename in file_names:
-                            file_path = os.path.join(folder_name, filename)
-                            zip_object.write(file_path, os.path.basename(file_path))
-                with open('chameleon_output.zip', 'rb') as file:
-                    encoded_data = file.read()
-                with open(output_folder, 'w') as json_file:
-                    json.dump({"file_data": encoded_data}, json_file)
-                    out = json_file
-                if ('folder_bytes' or 'folder_url') in data:
-                    shutil.rmtree(input_folder)
-                os.remove('chameleon_output.zip')
-            else:
-                with ZipFile('chameleon_output.zip', 'w') as zip_object:
-                    for folder_name, sub_folders, file_names in os.walk(output_folder):
-                        for filename in file_names:
-                            file_path = os.path.join(folder_name, filename)
-                            zip_object.write(file_path, os.path.basename(file_path))
-                with open('chameleon_output.zip', 'rb') as file:
-                    encoded_data = file.read()
-                with open('chameleon_out_json', 'w') as json_file:
-                    json.dump({"file_data": encoded_data}, json_file)
-                    out = json_file
-                if ('folder_bytes' or 'folder_url') in data:
-                    shutil.rmtree(input_folder)
-                os.remove('chameleon_output.zip')
-        elif data.get('output_type') == 'file':
-            output_folder = validate_path(output_folder)
-            out = output_folder
-        else:
-            out = None
-    else:
-        out = None
+                raise HTTPException(status_code=400, detail=f'Request failed while accessing {dir_url}')
+        return temp_folder, output_folder, output_file
 
-    if result is None:
-        if out:
-            if data.get('output_dest') == 'file' or (data.get('output_dest') == 'caller' and data.get('output_type') == 'JSON'):
-                return Response(content=out, media_type='application/json')
-            else:
-                return Response(content=out, media_type='application/zip')
-        else:
-            return {'message': 'Files processed successfully'}
-    else:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
-    
-# common_handler_prepare_output(request, data, input_file, output_file, request)
-def common_file_handler_prepare_output(request, data, input_file, output_file, result, conversion):
-    #OUTPUTS
-    if conversion == 'rheed' or conversion == 'non4dstem' or conversion == 'hs2':
-        mime_type = 'image/png'
-    elif conversion == 'brukerraw' or conversion == 'ppms':
-        mime_type = 'text_plain'
-    elif conversion == 'arpes':
-        mime_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    else: 
-        mime_type = 'application/json'
+    raise HTTPException(status_code=400, detail='Malformed parameters')
 
-    if 'output_type' in data:
-        if data.get('output_type') == 'raw':
-            if 'output_dest' in data and data.get('output_dest') == 'file':
-                with open(output_file, 'rb') as file:
-                    encoded_data = file.read()
-                    os.remove(output_file)
-                with open(output_file, 'wb') as file:
-                    file.write(encoded_data)
-                out = output_file
-            else:
-                with open(output_file, 'rb') as file:
-                    encoded_data = file.read()
-                    out = encoded_data
-                    os.remove(output_file)
-        elif data.get('output_type') == 'JSON':
-            if 'output_dest' in data and data.get('output_dest') == 'file':
-                with open(output_file, 'rb') as file:
-                    encoded_data = file.read()
-                    os.remove(output_file)
-                with open(output_file, 'w') as json_file:
-                    json.dump({"file_data": encoded_data}, json_file)
-                    out = json_file
-            else:
-                with open(output_file, 'rb') as file:
-                    encoded_data = file.read()
-                with open('output_json', 'w') as json_file:
-                    json.dump({"file_data": encoded_data}, json_file)
-                    out = json_file
-                os.remove(output_file)
-        elif data.get('output_type') == 'file':
-            output_file = validate_path(output_file)
-            out = output_file
-    else:
-        out = None
+# response = common_folder_handler_prepare_output(request, data, output_folder, output_file)
+def common_folder_handler_prepare_output(request, data, output_folder, output_file):
+    # At this point, the conversion has happened and the outputs are in output_folder
 
-    if result is None:
-        if out:
-            if 'output_dest' in data and data.get('output_dest') == 'caller' and data.get('output_type') == 'raw':
-                return Response(content=out, media_type=mime_type)
-            elif data.get('output_type') == 'file':
-                return Response(content=out, media_type=mime_type)
-            else:
-                return Response(content=out, media_type="application/json")
-        else:
-            return {'message': 'Image converted successfully'}
-    
-    raise HTTPException(status_code=500, detail=f'Failed to convert file')
+    if 'output_dest' in data and data['output_dest'] == 'folder':
+        return {'status': 'ok', 'message': 'Files processed successfully'}
 
-# common_handler_cleanup_request(request, data, input_file, output_file)
-def common_handler_cleanup_request(request, data, input_file, output_file):
-    if not ('file_name' in data) and ('file_bytes' in data or 'file_url' in data):
-        # Cleanup temp input file
-        os.remove(input_file)
-    # Nothing to return
+    # If the output is anything other than 'folder', we need to turn it into a zip file
+    with ZipFile(output_file, 'w') as zip_object:
+        for folder_name, sub_folders, file_names in os.walk(output_folder):
+            for filename in file_names:
+                file_path = os.path.join(folder_name, filename)
+                zip_object.write(file_path, os.path.relpath(file_path,start=output_folder))
+    # and then cleanup the output folder
+    shutil.rmtree(output_folder)
 
-def common_folder_handler_cleanup_request(request, data, input_folder, output_file):
-    if not ('folder_name' in data) and ('folder_bytes' in data or 'folder_url' in data):
-        # Cleanup temp input file
-        os.remove(input_folder)
+    return common_file_handler_prepare_output(request, data, output_file, 'application/zip')
+
+# response = common_file_handler_prepare_output(request, data, output_file, media_type (opt))
+def common_file_handler_prepare_output(request, data, output_file, media_type = None):
+    # At this point, the conversion has happened and the output is in output_file
+    # TODO: determine media_type by file inspection, so it doesn't have to be passed here
+
+    if 'output_dest' in data and data['output_dest'] == 'file':
+        return {'status': 'ok', 'message': 'Files processed successfully'}
+
+    # If we get here, output_dest is either 'caller' or unspecified; in either case, we return the file contents.
+    # (remembering to cleanup the file afterwards)
+    if 'output_type' in data and data['output_type'] == 'raw':
+        # Raw bytes return. We do it with asynchronous cleanup of the output_file after returning it.
+        return FileResponse(output_file, media_type=media_type, background=BackgroundTask(os.unlink, output_file))
+
+    # If not specified, default to JSON return to caller.
+    # TODO: make this able to stream the result and not read the entire file into memory before returning.
+    with open(output_file, 'rb') as f:
+        rv = Response(content=json.dumps( { 'status': 'ok', 'message': 'Files processed successfully', 'file_data': base64.b64encode(f.read()), 'file_name': os.path.basename(output_file) } ), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
+
+# common_handler_cleanup_request(request, data, input_file, input_folder)
+def common_handler_cleanup_request(request, data, input_file, input_folder):
+    if not ('input_file' in data) and not ('input_folder' in data) and ('input_bytes' in data or 'input_url' in data):
+        # Cleanup temp input file/folder
+        if not (input_file is None):
+            os.remove(input_file)
+        if not (input_folder is None):
+            shutil.rmtree(input_folder)
     # Nothing to return
 
 @app.post('/rheedconverter')
-async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
+async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
     access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
-    
+
     er = common_handler_early_response(request, data)
     if not (er is None):
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, 'rheed')
+    input_file,output_file = common_file_handler_parse_request(request, data, '.img', '.png')
     try:
-        result = rheedconverter(input_file, output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="image/png")
-        else:
-            return common_file_handler_prepare_output(request, data, input_file, output_file, result, 'rheed')
+        rheedconverter(input_file, output_file)
+        return common_file_handler_prepare_output(request, data, output_file)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, None)
 
 @app.post('/brukerrawconverter')
 def brukerraw_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -412,20 +342,17 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
     er = common_handler_early_response(request, data)
     if not (er is None):
         return er
-    
+
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, 'brukerraw')
-    
+    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '.csv')
+
     try:
-        result = brukerrawconverter(input_file, output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="text/plain")
-        else:
-            return common_file_handler_prepare_output(request, data, input_file, output_file, result, 'brukerraw')
+        brukerrawconverter(input_file, output_file)
+        return common_file_handler_prepare_output(request, data, output_file)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, None)
     
 @app.post('/mbeparser')
 def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -435,18 +362,15 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
     if not (er is None):
         return er
     common_handler_method_auth_check(request, data, access_token)
-    input_folder,output_folder = common_folder_handler_parse_request(request, data)
-    
+    input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
+
     try:
-        result = mbeparser(input_folder)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_folder, output_folder, result), media_type="application/zip")
-        else:
-            return common_folder_handler_prepare_output(request, data, input_folder, output_folder, result)
+        mbeparser(input_folder)
+        return common_folder_handler_prepare_output(request, data, output_folder, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        raise HTTPException(status_code=500, detail=f'Failed to convert folder')
     finally:
-        common_folder_handler_cleanup_request(request, data, input_folder, output_folder)
+        common_folder_handler_cleanup_request(request, data, None, input_folder)
     
 @app.post('/non4dstem_folder')
 def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -457,18 +381,15 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
     if not (er is None):
         return er
     common_handler_method_auth_check(request, data, access_token)
-    input_folder,output_folder = common_folder_handler_parse_request(request, data)
+    input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
     
     try:
-        result = result = non4dstem(data_folder = input_folder,outputs_folder = output_folder)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_folder, output_folder, result), media_type="application/zip")
-        else:
-            return common_folder_handler_prepare_output(request, data, input_folder, output_folder, result)
+        non4dstem(data_folder = input_folder,outputs_folder = output_folder)
+        return common_folder_handler_prepare_output(request, data, output_folder, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        raise HTTPException(status_code=500, detail=f'Failed to convert folder')
     finally:
-        common_folder_handler_cleanup_request(request, data, input_folder, output_folder)
+        common_folder_handler_cleanup_request(request, data, None, input_folder)
 
 @app.post('/non4dstem_file')
 def non4dstem_file_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -479,18 +400,15 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
         return er
     
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, 'non4stem')
+    input_file,output_file = common_file_handler_parse_request(request, data, '.emd', '.png')
 
     try:
-        result = non4dstem(data_file = input_file, output_file = output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="image/png")
-        else:
-            return common_file_handler_prepare_output(request, data, input_file, output_file, result, 'non4dstem')
+        non4dstem(data_file = input_file, output_file = output_file)
+        return common_file_handler_prepare_output(request, data, output_file)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, None)
     
 @app.post('/ppmsmpms')
 def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -501,23 +419,20 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
         return er
     
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, 'ppms')
+    input_file,output_file = common_file_handler_parse_request(request, data, '.dat', '.txt') # TODO: Should this be .csv as output format?
 
     if 'value_name' in data:
-        value = data.get('value_name')
+        value = data['value_name']
     else:
         value = 1
 
     try:
-        result = ppmsmpmsparser(input_file, output_file, value)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="test/plain")
-        else:
-            return common_file_handler_prepare_output(request, data, input_file, output_file, result, 'ppms')
+        ppmsmpmsparser(input_file, output_file, value)
+        return common_file_handler_prepare_output(request, data, output_file)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, None)
     
 @app.post('/stemarray4d')
 def stem4d_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -528,17 +443,14 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, '4dstem')
+    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '') # TODO: Does the outpu really have no file extension? What format is it?
     try:
-        result = stemarray4d(input_file, output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_file, output_file, result), media_type="application/zip")
-        else:
-            return common_folder_handler_prepare_output(request, data, input_file, output_file, result)
+        stemarray4d(input_file, output_file)
+        return common_folder_handler_prepare_output(request, data, output_file, media_type='application/zip')
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, None)
     
 @app.post('/arpes_workbook')
 def arpes_workbook_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -549,20 +461,17 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_folder_handler_parse_request(request, data)
+    input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
     try:
-        result = arpes_folder_workbook(input_file, output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        else:
-            return common_file_handler_prepare_output(request, data, input_file, output_file, result, 'arpes')
+        arpes_folder_workbook(input_folder, output_file)
+        return common_file_handler_prepare_output(request, data, output_file, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        raise HTTPException(status_code=500, detail=f'Failed to convert files')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
-        
+        common_handler_cleanup_request(request, data, None, input_folder)
+
 @app.post('/hs2converter')
-async def hs2_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):  
+async def hs2_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
     access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
 
     er = common_handler_early_response(request, data)
@@ -570,18 +479,15 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
         return er
     
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, 'hs2')
+    input_file,output_file = common_file_handler_parse_request(request, data, '.hs2', '.png')
 
     try:
-        result = hs2converter(input_file, output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_file_handler_prepare_output(request, data, input_file, output_file, result), media_type="image/png")
-        else:
-            return common_file_handler_prepare_output(request, data, input_file, output_file, result, 'hs2')
+        hs2converter(input_file, output_file)
+        return common_file_handler_prepare_output(request, data, output_file)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)  
+        common_handler_cleanup_request(request, data, input_file, None)
         
 @app.post('/brukerrawbackground')
 def brukerbackground_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -592,19 +498,21 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, '4dstem')
+    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '.csv')
 
+    # TODO: this pretty much looks like common_file_handler_parse_request, but with different key names. We should find a way to
+    # turn this into a common_file_handler_parse_request call (and coresponding auth check call too)
     if not ('background_file_name' in data) ^ ('background_file_bytes' in data) ^ ('background_file_url' in data):
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
     if 'background_input_type' in data:
             if not '.raw' in data.get('background_input_type'):
                 if not '.csv' in data.get('background_input_type'):
                     raise HTTPException(status_code=400, detail='Incorrect file extension: background_input_type options are .raw and .csv')
-    background_ext = '.raw'        
+    background_ext = '.raw'
     if 'background_input_type' in data:
         background_ext = data.get('background_input_type')
     if 'background_file_name' in data:
-            background = data.get('background_file_name')
+            background = validate_path(data.get('background_file_name'))
             if not os.path.isfile(background):
                 raise HTTPException(status_code=400, detail='Local path is not a valid file')
     if 'background_file_bytes' in data:
@@ -615,19 +523,16 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
             background = temp_file.name + background_ext
         os.rename(temp_file.name, background)
     if 'background_file_url' in data:
-        background_file_url = data.get('background_file_url')
+        background_file_url = validate_url(data.get('background_file_url'))
         urllib.request.urlretrieve(background_file_url, filename = 'background_temp_name' + background_ext) 
         background = 'background_temp_name' + background_ext
 
     try:
-        result = brukerrawbackground(background, input_file, output_file)
-        if 'output_type' in data and data.get('output_type') == 'raw':
-            return StreamingResponse(common_folder_handler_prepare_output(request, data, input_file, output_file, result), media_type="application/zip")
-        else:
-            return common_folder_handler_prepare_output(request, data, input_file, output_file, result)
+        brukerrawbackground(background, input_file, output_file)
+        return common_folder_handler_prepare_output(request, data, output_file)
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert file')
     finally:
-        common_handler_cleanup_request(request, data, input_file, output_file)
+        common_handler_cleanup_request(request, data, input_file, None)
         if ('background_file_bytes' in data) or ('background_file_url' in data):
             os.remove(background)
