@@ -197,7 +197,7 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
 # input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
 def common_folder_handler_parse_request(request, data):
     #EXCEPTIONS
-    if not (('input_folder' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)):
+    if not (('input_folder' in data) ^ ('input_file' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)):
             raise HTTPException(status_code=400, detail='Incorrect number of parameters')
 
     if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw']):
@@ -232,6 +232,18 @@ def common_folder_handler_parse_request(request, data):
     if 'input_folder' in data:
         input_folder = validate_path(data['input_folder'])
         return input_folder, output_folder, output_file
+
+    if 'input_file' in data:
+        input_file = validate_path(data['input_file'])
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_folder = temp_file.name
+        os.unlink(temp_file.name) # cleanup
+        os.makedirs(temp_folder)
+        with zipfile.ZipFile(input_file, 'r') as zip_ref:
+            # TODO: zip allows for relative path filenames, so we need to sanitize those, otherwise this might allow overwrite of arbitrary files
+            zip_ref.extractall(temp_folder)
+        # No cleanup of input zip file since it is "durable"
+        return temp_folder, output_folder, output_file
 
     if 'input_bytes' in data:
         folder_bytes = data['input_bytes']
@@ -291,7 +303,8 @@ def common_folder_handler_prepare_output(request, data, output_folder, output_fi
 # response = common_file_handler_prepare_output(request, data, output_file, media_type (opt))
 def common_file_handler_prepare_output(request, data, output_file, media_type = None):
     # At this point, the conversion has happened and the output is in output_file
-    # TODO: determine media_type by file inspection, so it doesn't have to be passed here
+    # If media_type is None, FileResponse trys to decide based on filename/extension,
+    # so media_type only needed when extension does not accurately represent MIME type.
 
     if 'output_dest' in data and data['output_dest'] == 'file':
         return {'status': 'ok', 'message': 'Files processed successfully'}
@@ -309,12 +322,11 @@ def common_file_handler_prepare_output(request, data, output_file, media_type = 
 
 # common_handler_cleanup_request(request, data, input_file, input_folder)
 def common_handler_cleanup_request(request, data, input_file, input_folder):
-    if not ('input_file' in data) and not ('input_folder' in data) and ('input_bytes' in data or 'input_url' in data):
-        # Cleanup temp input file/folder
-        if not (input_file is None):
-            os.remove(input_file)
-        if not (input_folder is None):
-            shutil.rmtree(input_folder)
+    # Cleanup temp folder/file if used
+    if not ('input_folder' in data) and ('input_file' in data or 'input_bytes' in data or 'input_url' in data) and not (input_folder is None):
+        shutil.rmtree(input_folder)
+    if not ('input_file' in data) and ('input_folder' in data or 'input_bytes' in data or 'input_url' in data) and not (input_file is None):
+        os.remove(input_file)
     # Nothing to return
 
 @app.post('/rheedconverter')
@@ -443,7 +455,7 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '') # TODO: Does the outpu really have no file extension? What format is it?
+    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '') # TODO: Does the output really have no file extension? What format is it?
     try:
         stemarray4d(input_file, output_file)
         return common_folder_handler_prepare_output(request, data, output_file, media_type='application/zip')
