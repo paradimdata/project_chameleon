@@ -60,7 +60,7 @@ def validate_url(source_url: str):
         # Deconstruct the passed URL
         parts = urlparse(source_url)
         # Process the query string into parts
-        qs_parts = parse_qsl(parts.query, keep_blank_values=True, strict_parsing=True)
+        qs_parts = parse_qsl(parts.query, keep_blank_values=True, strict_parsing=True) if len(parts.query) > 0 else []
         # Remake query string
         qs = urlencode(qs_parts)
         # Remake URL
