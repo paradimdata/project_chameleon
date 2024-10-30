@@ -144,7 +144,7 @@ def common_handler_method_auth_check(request, data, access_token):
 # input_file,output_file = common_file_handler_parse_request(request, data, input_ext, output_ext)
 def common_file_handler_parse_request(request, data, input_ext, output_ext):
     #EXCEPTIONS
-    if not (('input_file' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)) in data:
+    if not (('input_file' in data) ^ ('input_bytes' in data) ^ ('input_url' in data)):
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
 
     if 'output_type' in data and all(opt not in data['output_type'] for opt in ['JSON', 'raw']):
