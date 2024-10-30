@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Body, Header, Request, Response, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Body, Header, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from starlette.background import BackgroundTask # Starlette underlies FastAPI
 import os, shutil
 import requests as r
 import json
@@ -65,10 +66,11 @@ def validate_url(source_url: str):
         qs = urlencode(qs_parts)
         # Remake URL
         canonical_url = urlunparse([parts.scheme,parts.netloc,parts.path,parts.params,qs,parts.fragment])
-        if canonical_url != source_url:
+        if not (canonical_url == source_url):
             raise HTTPException(status_code=400, detail=f"Error: Failed to normalize url.")
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error: Failed to normalize url. Reason: {str(e)}")
+    return canonical_url
 
 def authorized(access_token, endpoint_id, params):
     if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
@@ -328,6 +330,8 @@ def common_file_handler_prepare_output(request, data, output_file, media_type = 
     # TODO: make this able to stream the result and not read the entire file into memory before returning.
     with open(output_file, 'rb') as f:
         rv = Response(content=json.dumps( { 'status': 'ok', 'message': 'Files processed successfully', 'file_data': base64.b64encode(f.read()), 'file_name': os.path.basename(output_file) } ), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
+
+    return rv
 
 # common_handler_cleanup_request(request, data, input_file, input_folder)
 def common_handler_cleanup_request(request, data, input_file, input_folder):
