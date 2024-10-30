@@ -120,10 +120,14 @@ def common_handler_method_auth_check(request, data, access_token):
         # We do this on the request passed to the function, so that future steps do not need to redo the process
         if 'input_file' in data:
             data['input_file'] = validate_path(data['input_file'])
+        if 'input_folder' in data:
+            data['input_folder'] = validate_path(data['input_folder'])
         if 'input_url' in data:
             data['input_url'] = validate_url(data['input_url'])
         if 'output_file' in data:
             data['output_file'] = validate_path(data['output_file'], allow_nonexistent_leaf = True)
+        if 'output_folder' in data:
+            data['output_folder'] = validate_path(data['output_folder'], allow_nonexistent_leaf = True)
         auth_data = dict(data) # make explicit copy so we can delete items without affecting input request
         # Remove data, keeping only metadata
         if 'input_bytes' in auth_data:
@@ -297,6 +301,11 @@ def common_folder_handler_prepare_output(request, data, output_folder, output_fi
                 zip_object.write(file_path, os.path.relpath(file_path,start=output_folder))
     # and then cleanup the output folder
     shutil.rmtree(output_folder)
+
+    # Maybe TODO: At this point, the output is a file of raw bytes. If output_type == "JSON", should
+    # we rewrite the file as a valid JSON object? This seems like a case we would never use, so I
+    # tend towards "no", but then the parse_request logic should be updated to disallow output type
+    # JSON when the destination is "file" or "folder".
 
     return common_file_handler_prepare_output(request, data, output_file, 'application/zip')
 
