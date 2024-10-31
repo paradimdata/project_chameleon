@@ -21,3 +21,6 @@ background_file_name: [CONDITIONAL] FOR BRUKERBACKGROUND ONLY. A string of raw b
 background_file_url: [CONDITIONAL] FOR BRUKERBACKGROUND ONLY. A string that is a URL that is a download link for the background file being passed into the POST call.
 
 Output Keys
+
+{'status': 'ok', 'message': 'Files processed successfully'} : Return for output_dest 'file' 
+{ 'status': 'ok', 'message': 'Files processed successfully', 'file_data': base64.b64encode(f.read()), 'file_name': os.path.basename(output_file)} : Return for output_dest 'JSON'
