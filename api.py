@@ -395,7 +395,7 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert folder')
     finally:
-        common_folder_handler_cleanup_request(request, data, None, input_folder)
+        common_handler_cleanup_request(request, data, None, input_folder)
     
 @app.post('/non4dstem_folder')
 def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
@@ -414,7 +414,7 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
     except:
         raise HTTPException(status_code=500, detail=f'Failed to convert folder')
     finally:
-        common_folder_handler_cleanup_request(request, data, None, input_folder)
+        common_handler_cleanup_request(request, data, None, input_folder)
 
 @app.post('/non4dstem_file')
 def non4dstem_file_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
