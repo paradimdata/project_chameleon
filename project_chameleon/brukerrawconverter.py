@@ -41,6 +41,11 @@ def brukerrawconverter(input_file, output_file):
     if os.path.getsize(input_file) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
     
+    # Default tab separated, but understand CSV
+    sep = '\t'
+    if output_file.endswith(".csv"):
+        sep = ','
+
     #Load input file and create output text file
     d = xylib.load_file(input_file)
     f = open(output_file,"w+")
@@ -59,12 +64,12 @@ def brukerrawconverter(input_file, output_file):
         # column 0 is pseudo-column with point indices, we skip it
         col_names = [block.get_column(k).get_name() or ('column_%d' % k)
                      for k in range(1, ncol+1)]
-        f.write('# ' + '\t'.join(col_names) + '\n')
+        f.write('# ' + sep.join(col_names) + '\n')
         nrow = block.get_point_count()
         for j in range(nrow):
             values = ["%.6f" % block.get_column(k).get_value(j)
                       for k in range(1, ncol+1)]
-            f.write('\t'.join(values) + '\n')
+            f.write(sep.join(values) + '\n')
 
 def main():
     parser = argparse.ArgumentParser()
