@@ -155,6 +155,11 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
     if 'output_dest' in data and all(opt not in data['output_dest'] for opt in ['file', 'caller']):
             raise HTTPException(status_code=400, detail='Incorrect output_dest: output_dest options are file, caller')
 
+    #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
+    #TODO: do a proper check to make sure this is not tryig to elide the path
+    if 'file_output_type' in data and all(c in ".0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for c in data['file_output_type']):
+        output_ext = data['file_output_type']
+
     #HANDLE OUTPUT
     if 'output_dest' in data and data['output_dest'] == 'file':
         if not 'output_file' in data:
@@ -167,7 +172,8 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
         output_file = temp_name
 
     #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
-    if 'file_input_type' in data:
+    #TODO: do a proper check to make sure this is not tryig to elide the path
+    if 'file_input_type' in data and all(c in ".0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for c in data['file_input_type']):
         input_ext = data['file_input_type']
 
     #HANDLE INPUT
