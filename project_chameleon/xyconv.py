@@ -44,6 +44,10 @@ def convert_file(opt):
         d = xylib.load_string(src.read(), opt.t)
     else:
         d = xylib.load_file(opt.INPUT_FILE, opt.t or '')
+    # Default tab separated, but understand CSV
+    sep = '\t'
+    if opt.OUTPUT_FILE.name.endswith(".csv"):
+        sep = ','
     f = opt.OUTPUT_FILE
     f.write('# exported by xylib from a %s file\n' % d.fi.name)
     # output the file-level meta-info
@@ -62,12 +66,12 @@ def convert_file(opt):
         # column 0 is pseudo-column with point indices, we skip it
         col_names = [block.get_column(k).get_name() or ('column_%d' % k)
                      for k in range(1, ncol+1)]
-        f.write('# ' + '\t'.join(col_names) + '\n')
+        f.write('# ' + sep.join(col_names) + '\n')
         nrow = block.get_point_count()
         for j in range(nrow):
             values = ["%.6f" % block.get_column(k).get_value(j)
                       for k in range(1, ncol+1)]
-            f.write('\t'.join(values) + '\n')
+            f.write(sep.join(values) + '\n')
 
 
 
