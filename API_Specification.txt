@@ -2,9 +2,10 @@ Documentation of possible input and output keys for the stable API of Project Ch
 
 Input Keys
 
-X-Auth-Access-Token: [REQUIRED] A string associated with the endpoint that will be used as a key for access.
-endpoint_id: [REQUIRED] A string that contains the address the endpoint where chameleon is being hosted. 
-opa_json: [REQUIRED] A dictionary copy of the data being passed into the POST call.
+endpoint_id: [GENERATED] A string that contains the address the endpoint where chameleon is being hosted. Not input by the user. Generated within the code.
+opa_json: [GENERATED] A dictionary copy of the data being passed into the POST call. Not input by the user. Generated within the code.
+X-Auth-Access-Token: [OPTIONAL] A string associated with the endpoint that will be used as a key for access.
+Access-Token: [OPTIONAL] A string associated with the endpoint that will be used as a token for access.
 input_file: [OPTIONAL] A string or path that directs to a file being passed into the POST call.
 input_folder: [OPTIONAL] A string or path that directs to a folder being passed into the POST call.
 input_url: [OPTIONAL] A string that is a URL that is a download link for a file being passed into the POST call.
@@ -20,7 +21,11 @@ background_file_bytes: [CONDITIONAL] FOR BRUKERBACKGROUND ONLY. A string or path
 background_file_name: [CONDITIONAL] FOR BRUKERBACKGROUND ONLY. A string of raw bytes that are generated from the background file that will be processed in the POST call.
 background_file_url: [CONDITIONAL] FOR BRUKERBACKGROUND ONLY. A string that is a URL that is a download link for the background file being passed into the POST call.
 
+Aditional Notes:
+Although input_file, input_folder, input_url, input_bytes, and folder_bytes are all optional, it is required to have just one of them in the POST call.
+
 Output Keys
 
 {'status': 'ok', 'message': 'Files processed successfully'} : Return for output_dest 'file' 
+{'status': 'ok', 'message': 'Files processed successfully'} : Return for output_dest 'folder'
 { 'status': 'ok', 'message': 'Files processed successfully', 'file_data': base64.b64encode(f.read()), 'file_name': os.path.basename(output_file)} : Return for output_dest 'JSON'

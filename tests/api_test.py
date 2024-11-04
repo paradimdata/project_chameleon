@@ -1,12 +1,16 @@
+import sys
+sys.path.append('../')
 from fastapi.testclient import TestClient
 import pytest
 import pathlib
 import shutil
 from pathlib import Path
-
-from api import app
+from ..api import app
 
 client = TestClient(app)
+
+def authorized(access_token, endpoint_id, params):
+    return True
 
 def test_authorization_inputs():
     response = client.get("/rheedconverter", headers={"access-token": "", "Content-Type": "application/json"}, data={"input_url":"https://github.com/paradimdata/project_chameleon/raw/main/tests/data/rheed/test.img","output_dest": "file","output_file": "urltest_out.png"})

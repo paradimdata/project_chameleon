@@ -3,8 +3,8 @@ import pathlib
 import shutil
 from pathlib import Path
 from unittest.mock import patch
-from project_chameleon.mbeparser import mbeparser
-from project_chameleon.mbeparser import find_shutter_values
+from ..project_chameleon.mbeparser import mbeparser
+from ..project_chameleon.mbeparser import find_shutter_values
 
 
 def test_shutter_values():

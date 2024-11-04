@@ -5,7 +5,7 @@ import os
 import imagehash
 from PIL import Image
 from pathlib import Path
-from project_chameleon.stemarray4d import stemarray4d
+from ..project_chameleon.stemarray4d import stemarray4d
 
 def test_stemarray4d_basic_output():
     stemarray4d_file_path_basic = (

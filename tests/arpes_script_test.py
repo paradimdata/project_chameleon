@@ -1,9 +1,11 @@
+import sys
+sys.path.insert(1, '../')
 import pytest
 import pathlib
 import shutil
 import numpy as np
 from pathlib import Path
-from project_chameleon.arpes import arpes_folder_workbook
+from ..project_chameleon.arpes import arpes_folder_workbook
 from unittest.mock import patch
 
 def test_arpes_basic_output():

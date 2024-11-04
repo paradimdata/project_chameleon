@@ -3,7 +3,7 @@ import pathlib
 import shutil
 import imagehash
 from PIL import Image
-from project_chameleon.hs2converter import hs2converter
+from ..project_chameleon.hs2converter import hs2converter
 
 
 def test_hs2_basic_output():
