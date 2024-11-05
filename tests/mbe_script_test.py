@@ -3,8 +3,10 @@ import pathlib
 import shutil
 from pathlib import Path
 from unittest.mock import patch
-from ..project_chameleon.mbeparser import mbeparser
-from ..project_chameleon.mbeparser import find_shutter_values
+import sys
+sys.path.append('../')
+from project_chameleon.mbeparser import mbeparser
+from project_chameleon.mbeparser import find_shutter_values
 
 
 def test_shutter_values():
@@ -19,7 +21,7 @@ def test_mbe_basic_output():
     )
     assert not test_file_path_basic.parent.is_dir()
     test_file_path_basic.parent.mkdir()
-    shutil.copytree('/project_chameleon/tests/data/mbe/mbe_test_data', test_file_path_basic)
+    shutil.copytree('data/mbe/mbe_test_data', test_file_path_basic)
     try:
         assert test_file_path_basic.is_dir()
     finally:
@@ -34,7 +36,7 @@ def test_mbe_folders_useful():
     assert not test_file_path_folders_useful.parent.is_dir()
     test_file_path_folders_useful.parent.mkdir()
     try:
-        shutil.copytree('project_chameleon/tests/data/mbe/mbe_test_data', test_file_path_folders_useful)
+        shutil.copytree('data/mbe/mbe_test_data', test_file_path_folders_useful)
         with patch('builtins.input', return_value='4'):
             mbeparser(test_file_path_folders_useful)
         useful_path = Path(str(test_file_path_folders_useful) + '/useful')

@@ -86,7 +86,8 @@ def common_handler_access_token(request, data, access_token, x_auth_access_token
         elif len(access_token) == 0:
             access_token = x_auth_access_token
     except:
-        raise HTTPException(status_code=400, detail='Malformed parameters')
+        traceback.print_exc()
+        raise HTTPException(status_code=400, detail='Malformed parameters: Access method was not successful. Make sure you have a working token')
 
     try:
         if len(str(access_token)) > 0:
@@ -362,7 +363,8 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
         rheedconverter(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "rheedconverter"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
 
@@ -381,7 +383,8 @@ def brukerraw_convert_route(request: Request, data: dict = Body(...), access_tok
         brukerrawconverter(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "brukerrawconverter"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
     
@@ -399,7 +402,8 @@ def MBE_parser_route(request: Request, data: dict = Body(...), access_token: str
         mbeparser(input_folder)
         return common_folder_handler_prepare_output(request, data, output_folder, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert folder')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert folder: an error occurred running the function "mbeparser"')
     finally:
         common_handler_cleanup_request(request, data, None, input_folder)
     
@@ -418,7 +422,8 @@ def non4dstem_folder_convert_route(request: Request, data: dict = Body(...), acc
         non4dstem(data_folder = input_folder,outputs_folder = output_folder)
         return common_folder_handler_prepare_output(request, data, output_folder, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert folder')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert folder: an error occurred running the function "non4dstem" on a folder')
     finally:
         common_handler_cleanup_request(request, data, None, input_folder)
 
@@ -437,7 +442,8 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
         non4dstem(data_file = input_file, output_file = output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "non4dstem" on a file')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
     
@@ -461,7 +467,8 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
         ppmsmpmsparser(input_file, output_file, value)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "ppmsmpmsparser"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
     
@@ -479,7 +486,7 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         stemarray4d(input_file, output_file)
         return common_folder_handler_prepare_output(request, data, output_file, media_type='application/zip')
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "stemarray4d"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
     
@@ -497,7 +504,8 @@ def arpes_workbook_convert_route(request: Request, data: dict = Body(...), acces
         arpes_folder_workbook(input_folder, output_file)
         return common_file_handler_prepare_output(request, data, output_file, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert files')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert files: an error occurred running the function "arpes_folder_workbook"')
     finally:
         common_handler_cleanup_request(request, data, None, input_folder)
 
@@ -516,7 +524,8 @@ async def hs2_convert_route(request: Request, data: dict = Body(...), access_tok
         hs2converter(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "hs2converter"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
         
@@ -562,7 +571,8 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
         brukerrawbackground(background, input_file, output_file)
         return common_folder_handler_prepare_output(request, data, output_file)
     except:
-        raise HTTPException(status_code=500, detail=f'Failed to convert file')
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "brukerrawbackground"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
         if ('background_file_bytes' in data) or ('background_file_url' in data):

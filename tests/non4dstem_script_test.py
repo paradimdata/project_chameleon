@@ -3,7 +3,9 @@ import pathlib
 import shutil
 import os
 from pathlib import Path
-from ..project_chameleon.non4dstem import non4dstem
+import sys
+sys.path.append('../')
+from project_chameleon.non4dstem import non4dstem
 
 def test_non4dstem_basic_folder_output():
     non4dstem_file_path_basic = (
@@ -14,7 +16,7 @@ def test_non4dstem_basic_folder_output():
     assert not non4dstem_file_path_basic.parent.is_dir()
     non4dstem_file_path_basic.parent.mkdir()
     try:
-        non4dstem(data_folder = '/data/non4dstem_data', outputs_folder = non4dstem_file_path_basic)
+        non4dstem(data_folder = 'data/non4dstem_data', outputs_folder = non4dstem_file_path_basic)
         assert non4dstem_file_path_basic.is_dir()
     finally:
         shutil.rmtree(non4dstem_file_path_basic.parent)
@@ -28,7 +30,7 @@ def test_non4dstem_basic_file_output():
     assert not non4dstem_file_path_basic.parent.is_dir()
     non4dstem_file_path_basic.parent.mkdir()
     try:
-        non4dstem(data_file = '/data/non4dstem_data/005_ADF Image (SI Survey).dm4', output_file = non4dstem_file_path_basic)
+        non4dstem(data_file = 'data/non4dstem_data/005_ADF Image (SI Survey).dm4', output_file = non4dstem_file_path_basic)
         assert non4dstem_file_path_basic.is_file()
     finally:
         shutil.rmtree(non4dstem_file_path_basic.parent)
@@ -42,7 +44,7 @@ def test_non4dstem_file_output():
     assert not non4dstem_file_path_file.parent.is_dir()
     non4dstem_file_path_file.parent.mkdir()
     try:
-        non4dstem(data_folder = '/data/non4dstem_data', outputs_folder = non4dstem_file_path_file)
+        non4dstem(data_folder = 'data/non4dstem_data', outputs_folder = non4dstem_file_path_file)
         files = os.listdir(non4dstem_file_path_file)
         assert files
 

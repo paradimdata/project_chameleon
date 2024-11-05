@@ -3,7 +3,9 @@ import pathlib
 import shutil
 import numpy as np
 from pathlib import Path
-from ..project_chameleon.brukerrawbackground import brukerrawbackground
+import sys
+sys.path.append('../')
+from project_chameleon.brukerrawbackground import brukerrawbackground
 from unittest.mock import patch
 
 def test_brukerbackground_basic_output():
@@ -16,7 +18,7 @@ def test_brukerbackground_basic_output():
     brukerbackground_file_path_basic.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.15):
-            brukerrawbackground('/project_chameleon/tests/data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
+            brukerrawbackground('data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
         p = Path('test_output_backgroundSubtracted.csv')
         assert p.is_file()
     finally:
@@ -32,7 +34,7 @@ def test_brukerbackground_plot_output():
     brukerbackground_file_path_plot.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.85):
-            brukerrawbackground('/project_chameleon/tests/data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
+            brukerrawbackground('data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
         p = Path('test_output_raw_data.png')
         assert p.is_file()
     finally:
@@ -48,7 +50,7 @@ def test_brukerbackground_csv_output():
     brukerbackground_file_path_csv.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.85):
-            brukerrawbackground('/project_chameleon/tests/data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
+            brukerrawbackground('data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
         with open('test_output_backgroundSubtracted.csv', 'r') as file:
             file.readline()
             for lines in file:

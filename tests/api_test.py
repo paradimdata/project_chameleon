@@ -1,11 +1,12 @@
-import sys
-sys.path.append('../')
 from fastapi.testclient import TestClient
 import pytest
 import pathlib
 import shutil
 from pathlib import Path
-from ..api import app
+import sys
+sys.path.append('../')
+print(sys.path)
+from api import app
 
 client = TestClient(app)
 

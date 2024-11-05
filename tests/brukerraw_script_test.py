@@ -2,7 +2,9 @@ import pytest
 import pathlib
 import shutil
 from pathlib import Path
-from ..project_chameleon.brukerrawconverter import brukerrawconverter
+import sys
+sys.path.append('../')
+from project_chameleon.brukerrawconverter import brukerrawconverter
 
 def test_brukerraw_basic_output():
     brukerraw_file_path_basic = (
@@ -13,7 +15,7 @@ def test_brukerraw_basic_output():
     assert not brukerraw_file_path_basic.parent.is_dir()
     brukerraw_file_path_basic.parent.mkdir()
     try:
-        brukerrawconverter('/data/bruker/brukerraw_test.RAW',brukerraw_file_path_basic)
+        brukerrawconverter('data/bruker/brukerraw_test.RAW',brukerraw_file_path_basic)
         assert brukerraw_file_path_basic.is_file()
     finally:
         shutil.rmtree(brukerraw_file_path_basic.parent)
@@ -27,7 +29,7 @@ def test_brukerraw_output():
     assert not brukerraw_file_path.parent.is_dir()
     brukerraw_file_path.parent.mkdir()
     try:
-        brukerrawconverter('/data/bruker/brukerraw_test.RAW',brukerraw_file_path)
+        brukerrawconverter('data/bruker/brukerraw_test.RAW',brukerraw_file_path)
         with open(brukerraw_file_path, 'r') as file:
             test_lines = [file.readline() for _ in range(5)]
         with open('bruker_output.txt', 'r') as file:
