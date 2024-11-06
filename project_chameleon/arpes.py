@@ -37,7 +37,7 @@ def build_arpes_workbook(workbook_name):
     
     """
     #Error handling
-    if not workbook_name.endswith('.xlsx'):
+    if not str(workbook_name).endswith('.xlsx'):
         raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
     
     #Open the workbook
@@ -348,7 +348,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     
     """
     #Initialization and error handling
-    if not workbook_name.endswith('.xlsx'):
+    if not str(workbook_name).endswith('.xlsx'):
         raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
     if not jaina_file.endswith('.log'):
         raise ValueError("ERROR: jaina_file must end with '.log'")
@@ -425,7 +425,7 @@ def arpes_folder_workbook(folder_name, workbook_name):
         raise ValueError("ERROR: folder_name input must be a directory")
     if os.listdir(folder_name) == 0:
         raise ValueError("ERROR: bad input. Data folder should contain files")
-    if not workbook_name.endswith('.xlsx'):
+    if not str(workbook_name).endswith('.xlsx'):
         raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
 
     jaina_logs = []

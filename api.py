@@ -87,7 +87,7 @@ def common_handler_access_token(request, data, access_token, x_auth_access_token
             access_token = x_auth_access_token
     except:
         traceback.print_exc()
-        raise HTTPException(status_code=400, detail='Malformed parameters: Access method was not successful. Make sure you have a working token')
+        raise HTTPException(status_code=400, detail='Malformed parameters: Access token could not be found')
 
     try:
         if len(str(access_token)) > 0:

@@ -13,15 +13,13 @@ def test_arpes_basic_output():
     arpes_file_path_basic = (
         pathlib.Path(__file__).parent
         / test_arpes_basic_output.__name__
-        / "test_file.txt"
+        / "test_output.xlsx"
     )
     assert not arpes_file_path_basic.parent.is_dir()
     arpes_file_path_basic.parent.mkdir()
     try:
-        with patch('builtins.input', return_value=.15):
-            arpes_folder_workbook('data/arpes/ARPES_test_folder/ARPES Raw Data/NbO/Al2O3_0001/JF24020', 'test_output.xlsx')
-        p = Path('test_file.xlsx')
-        assert p.is_file()
+        arpes_folder_workbook('data/arpes/ARPES_test_folder/ARPES Raw Data/NbO/Al2O3_0001/JF24020', arpes_file_path_basic)
+        assert arpes_file_path_basic.is_file()
     finally:
         shutil.rmtree(arpes_file_path_basic.parent)
 
