@@ -161,28 +161,24 @@ def get_wavenote_values(wavenote_file):
                 #[File, Start Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
         os.remove(data_file)
         if (not '=' in lines[35]) and ('[' in lines[35]):
-            for l in lines[41:]:
-                #[Point (Degree), X, Y, Z, Theta, Phi]
-                current_row.append(l)
-                column += 1
-                if column == 6:
-                    run_mode_information.append(current_row)
-                    current_row = []
-                    column = 0
+            theta = str(dataset.run_mode_info.iloc[0, 4])
+            phi = str(dataset.run_mode_info.iloc[0, 5])
             #Row for Manipulator scan
             r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-                run_mode_information[0][4], run_mode_information[0][5],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
+                theta, phi,'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 'Manipulator Scan',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         elif (not '=' in lines[35]) and (not '[' in lines[35]):
+            theta = str(dataset.run_mode_info.iloc[0, 4])
+            phi = str(dataset.run_mode_info.iloc[0, 5])
             #Row for Normal Mode
             r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-                lines[41].split('=')[1], lines[42].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
+                theta, phi,'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
                 'Normal Mode',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         else:
             #Row for Add Dimension
             r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-                lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
-                lines[35].split('=')[1],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+            lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
+            lines[35].split('=')[1],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
         return r
     except ParsingError as e:
         print(f"An error occurred while parsing the configuration: {e}")
