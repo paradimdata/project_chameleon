@@ -18,7 +18,7 @@ def rheedconverter(file_name, output_file):
     #Make sure input is a .img file
     if not file_name.endswith('.img'):
         raise ValueError("ERROR: bad input. Expected .img file")
-    if not output_file.endswith('.png'):
+    if not str(output_file).endswith('.png'):
         raise ValueError("ERROR: please make your output file a .png file")
     if os.path.getsize(file_name) < 615040:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")

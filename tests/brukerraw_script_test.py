@@ -32,7 +32,7 @@ def test_brukerraw_output():
         brukerrawconverter('data/bruker/brukerraw_test.RAW',brukerraw_file_path)
         with open(brukerraw_file_path, 'r') as file:
             test_lines = [file.readline() for _ in range(5)]
-        with open('bruker_output.txt', 'r') as file:
+        with open('data/bruker/bruker_output.txt', 'r') as file:
             base_lines = [file.readline() for _ in range(5)]
 
         assert test_lines == base_lines

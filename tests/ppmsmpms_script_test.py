@@ -18,7 +18,7 @@ def test_ppms_basic_output():
     ppms_file_path_basic.parent.mkdir()
     try:
         with patch('builtins.input', return_value="4-Probe Resistivity"):
-            ppmsmpmsparser('/project_chameleon/tests/data/ppms/4-probe resistivity example file.dat', ppms_file_path_basic)
+            ppmsmpmsparser('data/ppms/4-probe resistivity example file.dat', ppms_file_path_basic, user_input = '3')
         assert ppms_file_path_basic.is_file()
     finally:
         shutil.rmtree(ppms_file_path_basic.parent)
@@ -33,10 +33,10 @@ def test_ppms_probe_output():
     ppms_file_path_probe.parent.mkdir()
     try:
         with patch('builtins.input', return_value="4-Probe Resistivity"):
-            ppmsmpmsparser('/project_chameleon/tests/data/ppms/4-probe resistivity example file.dat', ppms_file_path_probe)
+            ppmsmpmsparser('data/ppms/4-probe resistivity example file.dat', ppms_file_path_probe, user_input = '3')
         with open(ppms_file_path_probe, 'r') as file:
             test_lines = [file.readline() for _ in range(5)]
-        with open('probe_test_output.txt', 'r') as file:
+        with open('data/ppms/probe_test_output.txt', 'r') as file:
             base_lines = [file.readline() for _ in range(5)]
 
         assert test_lines == base_lines

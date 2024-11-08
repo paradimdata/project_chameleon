@@ -24,7 +24,7 @@ def stemarray4d(file_name,output_name):
         raise ValueError("ERROR: bad input. Function takes a .raw 4D stem file")
     if os.path.getsize(file_name) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
-    if '.' in output_name:
+    if '.' in str(output_name):
         raise ValueError("ERROR: Output Name should not contain '.'")
     
     #Import the file as 4D STEM array

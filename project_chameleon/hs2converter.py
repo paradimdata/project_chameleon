@@ -16,9 +16,9 @@ def hs2converter(file_name, output_file):
     """
 
     #Make sure input is a .img file
-    if not file_name.endswith('.hs2'):
+    if not str(file_name).endswith('.hs2'):
         raise ValueError("ERROR: bad input. Expected .hs2 file")
-    if not output_file.endswith('.png'):
+    if not str(output_file).endswith('.png'):
         raise ValueError("ERROR: please make your output file a .png file")
     if not os.path.isfile(file_name):
         raise ValueError("ERROR: Input should be a file. Check if your file exists.")

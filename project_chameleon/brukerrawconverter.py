@@ -34,16 +34,16 @@ def brukerrawconverter(input_file, output_file):
     #Check if input is a file
     if os.path.isfile(input_file) is False:
         raise ValueError("ERROR: bad input. Expected file")
-    if not (input_file.endswith('.raw') or input_file.endswith('.uxd') or input_file.endswith('.RAW')):
+    if not (str(input_file).endswith('.raw') or str(input_file).endswith('.uxd') or str(input_file).endswith('.RAW')):
         raise ValueError("ERROR: bad input. Expected .raw file or .uxd file.")
-    if not (output_file.endswith('.txt') or output_file.endswith('.csv')):
+    if not (str(output_file).endswith('.txt') or str(output_file).endswith('.csv')):
         raise ValueError("ERROR: Output file should be a text file.")
     if os.path.getsize(input_file) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
     
     # Default tab separated, but understand CSV
     sep = '\t'
-    if output_file.endswith(".csv"):
+    if str(output_file).endswith(".csv"):
         sep = ','
 
     #Load input file and create output text file

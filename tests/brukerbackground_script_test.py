@@ -12,46 +12,58 @@ def test_brukerbackground_basic_output():
     brukerbackground_file_path_basic = (
         pathlib.Path(__file__).parent
         / test_brukerbackground_basic_output.__name__
-        / "test_file.txt"
+        / "test_output"
     )
     assert not brukerbackground_file_path_basic.parent.is_dir()
     brukerbackground_file_path_basic.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.15):
-            brukerrawbackground('data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
-        p = Path('test_output_backgroundSubtracted.csv')
-        assert p.is_file()
+            brukerrawbackground('data/bruker/test_background.csv','data/bruker/test_sample.csv', brukerbackground_file_path_basic)
+        assert brukerbackground_file_path_basic.is_dir()
     finally:
         shutil.rmtree(brukerbackground_file_path_basic.parent)
 
 def test_brukerbackground_plot_output():
     brukerbackground_file_path_plot = (
         pathlib.Path(__file__).parent
-        / test_brukerbackground_plot_output.__name__
-        / "test_file.txt"
+        / "test_output"
     )
-    assert not brukerbackground_file_path_plot.parent.is_dir()
-    brukerbackground_file_path_plot.parent.mkdir()
+
+    # Ensure a clean test environment
+    if brukerbackground_file_path_plot.is_dir():
+        shutil.rmtree(brukerbackground_file_path_plot)
+    #brukerbackground_file_path_plot.mkdir(parents=True, exist_ok=True)
+    
     try:
-        with patch('builtins.input', return_value=.85):
-            brukerrawbackground('data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
-        p = Path('test_output_raw_data.png')
-        assert p.is_file()
+        # Mock input and run the function
+        with patch('builtins.input', return_value=0.85):
+            brukerrawbackground(
+                'data/bruker/test_background.csv',
+                'data/bruker/test_sample.csv',
+                brukerbackground_file_path_plot
+            )
+        
+        # Define expected output file path
+        expected_output_file = brukerbackground_file_path_plot / "test_output_raw_data.png"
+
+        # Check if the expected output file exists
+        assert expected_output_file.is_file(), f"Expected output file not found: {expected_output_file}"
+
     finally:
-        shutil.rmtree(brukerbackground_file_path_plot.parent)
+        # Clean up test output directory
+        shutil.rmtree(brukerbackground_file_path_plot)
 
 def test_brukerbackground_csv_output():
     brukerbackground_file_path_csv = (
         pathlib.Path(__file__).parent
         / test_brukerbackground_csv_output.__name__
-        / "test_file.txt"
+        / "test_file"
     )
     assert not brukerbackground_file_path_csv.parent.is_dir()
-    brukerbackground_file_path_csv.parent.mkdir()
     try:
         with patch('builtins.input', return_value=.85):
-            brukerrawbackground('data/bruker/test_background.csv','/project_chameleon/tests/data/bruker/test_sample.csv', 'test_output')
-        with open('test_output_backgroundSubtracted.csv', 'r') as file:
+            brukerrawbackground('data/bruker/test_background.csv','data/bruker/test_sample.csv', brukerbackground_file_path_csv)
+        with open(str(brukerbackground_file_path_csv) + '/test_output_backgroundSubtracted.csv', 'r') as file:
             file.readline()
             for lines in file:
                 test_parts = lines.split(',')

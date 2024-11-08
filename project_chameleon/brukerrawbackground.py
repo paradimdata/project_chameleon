@@ -34,8 +34,10 @@ def brukerrawbackground(background_input, sample_input, output_name):
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
     if os.path.getsize(sample_input) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
-    if '.' in output_name:
+    if '.' in str(output_name):
         raise ValueError("ERROR: Output Folder should not contain '.'")
+    
+    output_name = str(output_name)
 
     if background_input.endswith('.csv'):
         Background = pd.read_csv(background_input)

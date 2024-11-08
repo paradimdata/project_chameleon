@@ -53,7 +53,7 @@ def test_mbe_folders_useless():
     assert not test_file_path_folders_useless.parent.is_dir()
     test_file_path_folders_useless.parent.mkdir()
     try:
-        shutil.copytree('project_chameleon/tests/data/mbe/mbe_test_data', test_file_path_folders_useless)
+        shutil.copytree('data/mbe/mbe_test_data', test_file_path_folders_useless)
         with patch('builtins.input', return_value='4'):
             mbeparser(test_file_path_folders_useless)
         useful_path = Path(str(test_file_path_folders_useless) + '/useless')

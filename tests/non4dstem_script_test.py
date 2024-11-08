@@ -50,8 +50,3 @@ def test_non4dstem_file_output():
 
     finally:
         shutil.rmtree(non4dstem_file_path_file.parent)
-
-def test_no_arguments():
-    with pytest.raises(TypeError) as exc_info:
-        non4dstem()
-    assert str(exc_info.value) =="non4dstem() missing 2 required positional arguments: 'data_folder' and 'outputs_folder'"

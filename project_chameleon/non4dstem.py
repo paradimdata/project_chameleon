@@ -17,7 +17,7 @@ def non4dstem(data_folder = None, outputs_folder = None, data_file = None, outpu
     """
     if data_folder and os.path.isdir(data_folder) is False:
         raise ValueError("ERROR: bad input. Expected folder")
-    if outputs_folder and '.' in outputs_folder:
+    if outputs_folder and '.' in str(outputs_folder):
         raise ValueError("ERROR: Output Folder should not contain '.'")
     if data_folder and os.listdir(data_folder) == 0:
         raise ValueError("ERROR: bad input. Data folder should contain files")
@@ -63,4 +63,4 @@ def main():
     parser.add_argument("input", help="the input folder")
     parser.add_argument("output", help="the output folder")
     args = parser.parse_args()
-    non4dstem(args.input, args.output)
+    non4dstem(data_folder = args.input, output_folder = args.output)

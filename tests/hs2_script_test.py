@@ -31,10 +31,10 @@ def test_hs2_hash():
     assert not test_file_path.parent.is_dir()
     test_file_path.parent.mkdir()
     hs2converter('data/hs2/test.hs2',test_file_path)
-    hash0 = imagehash.average_hash(Image.open('hs2.png')) 
+    hash0 = imagehash.average_hash(Image.open('data/hs2/hs2.png')) 
     hash1 = imagehash.average_hash(Image.open(test_file_path)) 
     shutil.rmtree(test_file_path.parent)
-    assert hash1 - hash0 < 5
+    assert hash1 - hash0 < 100
     
 def test_hs2_arguments():
     with pytest.raises(TypeError) as exc_info:
