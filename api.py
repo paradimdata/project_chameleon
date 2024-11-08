@@ -207,6 +207,47 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
 
     raise HTTPException(status_code=400, detail='Malformed parameters')
 
+def secondary_file_handler_parse_request(request, data, input_ext):
+    #EXCEPTIONS
+    if not (('secondary_file' in data) ^ ('secondary_bytes' in data) ^ ('secondary_url' in data)):
+        raise HTTPException(status_code=400, detail='Incorrect number of parameters')
+
+    #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
+    #TODO: do a proper check to make sure this is not tryig to elide the path
+    if 'secondary_input_type' in data and all(c in ".0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for c in data['file_input_type']):
+        input_ext = data['file_input_type']
+
+    #HANDLE INPUT
+    if 'secondary_file' in data:
+        file_name = validate_path(data['input_file'])
+        return file_name
+
+    if 'secondary_bytes' in data:
+        decoded_data = base64.b64decode(data['secondary_bytes'])
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(decoded_data)
+            temp_name = temp_file.name + input_ext
+        os.rename(temp_file.name, temp_name)
+        return temp_name
+
+    if 'secondary_url' in data:
+        file_url = validate_url(data['secondary_url'])
+        try:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_name = temp_file.name + input_ext
+            os.unlink(temp_file.name) # cleanup
+            urllib.request.urlretrieve(file_url, filename = temp_name)
+        except r.exceptions.RequestException as e:
+            traceback.print_exc()
+            if e.response is not None:
+                raise HTTPException(status_code=400, detail=f'Error occured while accessing {file_url}')
+            else:
+                raise HTTPException(status_code=400, detail=f'Request failed while accessing {file_url}')
+        return temp_name
+    
+    raise HTTPException(status_code=400, detail='Malformed parameters')
+
+
 # input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
 def common_folder_handler_parse_request(request, data):
     #EXCEPTIONS
@@ -539,33 +580,7 @@ def brukerbackground_convert_route(request: Request, data: dict = Body(...), acc
 
     common_handler_method_auth_check(request, data, access_token)
     input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '.csv')
-
-    # TODO: this pretty much looks like common_file_handler_parse_request, but with different key names. We should find a way to
-    # turn this into a common_file_handler_parse_request call (and coresponding auth check call too)
-    if not ('background_file_name' in data) ^ ('background_file_bytes' in data) ^ ('background_file_url' in data):
-            raise HTTPException(status_code=400, detail='Incorrect number of parameters')
-    if 'background_input_type' in data:
-            if not '.raw' in data.get('background_input_type'):
-                if not '.csv' in data.get('background_input_type'):
-                    raise HTTPException(status_code=400, detail='Incorrect file extension: background_input_type options are .raw and .csv')
-    background_ext = '.raw'
-    if 'background_input_type' in data:
-        background_ext = data.get('background_input_type')
-    if 'background_file_name' in data:
-            background = validate_path(data.get('background_file_name'))
-            if not os.path.isfile(background):
-                raise HTTPException(status_code=400, detail='Local path is not a valid file')
-    if 'background_file_bytes' in data:
-        background_file_bytes = data.get('background_file_bytes')
-        decoded_data = base64.b64decode(background_file_bytes)
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(decoded_data)
-            background = temp_file.name + background_ext
-        os.rename(temp_file.name, background)
-    if 'background_file_url' in data:
-        background_file_url = validate_url(data.get('background_file_url'))
-        urllib.request.urlretrieve(background_file_url, filename = 'background_temp_name' + background_ext) 
-        background = 'background_temp_name' + background_ext
+    background = secondary_file_handler_parse_request(request, data, '.raw')
 
     try:
         brukerrawbackground(background, input_file, output_file)
