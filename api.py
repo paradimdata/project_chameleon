@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Body, Header, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from starlette.background import BackgroundTask # Starlette underlies FastAPI
 import os, shutil
 import requests as r
@@ -375,9 +375,20 @@ def common_file_handler_prepare_output(request, data, output_file, media_type = 
         return FileResponse(output_file, media_type=media_type, background=BackgroundTask(os.unlink, output_file))
 
     # If not specified, default to JSON return to caller.
-    # TODO: make this able to stream the result and not read the entire file into memory before returning.
-    with open(output_file, 'rb') as f:
-        rv = Response(content=json.dumps( { 'status': 'ok', 'message': 'Files processed successfully', 'file_data': base64.b64encode(f.read()), 'file_name': os.path.basename(output_file) } ), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
+    # We use a generator to avoid reading the entire file into memory.
+    def iterb64encode(opf):
+        CHUNK_SIZE = 3*16384 # should be a multiple of 3, as 3 binary characters are 4 base64 characters; this (times ~2.5) is the memory usage at any one time
+        # prefix first
+        yield from [b'{ "status": "ok", "message": "Files processed successfully", "file_data": "'.decode('utf8')];
+        with open(opf, 'rb') as f:
+            # binary data as base64 next
+            chunk = f.read(CHUNK_SIZE)
+            while len(chunk) > 0:
+                yield from [base64.b64encode(chunk).decode('utf8')]
+                chunk = f.read(CHUNK_SIZE)
+        # suffix last
+        yield from [(b'", "file_name": ' + json.dumps(os.path.basename(opf)).encode('utf8') + b' }').decode('utf8')];
+    rv = StreamingResponse(iterb64encode(output_file), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
 
     return rv
 
