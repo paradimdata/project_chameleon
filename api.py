@@ -386,7 +386,7 @@ def common_file_handler_prepare_output(request, data, output_file, media_type = 
             yield from base64.b64encode(chunk)
         # suffix last
         yield from b'", "file_name": "' + json.dumps(os.path.basename(opf)).encode('utf8') + b'" }';
-    rv = StreamingResponse(iterb64encode(output_file)), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
+    rv = StreamingResponse(iterb64encode(output_file), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
 
     return rv
 
