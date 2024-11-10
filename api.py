@@ -383,7 +383,9 @@ def common_file_handler_prepare_output(request, data, output_file, media_type = 
         with open(opf, 'rb') as f:
             # binary data as base64 next
             chunk = f.read(CHUNK_SIZE)
-            yield from base64.b64encode(chunk)
+            while len(chunk) > 0:
+                yield from base64.b64encode(chunk)
+                chunk = f.read(CHUNK_SIZE)
         # suffix last
         yield from b'", "file_name": "' + json.dumps(os.path.basename(opf)).encode('utf8') + b'" }';
     rv = StreamingResponse(iterb64encode(output_file), media_type='application/json', background=BackgroundTask(os.unlink, output_file))
