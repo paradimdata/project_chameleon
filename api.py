@@ -247,7 +247,6 @@ def secondary_file_handler_parse_request(request, data, input_ext):
     
     raise HTTPException(status_code=400, detail='Malformed parameters')
 
-
 # input_folder,output_folder,output_file = common_folder_handler_parse_request(request, data)
 def common_folder_handler_parse_request(request, data):
     #EXCEPTIONS
@@ -522,7 +521,7 @@ def stem4d_convert_route(request: Request, data: dict = Body(...), access_token:
         return er
 
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '') # TODO: Does the output really have no file extension? What format is it?
+    input_file,output_file = common_file_handler_parse_request(request, data, '.raw', '') # Output has no file extension, all files are in a folder
     try:
         stemarray4d(input_file, output_file)
         return common_folder_handler_prepare_output(request, data, output_file, media_type='application/zip')
