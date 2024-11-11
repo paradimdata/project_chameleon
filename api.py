@@ -510,7 +510,7 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
         return er
     
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, '.dat', '.txt') # TODO: Should this be .csv as output format?
+    input_file,output_file = common_file_handler_parse_request(request, data, '.dat', '.csv') 
 
     if 'value_name' in data:
         value = data['value_name']

@@ -1,6 +1,7 @@
 import numpy as np
 import argparse
 import os
+import csv
 
 def ppmsmpmsparser(inputfile, outputfile, user_input = None):
     """
@@ -20,8 +21,8 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         raise ValueError("ERROR: bad input. Expected .dat file")
     if os.path.getsize(inputfile) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
-    if not str(outputfile).endswith('.txt'):
-        raise ValueError("ERROR: outputfile should be a .txt file.")
+    if not str(outputfile).endswith('.txt') or str(outputfile).endswith('.csv'):
+        raise ValueError("ERROR: outputfile should be a .csv file.")
     if user_input not in ['1', '2', '3', '4'] and user_input is not None:
         raise ValueError("ERROR: User Input should be 1, 2, 3, 4, or None")
 
