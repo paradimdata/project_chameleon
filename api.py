@@ -72,6 +72,19 @@ def validate_url(source_url: str):
         raise HTTPException(status_code=400, detail=f"Error: Failed to normalize url. Reason: {str(e)}")
     return canonical_url
 
+def validate_zip(input_file, temp_folder):
+    #Open inputfile a zip_ref
+    with zipfile.ZipFile(input_file, 'r') as zip_ref:
+        #Parse through each file in zip archive, test if paths are valid, and extract if they are
+        for filename in zip_ref.namelist():
+            initial_path = Path(os.path.normpath(temp_folder)) / Path(os.path.normpath(filename))
+            temp_abs_path = os.path.abspath(Path(temp_folder))
+            norm_path = os.path.abspath(initial_path)
+            if norm_path.startswith(temp_abs_path):
+                zip_ref.extract(filename, temp_folder)
+            else:
+                raise HTTPException(status_code=400, detail=f"Error: Failed to validate path.")
+
 def authorized(access_token, endpoint_id, params):
     if r.post('https://data.paradim.org/poly/api/opa', headers={'X-Auth-Access-Token': access_token}, json={ "endpoint_id": endpoint_id, "opa_json": params}).status_code == 200:
         return True
@@ -300,10 +313,7 @@ def common_folder_handler_parse_request(request, data):
             temp_folder = temp_file.name
         os.unlink(temp_file.name) # cleanup
         os.makedirs(temp_folder)
-        with zipfile.ZipFile(input_file, 'r') as zip_ref:
-            # TODO: zip allows for relative path filenames, so we need to sanitize those, otherwise this might allow overwrite of arbitrary files
-            zip_ref.extractall(temp_folder)
-        # No cleanup of input zip file since it is "durable"
+        validate_zip(input_file, temp_folder)
         return temp_folder, output_folder, output_file
 
     if 'input_bytes' in data:
@@ -315,9 +325,7 @@ def common_folder_handler_parse_request(request, data):
             temp_name = temp_file.name + '.zip'
         os.rename(temp_file.name, temp_name)
         os.makedirs(temp_folder)
-        with zipfile.ZipFile(temp_name, 'r') as zip_ref:
-            # TODO: zip allows for relative path filenames, so we need to sanitize those, otherwise this might allow overwrite of arbitrary files
-            zip_ref.extractall(temp_folder)
+        validate_zip(temp_name, temp_folder)
         os.unlink(temp_name) # cleanup temporary input zip file
         return temp_folder, output_folder, output_file
 
@@ -329,9 +337,7 @@ def common_folder_handler_parse_request(request, data):
                 temp_folder = temp_file.name
             os.unlink(temp_file.name) # cleanup
             urllib.request.urlretrieve(dir_url, filename = temp_name)
-            with zipfile.ZipFile(temp_name, 'r') as zip_ref:
-                # TODO: zip allows for relative path filenames, so we need to sanitize those, otherwise this might allow overwrite of arbitrary files
-                zip_ref.extractall(temp_folder)
+            validate_zip(temp_name, temp_folder)
             os.unlink(temp_name) # cleanup temporary input zip file
         except r.exceptions.RequestException as e:
             traceback.print_exc()
