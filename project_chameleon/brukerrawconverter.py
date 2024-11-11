@@ -19,7 +19,7 @@ def export_metadata(f, meta):
         f.write('# %s: %s\n' % (key, value.replace('\n', '\n#\t')))
 
 #Converts input file into a text file title "output_file.txt"
-def brukerrawconverter(input_file, output_file):
+def brukerrawconverter(input_file, output_file, cps = None):
     """
     ``brukerrawconverter`` is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
     This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib. 
@@ -40,6 +40,8 @@ def brukerrawconverter(input_file, output_file):
         raise ValueError("ERROR: Output file should be a text file.")
     if os.path.getsize(input_file) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
+    if not cps in [True, False, None]:
+        raise ValueError("ERROR: cps variable may only contain values 'True', 'False', or 'None'.")
     
     # Default tab separated, but understand CSV
     sep = '\t'
@@ -52,25 +54,37 @@ def brukerrawconverter(input_file, output_file):
     f.write('# exported by xylib from a %s file\n' % d.fi.name)
     nb = d.get_block_count()
 
+    #If there is more than one block, cps defaults to true, otherwise defaults to false
+    if not cps and nb > 1:
+        cps = True
+    else:
+        cps = False
+
     #Iterate through the raw file and rewrite columns in the text file
     for i in range(nb):
         block = d.get_block(i)
-        if nb > 1 or block.get_name():
-            f.write(f'\n### block #{i} {block.get_name()}\n')
-        else:
-            export_metadata(f, block.meta)
-    
+        #Get step size
+        if cps == True:
+            step_size = block.meta.get(block.meta.get_key(10))
+        if i > 0:
+            f.write("\n")
+        export_metadata(f, block.meta)
+
         ncol = block.get_column_count()
         # column 0 is pseudo-column with point indices, we skip it
         col_names = [block.get_column(k).get_name() or ('column_%d' % k)
-                     for k in range(1, ncol+1)]
+                    for k in range(1, ncol+1)]
         f.write('# ' + sep.join(col_names) + '\n')
         nrow = block.get_point_count()
+        #Get actualy values and process them if necessary 
         for j in range(nrow):
             values = ["%.6f" % block.get_column(k).get_value(j)
-                      for k in range(1, ncol+1)]
+                    for k in range(1, ncol+1)]
+            print(values[1])
+            if cps:
+                values[1] = str(float(values[1])/float(step_size))
             f.write(sep.join(values) + '\n')
-        f.close()
+    f.close()
 
 def main():
     parser = argparse.ArgumentParser()

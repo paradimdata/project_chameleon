@@ -152,6 +152,7 @@ def get_wavenote_values(wavenote_file):
         dataset = htmdec_formats.ARPESDataset.from_file(wavenote_file)
         with open(data_file, "w") as f:
             l = f.write(dataset._metadata)
+        f.close()
         with open(data_file, 'r') as file:
             lines = file.readlines()
         lines[20] = lines[20].split('\\')
@@ -534,6 +535,7 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
             log_file_path = os.path.join(os.path.dirname(item), "log_data_holder.txt")
             with open(log_file_path, "w") as f:
                 f.write(dataset._metadata)
+            f.close()
             with open(log_file_path, 'r') as file:
                 lines = file.readlines()
             os.remove(log_file_path)
@@ -645,6 +647,7 @@ def arpes_previewer(pxt_file):
     log_file_path = os.path.join(os.path.dirname(pxt_file), "log_data_holder.txt")
     with open(log_file_path, "w") as f:
         f.write(dataset._metadata)
+    f.close()
     with open(log_file_path, 'r') as file:
         lines = file.readlines()
     os.remove(log_file_path)

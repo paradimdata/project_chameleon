@@ -66,6 +66,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
             else:
                 datafile.write(new_line[1] + ', ' + new_line[3] + ', ' + new_line[4] + ', ' + new_line[6] + ', ' + new_line[8] + ', ' + new_line[10] + '\n')
                 count += 1
+        datafile.close()
 
     #HEAT CAPACITY LOOP
     elif('1' in user_input):
@@ -80,6 +81,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
             else:
                 datafile.write(new_line[0] + ', ' + new_line[5] + ', ' + new_line[7] + ', ' + new_line[9] + ', ' + new_line[10] + ', ' + new_line[18] + ', ' + new_line[28] + '\n')
                 count += 1
+        datafile.close()
 
     #AC MAGNETIC SUSCEPTIBILITY LOOP
     elif('2' in user_input):
@@ -94,6 +96,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
             else:
                 datafile.write(new_line[1] + ', ' + new_line[2] + ', ' + new_line[3] + ', ' + new_line[4] + ', ' + new_line[5] + ', ' + new_line[6] + ', ' + new_line[8] + ', ' + new_line[9] +'\n')
                 count += 1
+        datafile.close()
 
     #THERMAL TRANSPORT LOOP
     elif('4' in user_input):
@@ -108,6 +111,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
             else:
                 datafile.write(new_line[1] + ', ' + new_line[4] + ', ' + new_line[5] + ', ' + new_line[6] + ', ' + new_line[8] + ', ' + new_line[10] + ', ' + new_line[12] + '\n')
                 count += 1
+        datafile.close()
 
     #IF THERE IS A TYPO
     else:
