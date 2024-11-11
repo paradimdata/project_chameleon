@@ -154,7 +154,10 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
         raise HTTPException(status_code=400, detail='Incorrect output_type: output_type options are raw, JSON')
 
     if 'output_dest' in data and all(opt not in data['output_dest'] for opt in ['file', 'caller']):
-            raise HTTPException(status_code=400, detail='Incorrect output_dest: output_dest options are file, caller')
+        raise HTTPException(status_code=400, detail='Incorrect output_dest: output_dest options are file, caller')
+    
+    if ('output_dest' and 'output_type' in data) and (data['output_type'] == 'JSON' and data['output_dest'] == 'file'):
+        raise HTTPException(status_code=400, detail='Incompatible parameters: when output_dest is file, output_type may not be JSON')
 
     #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
     #TODO: do a proper check to make sure this is not tryig to elide the path
@@ -258,6 +261,9 @@ def common_folder_handler_parse_request(request, data):
 
     if 'output_dest' in data and all(opt not in data['output_dest'] for opt in ['folder', 'file', 'caller']):
             raise HTTPException(status_code=400, detail='Incorrect output_dest: output_dest options are folder, file, caller')
+    
+    if ('output_dest' and 'output_type' in data) and (data['output_type'] == 'JSON') and (data['output_dest'] in ['file','folder']):
+        raise HTTPException(status_code=400, detail='Incompatible parameters: when output_dest is file or folder, output_type may not be JSON')
 
     # HANDLE OUTPUT
     if 'output_dest' in data and data['output_dest'] == 'folder':
@@ -350,11 +356,6 @@ def common_folder_handler_prepare_output(request, data, output_folder, output_fi
                 zip_object.write(file_path, os.path.relpath(file_path,start=output_folder))
     # and then cleanup the output folder
     shutil.rmtree(output_folder)
-
-    # Maybe TODO: At this point, the output is a file of raw bytes. If output_type == "JSON", should
-    # we rewrite the file as a valid JSON object? This seems like a case we would never use, so I
-    # tend towards "no", but then the parse_request logic should be updated to disallow output type
-    # JSON when the destination is "file" or "folder".
 
     return common_file_handler_prepare_output(request, data, output_file, 'application/zip')
 
