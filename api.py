@@ -77,6 +77,11 @@ def authorized(access_token, endpoint_id, params):
         return True
     return False # or throw not authorized exception
 
+def check_allowed_file_type(inp):
+  if inp in ['.csv','.img', '.raw','.RAW','.png', '.txt', '.uxd', '.hs2', '.emd', '.dm4', '.ser', '.pxt', '.xlsx', '.dat']:
+    return True
+  return False
+
 # access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
 def common_handler_access_token(request, data, access_token, x_auth_access_token):
     try:
@@ -160,8 +165,7 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
         raise HTTPException(status_code=400, detail='Incompatible parameters: when output_dest is file, output_type may not be JSON')
 
     #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
-    #TODO: do a proper check to make sure this is not tryig to elide the path
-    if 'file_output_type' in data and all(c in ".0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for c in data['file_output_type']):
+    if 'file_output_type' in data and check_allowed_file_type(data['file_output_type']):
         output_ext = data['file_output_type']
 
     #HANDLE OUTPUT
@@ -176,8 +180,7 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
         output_file = temp_name
 
     #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
-    #TODO: do a proper check to make sure this is not tryig to elide the path
-    if 'file_input_type' in data and all(c in ".0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for c in data['file_input_type']):
+    if 'file_input_type' in data and check_allowed_file_type(data['file_input_type']):
         input_ext = data['file_input_type']
 
     #HANDLE INPUT
@@ -216,9 +219,8 @@ def secondary_file_handler_parse_request(request, data, input_ext):
         raise HTTPException(status_code=400, detail='Incorrect number of parameters')
 
     #OVERRIDE INPUT EXTENSION TYPE IF SPECIFIED
-    #TODO: do a proper check to make sure this is not tryig to elide the path
-    if 'secondary_input_type' in data and all(c in ".0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for c in data['file_input_type']):
-        input_ext = data['file_input_type']
+    if 'secondary_input_type' in data and check_allowed_file_type(data['secondary_file_input_type']):
+        input_ext = data['secondary_file_input_type']
 
     #HANDLE INPUT
     if 'secondary_file' in data:
