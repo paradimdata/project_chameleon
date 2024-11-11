@@ -60,15 +60,22 @@ def brukerrawconverter(input_file, output_file, cps = None):
     else:
         cps = False
 
+    #Put all headers at the start
+    if cps == True:
+        for i in range(nb):
+            f.write('block #' + str(i))
+            export_metadata(f, block.meta)
+            f.write("\n")
     #Iterate through the raw file and rewrite columns in the text file
     for i in range(nb):
         block = d.get_block(i)
-        #Get step size
         if cps == True:
             step_size = block.meta.get(block.meta.get_key(10))
-        if i > 0:
-            f.write("\n")
-        export_metadata(f, block.meta)
+        #Put headers with blocks
+        if cps == False:
+            if i > 0:
+                f.write("\n")
+            export_metadata(f, block.meta)
 
         ncol = block.get_column_count()
         # column 0 is pseudo-column with point indices, we skip it
@@ -76,11 +83,9 @@ def brukerrawconverter(input_file, output_file, cps = None):
                     for k in range(1, ncol+1)]
         f.write('# ' + sep.join(col_names) + '\n')
         nrow = block.get_point_count()
-        #Get actualy values and process them if necessary 
         for j in range(nrow):
             values = ["%.6f" % block.get_column(k).get_value(j)
                     for k in range(1, ncol+1)]
-            print(values[1])
             if cps:
                 values[1] = str(float(values[1])/float(step_size))
             f.write(sep.join(values) + '\n')
