@@ -1,9 +1,0 @@
-non4dstem_data filter=lfs diff=lfs merge=lfs -text
-data/1523_SI_1.15_Mx.emd filter=lfs diff=lfs merge=lfs -text
-non4dstem_data/1523_SI_1.15_Mx.emd filter=lfs diff=lfs merge=lfs -text
-1523_SI_1.15_Mx.emd filter=lfs diff=lfs merge=lfs -text
-005_ADF[[:space:]]Image[[:space:]](SI[[:space:]]Survey).dm4 filter=lfs diff=lfs merge=lfs -text
-11.53.53[[:space:]]Scanning[[:space:]]Acquire_1.ser filter=lfs diff=lfs merge=lfs -text
-1444_STEM_73000_x.emd filter=lfs diff=lfs merge=lfs -text
-1535_STEM_6.60_Mx.emd filter=lfs diff=lfs merge=lfs -text
-stemarray4d_test_data.raw filter=lfs diff=lfs merge=lfs -text
