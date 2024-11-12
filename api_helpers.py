@@ -88,12 +88,15 @@ def common_handler_access_token(request, data, access_token, x_auth_access_token
         raise HTTPException(status_code=400, detail='Malformed parameters: Access token could not be found')
 
     try:
-        if len(str(access_token)) > 0:
+        if len(str(access_token)) > 0 and ('input_url_access_token_header' in data and len(str(data['input_url_access_token_header'])) > 0):
             # Add header when we retrieve URLs
             # TODO: Maybe add a flag in the request JSON and only do this if requested to do so?
             opener = urllib.request.build_opener()
-            opener.addheaders = [('X-Auth-Access-Token', str(access_token))]
-            # TODO: does this play well with async?
+            opener.addheaders = [(str(data['input_url_access_token_header']), str(access_token))]
+            #We will leave this for now but keep an eye on async
+            urllib.request.install_opener(opener)
+        if not 'input_url_access_token_header' in data or ('input_url_access_token_header' in data and len(str(data['input_url_access_token_header'])) == 0):
+            opener = urllib.request.build_opener()
             urllib.request.install_opener(opener)
     except:
         # We ignore as if this is a problem we will get an error later.
