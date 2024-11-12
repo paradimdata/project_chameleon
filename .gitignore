@@ -164,3 +164,8 @@ cython_debug/
 #macos
 .DS_Store
 docs/.DS_Store
+
+.gitattributes
+.ipynb_checkpoints
+.readthedocs.yaml
+__pycache__
