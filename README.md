@@ -6,11 +6,11 @@ Project Chameleon is a collection of Python scripts written to assist in data pr
 - 4D STEM: documented and converted to series of 2D slices 
 - NON 4D STEM: Data graphed and converted to png 
 - XRD: Bruker RAW/UXD to CSV
-- RHEED: 16 bpp images to TIF/PNG
+- RHEED: 16 bpp .img images to TIF/PNG
 - MBE: Data sorted and graphed
 - PPMS/MPMS: Relevant lines extracted and saved
 - ARPES: Extracts data from pxt files
-- HS2 Files: 16bpp images to PNG
+- HS2 Files: 16bpp .hs2 images to PNG
 
 ## Functions still in progress
 - JEOL SEM
