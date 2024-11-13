@@ -9,6 +9,7 @@ Access-Token: [OPTIONAL] A string associated with the endpoint that will be used
 input_file: [OPTIONAL] A string or path that directs to a file being passed into the POST call.
 input_folder: [OPTIONAL] A string or path that directs to a folder being passed into the POST call.
 input_url: [OPTIONAL] A string that is a URL that is a download link for a file being passed into the POST call.
+input_url_access_token_header: [OPTIONAL] If set to a header value, access token is sent with the request to acquire the input_url.
 output_file: [OPTIONAL] A string or path to a file that will hold the output of the function executed in the POST call. The file should not yet exist to make sure data is not overwritten.
 output_folder: [OPTIONAL] A string or path to a folder that will hold the output of the function executed in the POST call. The folder should not yet exist to make sure data is not overwritten.
 input_bytes: [OPTIONAL] A string of raw bytes that are generated from the file that will be processed in the POST call.
