@@ -1,4 +1,4 @@
-![Chameleon](Chameleon_logo.png)
+![Chameleon](ChameleonLogo.png)
 
 This is the current format for calling the Project Chameleon API using JS. THIS FORMAT IS A WORK IN PROGRESS AND WILL CHANGE.
 
