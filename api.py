@@ -24,6 +24,7 @@ from project_chameleon.stemarray4d import stemarray4d
 from project_chameleon.ppmsmpms import ppmsmpmsparser
 from project_chameleon.arpes import arpes_folder_workbook
 from project_chameleon.hs2converter import hs2converter
+from project_chameleon.rheed_video_converter import rheed_video_converter
 
 app = FastAPI()
 
@@ -51,6 +52,25 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
     except:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "rheedconverter"')
+    finally:
+        common_handler_cleanup_request(request, data, input_file, None)
+
+@app.post('/rheed_video_converter')
+def rheed_vide_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
+    access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
+
+    er = common_handler_early_response(request, data)
+    if not (er is None):
+        return er
+
+    common_handler_method_auth_check(request, data, access_token)
+    input_file,output_file = common_file_handler_parse_request(request, data, '.imm', '.avi')
+    try:
+        rheed_video_converter(input_file, output_file, '.avi')
+        return common_file_handler_prepare_output(request, data, output_file)
+    except:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f'Failed to convert file: an error occurred running the function "rheed_video_converter"')
     finally:
         common_handler_cleanup_request(request, data, input_file, None)
 

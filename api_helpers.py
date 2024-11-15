@@ -72,7 +72,7 @@ def authorized(access_token, endpoint_id, params):
     return False # or throw not authorized exception
 
 def check_allowed_file_type(inp):
-  if inp in ['.csv','.img', '.raw','.RAW','.png', '.txt', '.uxd', '.hs2', '.emd', '.dm4', '.ser', '.pxt', '.xlsx', '.dat']:
+  if inp in ['.csv','.img', '.raw','.RAW','.png', '.txt', '.uxd', '.hs2', '.emd', '.dm4', '.ser', '.pxt', '.xlsx', '.dat', '.imm', '.avi', '.mp4']:
     return True
   return False
 
