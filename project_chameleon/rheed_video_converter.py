@@ -7,15 +7,16 @@ import shutil
 from sys import argv, exit
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
-from .rheedconverter import get_image_dimensions
+from rheedconverter import get_image_dimensions
 import subprocess
+import re
 
-def rheed_video_image_parser(input_file, output_file = 'rheed_video_temp'):
+def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
     index = 0
     file_size = os.path.getsize(input_file)
     height, width, header_size = get_image_dimensions(input_file)
     cap = int(int(file_size) / (2*(height*width)))
-    os.mkdir(output_file)
+    os.mkdir(output_folder)
 
     while cap > index:
         header_bytes = header_size + (2*(height*width) + header_size)*index
@@ -30,9 +31,9 @@ def rheed_video_image_parser(input_file, output_file = 'rheed_video_temp'):
         laue = 255 - laue
         laue = laue.astype(np.uint8)
         im = Image.fromarray(laue)
-        im.save(output_file + str(index) + '.png')
-        filepath = os.path.join('.', output_file + str(index) + '.png')
-        shutil.move(filepath, os.path.join(output_file, output_file + str(index) + '.png'))
+        im.save(output_folder + '_' + str(index) + '.png')
+        filepath = os.path.join('.', output_folder + '_' + str(index) + '.png')
+        shutil.move(filepath, os.path.join(output_folder, output_folder + '_' + str(index) + '.png'))
         index += 1
 
 def rheed_video_converter(input_file, output_file, output_type, keep_images = 0):
@@ -56,24 +57,31 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
         raise ValueError("ERROR: invalid keep_images value. keep_images may only be a 1(keep) or 0(delete).")
     
 
-    rheed_video_image_parser(input_file, output_file)
+    rheed_video_image_parser(input_file, output_folder = output_file)
     output_name = output_file + output_type
+    index = 0
     if output_type == '.avi':
         png_files = sorted(glob.glob(os.path.join(output_file, "*.png")))
+        png_files = sorted(png_files, key=lambda s: int(re.findall(r'\d+', s)[-1]) if re.findall(r'\d+', s) else 0)
+        
         # Ensure there are matching files
         if not png_files:
             print("No PNG files found in the specified directory.")
         else:
             # Construct the FFmpeg command using the file list
-            input_pattern = os.path.join(output_file, "*.png")
+            with open("input_list.txt", "w") as f:
+                for file in png_files:
+                    f.write(f"file '{file}'\n")
+                    f.write(f"duration 0.04\n")
             command = [
                 "ffmpeg",
-                "-framerate", "25",
-                "-pattern_type", "glob",
-                "-i", input_pattern,
-                "-f", "avi",
-                "-c:v", "rawvideo",
-                output_name
+                "-f", "concat",  # Use concat demuxer to concatenate files
+                "-safe", "0",    # Allow absolute/relative file paths in the input list
+                "-i", "input_list.txt",  # Input list file
+                "-framerate", "25",  # Set the frame rate for the output video
+                "-f", "avi",   # Output format (avi)
+                "-c:v", "rawvideo",  # Video codec
+                output_name  # Output file name
             ]
             # Run the command
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -86,23 +94,28 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
                 print(stderr)
     elif output_type == '.mp4':
         png_files = sorted(glob.glob(os.path.join(output_file, "*.png")))
+        png_files = sorted(png_files, key=lambda s: int(re.findall(r'\d+', s)[-1]) if re.findall(r'\d+', s) else 0)
+        print(png_files)
         # Ensure there are matching files
         if not png_files:
             print("No PNG files found in the specified directory.")
         else:
             # Construct the FFmpeg command using the file list
-            input_pattern = os.path.join(output_file, "*.png")
+            with open("input_list.txt", "w") as f:
+                for file in png_files:
+                    f.write(f"file '{file}'\n")
+                    f.write(f"duration 0.04\n")
             command = [
                 "ffmpeg",
-                "-framerate", "25",
-                "-pattern_type", "glob",
-                "-i", input_pattern,
-                "-c:v", "libx264",
-                "-profile:v", "high444",
-                "-level", "4.0",
-                "-preset", "slow",
-                "-b:v", "3000k",
-                output_name
+                "-f", "concat",  # Use the concat demuxer
+                "-safe", "0",    # Allow absolute paths
+                "-i", "input_list.txt",  # Input file containing the list of images and durations
+                "-c:v", "libx264",  # Use the libx264 codec
+                "-profile:v", "high444",  # Set the H.264 profile
+                "-level", "4.0",  # Set the H.264 level
+                "-preset", "slow",  # Set the encoding preset
+                "-b:v", "3000k",  # Set the video bitrate
+                output_name  # Output file name (e.g., output.avi)
             ]
             # Run the command
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -113,9 +126,9 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
             if stderr:
                 print("Standard Error:")
                 print(stderr)
-
+    os.remove('input_list.txt')
     if keep_images == 0:
-        shutil.rmtree('rheed_video_temp')
+        shutil.rmtree(output_file)
 
 def main():
     parser = argparse.ArgumentParser()
