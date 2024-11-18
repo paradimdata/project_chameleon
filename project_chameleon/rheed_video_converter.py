@@ -5,7 +5,6 @@ from PIL import Image
 import argparse
 import shutil
 from sys import argv, exit
-from lz4.frame import decompress
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
 import subprocess
@@ -30,7 +29,7 @@ def rheed_video_image_parser(input_file, output_file = 'rheed_video_temp'):
         laue = laue.astype(np.uint8)
         im = Image.fromarray(laue)
         im.save(output_file + str(index) + '.png')
-        filepath = os.path.join('.', 'test' + str(index) + '.png')
+        filepath = os.path.join('.', output_file + str(index) + '.png')
         shutil.move(filepath, os.path.join(output_file, output_file + str(index) + '.png'))
         index += 1
 
@@ -49,9 +48,9 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
         raise ValueError("ERROR: bad input. Expected .imm file")
     if output_file.endswith('.avi') or output_file.endswith('.mp4'):
         raise ValueError("ERROR: output_file should not contain file extension, just file name.")
-    if not '.avi' or '.mp4' in output_type:
+    if not output_type in ['.avi','.mp4']:
         raise ValueError("ERROR: invalid output type. Output type must be either .avi or .mp4.")
-    if not 1 or 0 in keep_images:
+    if not keep_images in [1,0]:
         raise ValueError("ERROR: invalid keep_images value. keep_images may only be a 1(keep) or 0(delete).")
     
 
