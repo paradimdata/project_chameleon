@@ -4,6 +4,28 @@ import matplotlib.pyplot as plt
 import sys
 import argparse
 
+def get_image_dimensions(input_file):
+    file_size = os.path.getsize(input_file)
+    with open(input_file,"rb") as f:
+        f.seek(39)
+        data = f.read(6)
+        signature = data.decode('utf-8')
+        f.seek(49)
+        data = f.read(2)
+        width = int.from_bytes(data, byteorder='big') 
+        f.seek(321)
+        data = f.read(2)
+        height = int.from_bytes(data, byteorder='big')
+    f.close()
+    header_size = file_size - 2*(width*height)
+    if file_size > 3*(width*height):
+        if signature == 'KSA00F':
+            header_size = 640
+        else:
+            header_size = 685
+
+    return height, width, header_size
+
 def rheedconverter(file_name, output_file):
     """
     ``rheedconverter()`` is a function to allow RHEED users to convert 16 bpp .img images into 8 bpp more easily readable .png images
@@ -25,25 +47,12 @@ def rheedconverter(file_name, output_file):
     if os.path.getsize(file_name) > 1049216:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too large.")
     
-    file_size = os.path.getsize(file_name)
-    if file_size < 1000000:
-        if file_size == 615040:
-            header_bytes = 640
-            file_width = 480
-            file_height = 640
-        else:
-            header_bytes = 685
-            file_width = 480
-            file_height = 640
-    else:
-        header_bytes = 640
-        file_width = 1024
-        file_height = 1024
+    file_height, file_width, header_bytes = get_image_dimensions(file_name)
     
-    #Open file as unknown type. Skip header bytes and adjust to a 480 X 640 image. 
+    #Open file as unknown type. Skip header bytes and adjust to a height X width image. 
     with open(file_name,"r") as f:
         f.seek(header_bytes)
-        laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_width,file_height))
+        laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))
     
     #Operate to adjust from 16bpp to 8 bpp so the image can be displayed easier
     im_temp = laue - laue.min()

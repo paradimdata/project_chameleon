@@ -7,23 +7,25 @@ import shutil
 from sys import argv, exit
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
+from .rheedconverter import get_image_dimensions
 import subprocess
 
 def rheed_video_image_parser(input_file, output_file = 'rheed_video_temp'):
     index = 0
     file_size = os.path.getsize(input_file)
-    cap = int(int(file_size) / (2*(1024*1024)))
+    height, width, header_size = get_image_dimensions(input_file)
+    cap = int(int(file_size) / (2*(height*width)))
     os.mkdir(output_file)
 
     while cap > index:
-        header_bytes = 640 + (2*(1024*1024) + 640)*index
-        file_height = 1024
-        file_width = 1024
+        header_bytes = header_size + (2*(height*width) + header_size)*index
+        file_height = height
+        file_width = width
 
         #Open file as unknown type. Skip header bytes and adjust to a 480 X 640 image. 
         with open(input_file,"r") as f:
             f.seek(header_bytes)
-            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_width,file_height))    
+            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))    
         laue = ((laue/np.max(laue))**(2/3))*255
         laue = 255 - laue
         laue = laue.astype(np.uint8)
