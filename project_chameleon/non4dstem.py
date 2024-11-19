@@ -2,7 +2,6 @@ import hyperspy.api as hs
 from glob import glob
 import matplotlib.pyplot as plt
 import os
-import sys
 import argparse
 
 def non4dstem(data_folder = None, outputs_folder = None, data_file = None, output_file = None):

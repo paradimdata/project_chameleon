@@ -7,7 +7,7 @@ import shutil
 from sys import argv, exit
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
-from rheedconverter import get_image_dimensions
+from get_image_dimensions import get_image_dimensions
 import subprocess
 import re
 
@@ -28,12 +28,10 @@ def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
             f.seek(header_bytes)
             laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))    
         laue = ((laue/np.max(laue))**(2/3))*255
-        laue = 255 - laue
         laue = laue.astype(np.uint8)
         im = Image.fromarray(laue)
-        im.save(output_folder + '_' + str(index) + '.png')
         filepath = os.path.join('.', output_folder + '_' + str(index) + '.png')
-        shutil.move(filepath, os.path.join(output_folder, output_folder + '_' + str(index) + '.png'))
+        im.save(filepath)
         index += 1
 
 def rheed_video_converter(input_file, output_file, output_type, keep_images = 0):
@@ -95,7 +93,6 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     elif output_type == '.mp4':
         png_files = sorted(glob.glob(os.path.join(output_file, "*.png")))
         png_files = sorted(png_files, key=lambda s: int(re.findall(r'\d+', s)[-1]) if re.findall(r'\d+', s) else 0)
-        print(png_files)
         # Ensure there are matching files
         if not png_files:
             print("No PNG files found in the specified directory.")

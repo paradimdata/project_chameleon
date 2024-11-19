@@ -1,30 +1,9 @@
 import os
 import numpy as np 
-import matplotlib.pyplot as plt
-import sys
 import argparse
+from PIL import Image
+from get_image_dimensions import get_image_dimensions
 
-def get_image_dimensions(input_file):
-    file_size = os.path.getsize(input_file)
-    with open(input_file,"rb") as f:
-        f.seek(39)
-        data = f.read(6)
-        signature = data.decode('utf-8')
-        f.seek(49)
-        data = f.read(2)
-        width = int.from_bytes(data, byteorder='big') 
-        f.seek(321)
-        data = f.read(2)
-        height = int.from_bytes(data, byteorder='big')
-    f.close()
-    header_size = file_size - 2*(width*height)
-    if file_size > 3*(width*height):
-        if signature == 'KSA00F':
-            header_size = 640
-        else:
-            header_size = 685
-
-    return height, width, header_size
 
 def rheedconverter(file_name, output_file):
     """
@@ -42,10 +21,6 @@ def rheedconverter(file_name, output_file):
         raise ValueError("ERROR: bad input. Expected .img file")
     if not str(output_file).endswith('.png'):
         raise ValueError("ERROR: please make your output file a .png file")
-    if os.path.getsize(file_name) < 615040:
-        raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
-    if os.path.getsize(file_name) > 1049216:
-        raise ValueError("ERROR: This size of file cannot be handled by this function. File too large.")
     
     file_height, file_width, header_bytes = get_image_dimensions(file_name)
     
@@ -55,15 +30,11 @@ def rheedconverter(file_name, output_file):
         laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))
     
     #Operate to adjust from 16bpp to 8 bpp so the image can be displayed easier
-    im_temp = laue - laue.min()
-    im_temp = im_temp / im_temp.max()
-    im_temp = im_temp * 255
-   
-    #Adjust to unsigned integers and save as a jpeg
-    im_uint8_scaled = im_temp.astype(np.uint8)
-    plt.axis('off')
-    plt.imshow(im_uint8_scaled)
-    plt.savefig(output_file)
+    laue = ((laue/np.max(laue))**(2/3))*255
+    laue = laue.astype(np.uint8)
+    im = Image.fromarray(laue)
+    im.save(output_file)
+ 
 
 def main():
     parser = argparse.ArgumentParser()
