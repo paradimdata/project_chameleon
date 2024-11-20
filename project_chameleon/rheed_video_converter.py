@@ -7,62 +7,10 @@ import shutil
 from sys import argv, exit
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
-from get_image_dimensions import get_image_dimensions
+from .rheed_helpers import get_image_dimensions
+from .rheed_helpers import rheed_video_frame_parser
+from .rheed_helpers import rheed_video_image_parser
 import traceback
-
-def get_image_dimensions(input_file):
-    with open(input_file,"rb") as f:
-        f.seek(39)
-        data = f.read(6)
-        signature = data.decode('utf-8')
-        f.seek(49)
-        data = f.read(2)
-        width = int.from_bytes(data, byteorder='big') 
-        f.seek(321)
-        data = f.read(2)
-        height = int.from_bytes(data, byteorder='big')
-    f.close()
-    if signature == 'KSA00F':
-        header_size = 640
-    elif signature == 'KSA00J':
-        header_size = 685
-    else:
-        raise ValueError("ERROR: Ecountered unknown header.")
-
-    return height, width, header_size
-
-def rheed_video_frame_parser(input_file, height, width, header_bytes):
-
-    with open(input_file,"r") as f:
-        f.seek(header_bytes)
-        laue = np.fromfile(f,dtype="<u2",count=width*height).reshape((height,width))    
-    laue = ((laue/np.max(laue))**(2/3))*255
-    laue = laue.astype(np.uint8)
-    
-    return laue
-
-def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
-    index = 0
-    file_size = os.path.getsize(input_file)
-    height, width, header_size = get_image_dimensions(input_file)
-    cap = int(int(file_size) / (2*(height*width)))
-    os.mkdir(output_folder)
-
-    while cap > index:
-        header_bytes = header_size + (2*(height*width) + header_size)*index
-        file_height = height
-        file_width = width
-
-        #Open file as unknown type. Skip header bytes and adjust to a H X W image. 
-        with open(input_file,"r") as f:
-            f.seek(header_bytes)
-            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))    
-        laue = ((laue/np.max(laue))**(2/3))*255
-        laue = laue.astype(np.uint8)
-        im = Image.fromarray(laue)
-        filepath = os.path.join('.', output_folder + '_' + str(index) + '.png')
-        im.save(filepath)
-        index += 1
 
 def rheed_video_converter(input_file, output_file, output_type, keep_images = 0):
     """
@@ -86,13 +34,12 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     
     file_size = os.path.getsize(input_file)
     height, width, header_size = get_image_dimensions(input_file)
-    print(height, width, header_size)
     cap = file_size // (2 * height * width)
     output_name = output_file + output_type
     if output_type == '.avi':
         ffmpeg = Popen(
         [
-            '/opt/homebrew/bin/ffmpeg',
+            'ffmpeg',
             '-f', 'rawvideo',  # Input format is raw video
             '-pixel_format', 'gray',  # Pixel format
             '-video_size', f'{width}x{height}',  # Frame dimensions
@@ -123,7 +70,7 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     elif output_type == '.mp4':
         ffmpeg = Popen(
         [
-            '/opt/homebrew/bin/ffmpeg',
+            'ffmpeg',
             '-f', 'rawvideo',  # Input format is raw video
             '-pixel_format', 'gray',  # Pixel format
             '-video_size', f'{width}x{height}',  # Frame dimensions
