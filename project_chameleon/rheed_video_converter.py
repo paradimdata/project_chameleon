@@ -8,8 +8,38 @@ from sys import argv, exit
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
 from get_image_dimensions import get_image_dimensions
-import subprocess
-import re
+import traceback
+
+def get_image_dimensions(input_file):
+    with open(input_file,"rb") as f:
+        f.seek(39)
+        data = f.read(6)
+        signature = data.decode('utf-8')
+        f.seek(49)
+        data = f.read(2)
+        width = int.from_bytes(data, byteorder='big') 
+        f.seek(321)
+        data = f.read(2)
+        height = int.from_bytes(data, byteorder='big')
+    f.close()
+    if signature == 'KSA00F':
+        header_size = 640
+    elif signature == 'KSA00J':
+        header_size = 685
+    else:
+        raise ValueError("ERROR: Ecountered unknown header.")
+
+    return height, width, header_size
+
+def rheed_video_frame_parser(input_file, height, width, header_bytes):
+
+    with open(input_file,"r") as f:
+        f.seek(header_bytes)
+        laue = np.fromfile(f,dtype="<u2",count=width*height).reshape((height,width))    
+    laue = ((laue/np.max(laue))**(2/3))*255
+    laue = laue.astype(np.uint8)
+    
+    return laue
 
 def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
     index = 0
@@ -23,7 +53,7 @@ def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
         file_height = height
         file_width = width
 
-        #Open file as unknown type. Skip header bytes and adjust to a 480 X 640 image. 
+        #Open file as unknown type. Skip header bytes and adjust to a H X W image. 
         with open(input_file,"r") as f:
             f.seek(header_bytes)
             laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))    
@@ -54,78 +84,79 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     if not keep_images in [1,0]:
         raise ValueError("ERROR: invalid keep_images value. keep_images may only be a 1(keep) or 0(delete).")
     
-
-    rheed_video_image_parser(input_file, output_folder = output_file)
+    file_size = os.path.getsize(input_file)
+    height, width, header_size = get_image_dimensions(input_file)
+    print(height, width, header_size)
+    cap = file_size // (2 * height * width)
     output_name = output_file + output_type
-    index = 0
     if output_type == '.avi':
-        png_files = sorted(glob.glob(os.path.join(output_file, "*.png")))
-        png_files = sorted(png_files, key=lambda s: int(re.findall(r'\d+', s)[-1]) if re.findall(r'\d+', s) else 0)
-        
-        # Ensure there are matching files
-        if not png_files:
-            print("No PNG files found in the specified directory.")
-        else:
-            # Construct the FFmpeg command using the file list
-            with open("input_list.txt", "w") as f:
-                for file in png_files:
-                    f.write(f"file '{file}'\n")
-                    f.write(f"duration 0.04\n")
-            command = [
-                "ffmpeg",
-                "-f", "concat",  # Use concat demuxer to concatenate files
-                "-safe", "0",    # Allow absolute/relative file paths in the input list
-                "-i", "input_list.txt",  # Input list file
-                "-framerate", "25",  # Set the frame rate for the output video
-                "-f", "avi",   # Output format (avi)
-                "-c:v", "rawvideo",  # Video codec
-                output_name  # Output file name
-            ]
-            # Run the command
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout, stderr = process.communicate()
-            print("Standard Output:")
-            print(stdout)
+        ffmpeg = Popen(
+        [
+            '/opt/homebrew/bin/ffmpeg',
+            '-f', 'rawvideo',  # Input format is raw video
+            '-pixel_format', 'gray',  # Pixel format
+            '-video_size', f'{width}x{height}',  # Frame dimensions
+            '-framerate', '25',  # Frame rate
+            '-i', 'pipe:0',  # Input via stdin
+            "-f", "avi",   # Output format (avi)
+            "-c:v", "rawvideo",
+            output_name,  # Output file
+        ],
+        stdin=PIPE,
+        stdout=DEVNULL,
+        stderr=DEVNULL
+        )
 
-            if stderr:
-                print("Standard Error:")
-                print(stderr)
+        try:
+            for index in range(cap):
+                additional_header = (2 * height * width + header_size) * index
+                try:
+                    frame_data = rheed_video_frame_parser(input_file, height, width, header_size + additional_header)
+                    ffmpeg.stdin.write(frame_data)
+                except Exception as e:
+                    traceback.print_exc()
+        finally:
+            # Properly close FFmpeg and wait for it to finish
+            ffmpeg.stdin.close()
+            ffmpeg.wait()
+
     elif output_type == '.mp4':
-        png_files = sorted(glob.glob(os.path.join(output_file, "*.png")))
-        png_files = sorted(png_files, key=lambda s: int(re.findall(r'\d+', s)[-1]) if re.findall(r'\d+', s) else 0)
-        # Ensure there are matching files
-        if not png_files:
-            print("No PNG files found in the specified directory.")
-        else:
-            # Construct the FFmpeg command using the file list
-            with open("input_list.txt", "w") as f:
-                for file in png_files:
-                    f.write(f"file '{file}'\n")
-                    f.write(f"duration 0.04\n")
-            command = [
-                "ffmpeg",
-                "-f", "concat",  # Use the concat demuxer
-                "-safe", "0",    # Allow absolute paths
-                "-i", "input_list.txt",  # Input file containing the list of images and durations
-                "-c:v", "libx264",  # Use the libx264 codec
-                "-profile:v", "high444",  # Set the H.264 profile
-                "-level", "4.0",  # Set the H.264 level
-                "-preset", "slow",  # Set the encoding preset
-                "-b:v", "3000k",  # Set the video bitrate
-                output_name  # Output file name (e.g., output.avi)
-            ]
-            # Run the command
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout, stderr = process.communicate()
-            print("Standard Output:")
-            print(stdout)
+        ffmpeg = Popen(
+        [
+            '/opt/homebrew/bin/ffmpeg',
+            '-f', 'rawvideo',  # Input format is raw video
+            '-pixel_format', 'gray',  # Pixel format
+            '-video_size', f'{width}x{height}',  # Frame dimensions
+            '-framerate', '25',  # Frame rate
+            '-i', 'pipe:0',  # Input via stdin
+            '-c:v', 'libx264',  # Use the H.264 codec
+            '-profile:v', 'high444',  # H.264 profile
+            '-level', '4.0',  # H.264 level
+            '-preset', 'slow',  # Encoding preset
+            '-b:v', '3000k',  # Bitrate
+            '-y',  # Overwrite output file
+            output_name,  # Output file
+        ],
+        stdin=PIPE,
+        stdout=DEVNULL,
+        stderr=DEVNULL
+        )
 
-            if stderr:
-                print("Standard Error:")
-                print(stderr)
-    os.remove('input_list.txt')
-    if keep_images == 0:
-        shutil.rmtree(output_file)
+        try:
+            for index in range(cap):
+                additional_header = (2 * height * width + header_size) * index
+                try:
+                    frame_data = rheed_video_frame_parser(input_file, height, width, header_size + additional_header)
+                    ffmpeg.stdin.write(frame_data)
+                except Exception as e:
+                    traceback.print_exc()
+        finally:
+            # Properly close FFmpeg and wait for it to finish
+            ffmpeg.stdin.close()
+            ffmpeg.wait()
+
+    if keep_images != 0:
+        rheed_video_image_parser(input_file, output_folder = output_file)
 
 def main():
     parser = argparse.ArgumentParser()
