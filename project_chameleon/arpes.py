@@ -48,7 +48,7 @@ def build_arpes_workbook(workbook_name):
              'Slit Change','Slit Change','Theta Offset:','0','Phi Offset:','0','Omega Offset:','0']
     row_2 = ['Scan Number/File Name','Date','Time Start', 'Time End', 'Notes/Comments','FS Position','(X,Y,Z)','Theta(encoder)','Theta(true)','Phi(encoder)','Phi(true)',
              'Omega(Manipulator,approx)','Omega(true)','Kinetic Energy Range(eV)','Step Size(meV)','Temperature(K)[Diode A,Diode B]','Run Mode','Acquisition Mode',
-             '# of Sweeps','Pass Energy','Analyzer Slit','Pressure(Torr)','Photon Energy(eV)']
+             '[# of Sweeps, Layers]','Pass Energy','Analyzer Slit','Pressure(Torr)','Photon Energy(eV)']
     first_col = 1
     last_col = 28
     row_1_last_col = 19
@@ -132,14 +132,9 @@ def get_wavenote_values(wavenote_file):
         raise ValueError("ERROR: input file must end with '.pxt'")
     if os.path.isfile(wavenote_file) is False:
         raise ValueError("ERROR: bad input. Expected file")
-    
-    lines = []
-    run_mode_information = []
-    current_row = []
-    column = 0
 
-    #Create new file to hold output from HTMDEC 
-    data_file = os.path.join(os.path.dirname(wavenote_file), "data_holder.txt")
+    lines = []
+
     #Get date modified from wavenote file for the end time 
     ti_m = os.path.getmtime(wavenote_file)
     m_ti = time.ctime(ti_m) 
@@ -150,45 +145,30 @@ def get_wavenote_values(wavenote_file):
     #Read .pxt, write to file, read lines from file, split up lines for relevant data
     try:
         dataset = htmdec_formats.ARPESDataset.from_file(wavenote_file)
-        with open(data_file, "w") as f:
-            l = f.write(dataset._metadata)
-        f.close()
-        with open(data_file, 'r') as file:
-            lines = file.readlines()
+        lines = dataset._metadata.split("\n")
         lines[20] = lines[20].split('\\')
         for l in lines[20]:
             if '.pxt' in l:
                 scan_number = l
-                #[File, Start Date, Start Time, End Time, Comments, Theta, Phi, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
-        os.remove(data_file)
-        if (not '=' in lines[35]) and ('[' in lines[35]):
-            theta = str(dataset.run_mode_info.iloc[0, 4])
-            phi = str(dataset.run_mode_info.iloc[0, 5])
-            #Row for Manipulator scan
-            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-                theta, phi,'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
-                'Manipulator Scan',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
-        elif (not '=' in lines[35]) and (not '[' in lines[35]):
-            theta = str(dataset.run_mode_info.iloc[0, 4])
-            phi = str(dataset.run_mode_info.iloc[0, 5])
-            #Row for Normal Mode
-            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-                theta, phi,'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
-                'Normal Mode',lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+        if lines[35]:
+            scan_type = 'Add Dimension'
+        elif len(dataset.run_mode_info) > 0:
+            scan_type = 'Manipulator Scan'
         else:
-            #Row for Add Dimension
-            r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-            lines[40].split('=')[1], lines[41].split('=')[1],'[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
-            lines[35].split('=')[1],lines[8].split('=')[1], lines[5].split('=')[1],lines[4].split('=')[1],lines[6].split('=')[1]]
+            scan_type = 'Normal Mode'
+            
+    #[File, Start Date, Start Time, End Time, Comments, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
+        r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
+        '[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
+        scan_type,lines[8].split('=')[1], '[' + lines[5].split('=')[1] + ',' + str(dataset.num_layers) + ']',lines[4].split('=')[1],lines[6].split('=')[1]]
         return r
     except ParsingError as e:
         print(f"An error occurred while parsing the configuration: {e}")
         traceback.print_exc()
-        return None
     except Exception as e:
         print(f"An unexpected error occurred in get_wavenote_values: {e}")
         traceback.print_exc()
-        return None
+
 
 
 def get_varian_values(varian_file, date_time = None):
@@ -392,7 +372,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     else:
         #[Scan, Date, Start time, End time, Notes/Comments, '', (X,Y,Z), Theta, '', Phi, '', '', '', Kinetic Energy, Step size, Temp[A,B], Run mode, Acquisition mode,
         # # of sweeps, Pass energy, Analyzer slit, Pressure, Photon Energy]
-        row = [w[0],w[1],w[2],w[3],w[4],'',v[0],w[5],'',w[6],'','','',w[7],w[8],j[0],w[9],w[10],w[11],w[12],v[3],j[1],w[13]]
+        row = [w[0],w[1],w[2],w[3],w[4],'',v[0],v[1],'',v[2],'','','',w[5],w[6],j[0],w[7],w[8],w[9],w[10],v[3],j[1],w[11]]
         #Insert values into rows
         ws.row_dimensions[starting_row].height = 40
         for col in range(first_col, last_col):
