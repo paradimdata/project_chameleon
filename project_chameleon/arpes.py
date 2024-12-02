@@ -1,5 +1,6 @@
 import os.path
 import os
+import re
 import time
 import htmdec_formats
 import h5py
@@ -422,7 +423,10 @@ def arpes_folder_workbook(folder_name, workbook_name):
     for name in wavenote_names:
         if not '.pxt' in name:
             wavenote_names.remove(name)
-    sorted_waves = sorted(wavenote_names, key=lambda x: int(x.split('_')[1].split('.')[0]))
+    sorted_waves = sorted(
+        wavenote_names,
+        key=lambda x: float(re.findall(r"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?", x)[-1]) if re.findall(r"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?", x) else 0
+        )   
     #Make sure files in directories are just the files we want
     for f in jaina_names:
         if f.endswith('.log'):
