@@ -18,9 +18,12 @@ pandas = "^2.2.2"
 sphinx_rtd_theme = "^1.0.0"
 
 [build-system]
+# This section is required for pip to understand how to build the package.
+# Poetry uses poetry-core for packaging, which should be compatible with pip.
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+# Exporting the package's dependencies into a requirements.txt format
 [tool.poetry.scripts]
 non4dstem = "project_chameleon.non4dstem:main"
 stemarray4d = "project_chameleon.stemarray4d:main"
