@@ -17,7 +17,6 @@ xylib-py = "^1.6.1"
 pandas = "^2.2.2"
 sphinx_rtd_theme = "^1.0.0"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -30,3 +29,6 @@ ppmsmpms = "project_chameleon.ppmsmpms:main"
 rheed = "project_chameleon.rheedconverter:main"
 brukerraw = "project_chameleon.brukerrawconverter:main"
 brukerrawbackground = "project_chameleon.brukerrawbackground:main"
+
+[tool.poetry.extras]
+docs = ["sphinx_rtd_theme"]
