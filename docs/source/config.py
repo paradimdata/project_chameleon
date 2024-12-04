@@ -14,7 +14,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../openmsistream'))
+sys.path.insert(0, os.path.abspath('../../project_chameleon'))
 
 
 # -- Project information -----------------------------------------------------
@@ -52,7 +52,9 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 # Intersphinx mapping to Python 3 documentation
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
+                       'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+                       }
 
 
 # -- Options for HTML output -------------------------------------------------
