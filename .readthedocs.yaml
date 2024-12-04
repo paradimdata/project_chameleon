@@ -4,7 +4,7 @@
 
 version: 2
 
-# Set the OS, Python version, and other tools you might need
+# Set the OS, Python version and other tools you might need
 build:
   os: ubuntu-22.04
   tools:
@@ -13,9 +13,7 @@ build:
 # Install dependencies from pyproject.toml (or requirements.txt if preferred)
 python:
   install:
-    - path: .  # Install dependencies from the current directory (i.e., pyproject.toml)
-    - method: pip
-      extra_requirements: [docs]  # Optional: If you use a "docs" extra in pyproject.toml
+    - requirements: pyproject.toml  # This will install dependencies defined in pyproject.toml
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
@@ -24,4 +22,3 @@ sphinx:
 # Optionally build your docs in additional formats such as PDF and ePub
 # formats:
 #    - pdf
-
