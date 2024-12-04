@@ -1,3 +1,9 @@
+[build-system]
+# This section is required for pip to understand how to build the package.
+# Poetry uses poetry-core for packaging, which should be compatible with pip.
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "project-chameleon"
 version = "0.1.0"
@@ -16,12 +22,6 @@ py4DSTEM = "^0.14.15"
 xylib-py = "^1.6.1"
 pandas = "^2.2.2"
 sphinx_rtd_theme = "^1.0.0"
-
-[build-system]
-# This section is required for pip to understand how to build the package.
-# Poetry uses poetry-core for packaging, which should be compatible with pip.
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 # Exporting the package's dependencies into a requirements.txt format
 [tool.poetry.scripts]
