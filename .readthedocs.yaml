@@ -5,22 +5,7 @@ build:
     python: "3.10"  # Specify your Python version as a string
   jobs:
     pre_install:
-      - pip install cmake  # Install CMake
-      # Install SWIG from source
-      - git clone https://github.com/swig/swig.git  # Clone SWIG repository
-      - cd swig
-      - git fetch --tags  # Fetch all tags
-      - git checkout tags/rel-4.1.0 -b build-branch || git checkout master  # Use the tag or fallback to master
-      - sh autogen.sh  # Generate configure script
-      - ./configure --prefix=$HOME/.local
-      - make
-      - make install
-      - export PATH=$HOME/.local/bin:$PATH  # Add SWIG to PATH
-      - cd ..
-      # Install Boost from source
-      - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz  # Replace with the latest Boost version if necessary
-      - tar -xvzf boost_1_76_0.tar.gz
-      - cd boost_1_76_0
-      - ./bootstrap.sh --prefix=$HOME/.local  # Specify the local installation directory
-      - ./b2 install
-      - export BOOST_ROOT=$HOME/.local  # Set the BOOST_ROOT environment variable
+      - apt-get update && apt-get install -y gnupg2 curl && \
+        curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --batch --no-tty --dearmor -o /tmp/debian-archive-keyring.gpg && \
+        mv /tmp/debian-archive-keyring.gpg /usr/share/keyrings/debian-archive-keyring.gpg && \
+        curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc | gpg --batch --no-tty --dearmor -o /tmp/debian-security-archive-keyring.gpg && \mv /tmp/debian-security-archive-keyring.gpg /usr/share/keyrings/debian-security-archive-keyring.gpg
