@@ -14,7 +14,12 @@ build:
       - |
         if [ ! -f "bootstrap.sh" ]; then
           echo "bootstrap.sh not found. Attempting manual build of b2"
-          ./b2 --prefix=$HOME/.local --with-libraries=all install
+          # Manually build Boost without bootstrap.sh
+          # You can attempt to build b2 manually here
+          ./bjam --prefix=$HOME/.local --with-libraries=all install
+        else
+          ./bootstrap.sh --prefix=$HOME/.local  # Try to build Boost with bootstrap.sh if present
+          ./b2 install
         fi
       - export BOOST_ROOT=$HOME/.local  # Set BOOST_ROOT environment variable
       - export BOOST_INCLUDEDIR=$BOOST_ROOT/include  # Ensure Boost headers are found
