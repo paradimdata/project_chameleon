@@ -7,9 +7,10 @@ build:
     pre_install:
       - pip install cmake  # Install CMake
       # Install SWIG from source
-      - git clone https://github.com/swig/swig.git  # Clone the SWIG source repository
+      - git clone https://github.com/swig/swig.git  # Clone SWIG repository
       - cd swig
-      - sh autogen.sh  # Generate the configure script
+      - git checkout tags/rel-4.1.0 -b build-branch  # Check out a stable version
+      - sh autogen.sh  # Generate configure script
       - ./configure --prefix=$HOME/.local
       - make
       - make install
