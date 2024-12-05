@@ -11,8 +11,10 @@ build:
       - tar -xvzf boost_1_76_0.tar.gz
       - cd boost_1_76_0
       # Check if bootstrap.sh exists; if not, build b2 manually
-      - if [ ! -f "bootstrap.sh" ]; then echo "bootstrap.sh not found. Attempting manual build of b2"; \
-        ./b2 --prefix=$HOME/.local --with-libraries=all install; \
+      - |
+        if [ ! -f "bootstrap.sh" ]; then
+          echo "bootstrap.sh not found. Attempting manual build of b2"
+          ./b2 --prefix=$HOME/.local --with-libraries=all install
         fi
       - export BOOST_ROOT=$HOME/.local  # Set BOOST_ROOT environment variable
       - export BOOST_INCLUDEDIR=$BOOST_ROOT/include  # Ensure Boost headers are found
