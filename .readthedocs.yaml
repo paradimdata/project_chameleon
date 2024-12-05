@@ -3,28 +3,29 @@ build:
   os: ubuntu-20.04  # Specify the desired OS version (e.g., Ubuntu 20.04)
   tools:
     python: "3.10"  # Specify your Python version as a string (corrected)
-  install:
-    - method: pip
-      packages:
-        - -r requirements.txt  # Install Python dependencies from requirements.txt
-    # Install CMake
-    - pip install cmake
-    # Install SWIG from source
-    - wget https://github.com/swig/swig/releases/download/4.1.1/swig-4.1.1.tar.gz  # Replace with the latest SWIG version if necessary
-    - tar -xvzf swig-4.1.1.tar.gz
-    - cd swig-4.1.1
-    - ./configure --prefix=$HOME/.local  # Install SWIG locally
-    - make
-    - make install
-    - export PATH=$HOME/.local/bin:$PATH  # Ensure swig is in the PATH
-    - cd ..  # Go back to the original directory
-    # Install Boost from source
-    - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz  # Replace with the latest Boost version if necessary
-    - tar -xvzf boost_1_76_0.tar.gz
-    - cd boost_1_76_0
-    - ./bootstrap.sh --prefix=$HOME/.local  # Specify the local installation directory
-    - ./b2 install
-    - export BOOST_ROOT=$HOME/.local  # Set the BOOST_ROOT environment variable
+  jobs:  
+    pre_install:
+      - method: pip
+        packages:
+          - -r requirements.txt  # Install Python dependencies from requirements.txt
+      # Install CMake
+      - pip install cmake
+      # Install SWIG from source
+      - wget https://github.com/swig/swig/releases/download/4.1.1/swig-4.1.1.tar.gz  # Replace with the latest SWIG version if necessary
+      - tar -xvzf swig-4.1.1.tar.gz
+      - cd swig-4.1.1
+      - ./configure --prefix=$HOME/.local  # Install SWIG locally
+      - make
+      - make install
+      - export PATH=$HOME/.local/bin:$PATH  # Ensure swig is in the PATH
+      - cd ..  # Go back to the original directory
+      # Install Boost from source
+      - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz  # Replace with the latest Boost version if necessary
+      - tar -xvzf boost_1_76_0.tar.gz
+      - cd boost_1_76_0
+      - ./bootstrap.sh --prefix=$HOME/.local  # Specify the local installation directory
+      - ./b2 install
+      - export BOOST_ROOT=$HOME/.local  # Set the BOOST_ROOT environment variable
   build:
     # This is where you specify the build steps (e.g., generating HTML from your Sphinx documentation)
     commands:
