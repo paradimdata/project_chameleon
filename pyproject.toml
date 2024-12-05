@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "swig", "boost"]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,9 +16,9 @@ dependencies = [
     "numpy>=1.26.4",
     "hyperspy>=2.1.0",
     "py4DSTEM>=0.14.15",
-    "xylib-py>=1.6.1",
     "pandas>=2.2.2",
-    "sphinx-rtd-theme>=1.0.0"
+    "sphinx-rtd-theme>=1.0.0",
+    "xylib-py>=1.6.1"
 ]
 
 [project.optional-dependencies]
