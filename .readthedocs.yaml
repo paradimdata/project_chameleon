@@ -7,13 +7,13 @@ build:
     pre_install:
       - pip install cmake  # Install CMake
       # Install SWIG from source
-      - wget https://sourceforge.net/projects/swig/files/swig/swig-4.3.0/swig-4.3.0.tar.gz/download?use_mirror=cfhcable  # Replace with the latest SWIG version if necessary
-      - tar -xvzf swig-4.1.2.tar.gz
-      - cd swig-4.1.2
+      - wget -O swig-4.3.0.tar.gz https://sourceforge.net/projects/swig/files/swig/swig-4.3.0/swig-4.3.0.tar.gz/download?use_mirror=cfhcable
+      - tar -xvzf swig-4.3.0.tar.gz
+      - cd swig-4.3.0
       - ./configure --prefix=$HOME/.local  # Install SWIG locally in the home directory
       - make
       - make install
-      - export PATH=$HOME/.local/bin:$PATH  # Ensure SWIG is in the PATH
+      - export PATH=$HOME/.local/bin:$PATH  # Add SWIG to PATH
       - cd ..
       # Install Boost from source
       - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz  # Replace with the latest Boost version if necessary
