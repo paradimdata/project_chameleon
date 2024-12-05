@@ -8,8 +8,8 @@ build:
   jobs:
     pre_install:
       # Install system dependencies (SWIG and Boost)
-      - sudo apt-get update
-      - sudo apt-get install -y swig libboost-all-dev
+      - apt-get update
+      - apt-get install -y swig libboost-all-dev
 
 python:
   install:
