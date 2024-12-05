@@ -3,13 +3,10 @@ build:
   os: ubuntu-20.04  # Specify the desired OS version (e.g., Ubuntu 20.04)
   tools:
     python: "3.10"  # Specify your Python version as a string (corrected)
-  jobs:  
+  jobs:
     pre_install:
-      - method: pip
-        packages:
-          - -r requirements.txt  # Install Python dependencies from requirements.txt
-      # Install CMake
-      - pip install cmake
+      - pip install -r requirements.txt  # Install Python dependencies from requirements.txt
+      - pip install cmake  # Install CMake
       # Install SWIG from source
       - wget https://github.com/swig/swig/releases/download/4.1.1/swig-4.1.1.tar.gz  # Replace with the latest SWIG version if necessary
       - tar -xvzf swig-4.1.1.tar.gz
@@ -29,4 +26,4 @@ build:
   build:
     # This is where you specify the build steps (e.g., generating HTML from your Sphinx documentation)
     commands:
-      - make html  # Command to build the documentation (modify as needed
+      - make html  # Command to build the documentation (modify as needed)
