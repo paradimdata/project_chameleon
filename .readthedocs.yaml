@@ -5,7 +5,5 @@ build:
     python: "3.10"  # Specify your Python version as a string
   jobs:
     pre_install:
-      - apt-get update && apt-get install -y gnupg2 curl && \
-        curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --batch --no-tty --dearmor -o /tmp/debian-archive-keyring.gpg && \
-        mv /tmp/debian-archive-keyring.gpg /usr/share/keyrings/debian-archive-keyring.gpg && \
-        curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc | gpg --batch --no-tty --dearmor -o /tmp/debian-security-archive-keyring.gpg && \mv /tmp/debian-security-archive-keyring.gpg /usr/share/keyrings/debian-security-archive-keyring.gpg
+      - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc -o /tmp/debian-archive-keyring.asc
+      - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc -o /tmp/debian-security-archive-keyring.asc
