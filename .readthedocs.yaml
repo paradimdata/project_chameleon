@@ -5,7 +5,6 @@ build:
     python: "3.10"  # Specify your Python version as a string
   jobs:
     pre_install:
-      - pip install -r requirements.txt  # Install Python dependencies from requirements.txt
       - pip install cmake  # Install CMake
       # Install SWIG from source
       - wget https://github.com/swig/swig/releases/download/4.1.1/swig-4.1.1.tar.gz  # Replace with the latest SWIG version if necessary
