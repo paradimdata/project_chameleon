@@ -2,7 +2,7 @@ version: 2
 build:
   os: ubuntu-20.04  # Specify the desired OS version (e.g., Ubuntu 20.04)
   tools:
-    python: "3.10"  # Specify your Python version as a string (corrected)
+    python: "3.10"  # Specify your Python version as a string
   jobs:
     pre_install:
       - pip install -r requirements.txt  # Install Python dependencies from requirements.txt
@@ -23,7 +23,7 @@ build:
       - ./bootstrap.sh --prefix=$HOME/.local  # Specify the local installation directory
       - ./b2 install
       - export BOOST_ROOT=$HOME/.local  # Set the BOOST_ROOT environment variable
-  build:
+  post_build:
     # This is where you specify the build steps (e.g., generating HTML from your Sphinx documentation)
     commands:
       - make html  # Command to build the documentation (modify as needed)
