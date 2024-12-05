@@ -10,8 +10,10 @@ build:
       - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz -O boost_1_76_0.tar.gz
       - tar -xvzf boost_1_76_0.tar.gz
       - cd boost_1_76_0
-      # Attempt to build Boost with b2 if bootstrap.sh is not present
-      - ./b2 install --prefix=$HOME/.local  # Using b2 to install Boost
+      # Check if bootstrap.sh exists; if not, build b2 manually
+      - if [ ! -f "bootstrap.sh" ]; then echo "bootstrap.sh not found. Attempting manual build of b2"; \
+        ./b2 --prefix=$HOME/.local --with-libraries=all install; \
+        fi
       - export BOOST_ROOT=$HOME/.local  # Set BOOST_ROOT environment variable
       - export BOOST_INCLUDEDIR=$BOOST_ROOT/include  # Ensure Boost headers are found
       - export BOOST_LIBRARYDIR=$BOOST_ROOT/lib  # Ensure Boost libraries are found
