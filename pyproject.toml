@@ -1,40 +1,8 @@
 [build-system]
-# Minimum requirements for the build system to execute.
-requires = ["setuptools", "wheel"]  # PEP 508 specifications.
-build-backend = "setuptools.build_meta"
-
-# Ignore flat-layout.
-[tool.setuptools]
-py-modules = []
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
 
 [project]
-name = "project-chameleon"
-version = "0.1.0"
-description = "A package for transforming and querying different file formats commonly found in material science research"
-authors = [{name = "Peter Cauchy", email = "peter.cauchy@example.com"}]
-license = "MIT"
-readme = "README.md"
+name = "lumache"
+authors = [{name = "Peter Cauchy", email = "peter.cauchy@test.com"}]
 dynamic = ["version", "description"]
-
-[project.dependencies]
-python = "^3.12"
-sphinx = "^8.1.3"
-matplotlib = "^3.9.0"
-numpy = "^1.26.4"
-hyperspy = "^2.1.0"
-py4DSTEM = "^0.14.15"
-xylib-py = "^1.6.1"
-pandas = "^2.2.2"
-sphinx_rtd_theme = "^1.0.0"
-
-[project.optional-dependencies]
-docs = ["sphinx_rtd_theme"]
-
-[project.scripts]
-non4dstem = "project_chameleon.non4dstem:main"
-stemarray4d = "project_chameleon.stemarray4d:main"
-mbeparser = "project_chameleon.mbeparser:main"
-ppmsmpms = "project_chameleon.ppmsmpms:main"
-rheed = "project_chameleon.rheedconverter:main"
-brukerraw = "project_chameleon.brukerrawconverter:main"
-brukerrawbackground = "project_chameleon.brukerrawbackground:main"
