@@ -23,7 +23,4 @@ build:
       - ./bootstrap.sh --prefix=$HOME/.local  # Specify the local installation directory
       - ./b2 install
       - export BOOST_ROOT=$HOME/.local  # Set the BOOST_ROOT environment variable
-    post_build:
-      # This is where you specify the build steps (e.g., generating HTML from your Sphinx documentation)
-      commands:
-        - make html  # Command to build the documentation (modify as needed)
+
