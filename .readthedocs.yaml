@@ -7,5 +7,5 @@ build:
     pre_install:
       - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc -o /tmp/debian-archive-keyring.asc
       - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc -o /tmp/debian-security-archive-keyring.asc
-      - pip install swig boost hdf5
+      - pip install swig boost h5py
       - pip install -r docs/requirements.txt
