@@ -7,7 +7,7 @@ build:
     pre_install:
       - pip install cmake  # Install CMake
       # Install SWIG from source
-      - wget https://github.com/swig/swig/releases/download/4.1.2/swig-4.1.2.tar.gz  # Replace with the latest SWIG version if necessary
+      - wget https://sourceforge.net/projects/swig/files/swig/swig-4.3.0/swig-4.3.0.tar.gz/download?use_mirror=cfhcable  # Replace with the latest SWIG version if necessary
       - tar -xvzf swig-4.1.2.tar.gz
       - cd swig-4.1.2
       - ./configure --prefix=$HOME/.local  # Install SWIG locally in the home directory
