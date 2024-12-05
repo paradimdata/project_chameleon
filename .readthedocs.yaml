@@ -7,8 +7,14 @@ build:
     pre_install:
       - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc -o /tmp/debian-archive-keyring.asc
       - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc -o /tmp/debian-security-archive-keyring.asc
-      - pip install swig boost h5py
+      - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz -O boost_1_76_0.tar.gz
+      - tar -xvzf boost_1_76_0.tar.gz
+      - cd boost_1_76_0
+      - ./bootstrap.sh --prefix=$HOME/.local  # Install Boost locally
+      - ./b2 install
       - export BOOST_ROOT=$HOME/.local  # Set BOOST_ROOT environment variable
       - export BOOST_INCLUDEDIR=$BOOST_ROOT/include  # Ensure Boost headers are found
-      - export BOOST_LIBRARYDIR=$BOOST_ROOT/lib
+      - export BOOST_LIBRARYDIR=$BOOST_ROOT/lib  # Ensure Boost libraries are found
+      - cd ..
+      - pip install swig boost h5py
       - pip install -r docs/requirements.txt
