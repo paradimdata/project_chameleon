@@ -10,6 +10,7 @@ build:
       - wget -O swig-4.3.0.tar.gz https://sourceforge.net/projects/swig/files/swig/swig-4.3.0/swig-4.3.0.tar.gz/download
       - tar -xvzf swig-4.3.0.tar.gz
       - cd swig-4.3.0
+      - sh autogen.sh  # Generate the configure script
       - ./configure --prefix=$HOME/.local
       - make
       - make install
