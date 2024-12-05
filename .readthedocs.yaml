@@ -16,5 +16,5 @@ build:
       - export BOOST_LIBRARYDIR=$BOOST_ROOT/lib  # Ensure Boost libraries are found
       - cd ..
       - pip install swig boost h5py
-
+      - ls $HOME/.local/include/boost/shared_ptr.hpp
       - pip install -r docs/requirements.txt
