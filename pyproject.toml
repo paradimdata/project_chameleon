@@ -32,3 +32,14 @@ ppmsmpms = "project_chameleon.ppmsmpms:main"
 rheed = "project_chameleon.rheedconverter:main"
 brukerraw = "project_chameleon.brukerrawconverter:main"
 brukerrawbackground = "project_chameleon.brukerrawbackground:main"
+
+[tool.setuptools]
+# Explicitly list the package to avoid issues with flat-layout
+packages = ["project_chameleon"]
+
+# Optionally, use src-layout if you prefer to restructure your package
+# package-dir = {"" = "src"}
+
+# You can also explicitly exclude other directories
+# exclude = ["conda", "*.tests"]
+
