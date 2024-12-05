@@ -1,10 +1,8 @@
 [build-system]
-# Minimum requirements for the build system to execute.
-requires = ["setuptools>=42", "wheel"]  # Ensure up-to-date setuptools for PEP 517 support.
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-# Indicates a flat-layout with Python modules at the root.
 py-modules = []
 
 [project]
@@ -14,19 +12,21 @@ description = "A package for transforming and querying different file formats co
 authors = [{name = "Peter Cauchy", email = "peter.cauchy@example.com"}]
 license = {text = "MIT"}
 readme = "README.md"
-# Dynamic fields explicitly stated.
 dynamic = ["version", "description"]
 
 [project.dependencies]
-python = ">=3.12"  # Specify the minimum Python version.
-sphinx = ">=8.1.3"
-matplotlib = ">=3.9.0"
-numpy = ">=1.26.4"
-hyperspy = ">=2.1.0"
-py4DSTEM = ">=0.14.15"
-xylib-py = ">=1.6.1"
-pandas = ">=2.2.2"
-sphinx-rtd-theme = ">=1.0.0"  # Use a hyphen to match the package name on PyPI.
+# Each dependency is a string in the array
+dependencies = [
+    "python>=3.12",
+    "sphinx>=8.1.3",
+    "matplotlib>=3.9.0",
+    "numpy>=1.26.4",
+    "hyperspy>=2.1.0",
+    "py4DSTEM>=0.14.15",
+    "xylib-py>=1.6.1",
+    "pandas>=2.2.2",
+    "sphinx-rtd-theme>=1.0.0"
+]
 
 [project.optional-dependencies]
 docs = ["sphinx-rtd-theme"]
