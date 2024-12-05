@@ -5,8 +5,8 @@ build:
   tools:
     python: "3.10"
 
-  # Use the before_install section for system dependencies
   before_install:
+    # Install system dependencies (SWIG and Boost)
     - sudo apt-get update
     - sudo apt-get install -y swig libboost-all-dev
 
