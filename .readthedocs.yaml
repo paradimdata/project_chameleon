@@ -5,6 +5,6 @@ build:
     python: "3.10"  # Specify your Python version as a string
   jobs:
     pre_install:
-    pip install -r /docs/requirements.txt
+      - pip install -r docs/requirements.txt
       - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc -o /tmp/debian-archive-keyring.asc
       - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc -o /tmp/debian-security-archive-keyring.asc
