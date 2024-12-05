@@ -1,8 +1,41 @@
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+# Minimum requirements for the build system to execute.
+requires = ["setuptools>=42", "wheel"]  # Ensure up-to-date setuptools for PEP 517 support.
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Indicates a flat-layout with Python modules at the root.
+py-modules = []
 
 [project]
-name = "lumache"
-authors = [{name = "Peter Cauchy", email = "peter.cauchy@test.com"}]
+name = "project-chameleon"
+version = "0.1.0"
+description = "A package for transforming and querying different file formats commonly found in material science research"
+authors = [{name = "Peter Cauchy", email = "peter.cauchy@example.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+# Dynamic fields explicitly stated.
 dynamic = ["version", "description"]
+
+[project.dependencies]
+python = ">=3.12"  # Specify the minimum Python version.
+sphinx = ">=8.1.3"
+matplotlib = ">=3.9.0"
+numpy = ">=1.26.4"
+hyperspy = ">=2.1.0"
+py4DSTEM = ">=0.14.15"
+xylib-py = ">=1.6.1"
+pandas = ">=2.2.2"
+sphinx-rtd-theme = ">=1.0.0"  # Use a hyphen to match the package name on PyPI.
+
+[project.optional-dependencies]
+docs = ["sphinx-rtd-theme"]
+
+[project.scripts]
+non4dstem = "project_chameleon.non4dstem:main"
+stemarray4d = "project_chameleon.stemarray4d:main"
+mbeparser = "project_chameleon.mbeparser:main"
+ppmsmpms = "project_chameleon.ppmsmpms:main"
+rheed = "project_chameleon.rheedconverter:main"
+brukerraw = "project_chameleon.brukerrawconverter:main"
+brukerrawbackground = "project_chameleon.brukerrawbackground:main"
