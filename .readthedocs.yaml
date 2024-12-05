@@ -9,8 +9,8 @@ build:
       # Install SWIG from source
       - git clone https://github.com/swig/swig.git  # Clone SWIG repository
       - cd swig
-      - git fetch --tags  # Fetch tags
-      - git checkout tags/v4.1.0 -b build-branch  # Checkout the specific version
+      - git fetch --tags  # Fetch all tags
+      - git checkout tags/rel-4.1.0 -b build-branch || git checkout master  # Use the tag or fallback to master
       - sh autogen.sh  # Generate configure script
       - ./configure --prefix=$HOME/.local
       - make
