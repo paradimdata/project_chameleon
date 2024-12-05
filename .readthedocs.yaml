@@ -6,10 +6,15 @@ build:
   jobs:
     pre_install:
       - pip install cmake  # Install CMake
-      # Install Homebrew (if necessary) and SWIG
-      - export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"  # Update the PATH for Homebrew (Linux)
-      - which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"  # Install Homebrew if it's not already installed
-      - brew install swig  # Install SWIG using Homebrew
+      # Install SWIG from source
+      - wget https://github.com/swig/swig/releases/download/4.1.2/swig-4.1.2.tar.gz  # Replace with the latest SWIG version if necessary
+      - tar -xvzf swig-4.1.2.tar.gz
+      - cd swig-4.1.2
+      - ./configure --prefix=$HOME/.local  # Install SWIG locally in the home directory
+      - make
+      - make install
+      - export PATH=$HOME/.local/bin:$PATH  # Ensure SWIG is in the PATH
+      - cd ..
       # Install Boost from source
       - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz  # Replace with the latest Boost version if necessary
       - tar -xvzf boost_1_76_0.tar.gz
