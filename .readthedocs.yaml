@@ -5,13 +5,13 @@ build:
   tools:
     python: "3.10"
 
+  # Use the before_install section for system dependencies
+  before_install:
+    - sudo apt-get update
+    - sudo apt-get install -y swig libboost-all-dev
+
 python:
   install:
     - method: pip
       path: .
     - requirements: requirements.txt
-
-  install:
-    - sudo apt-get update
-    - sudo apt-get install -y swig libboost-all-dev
-
