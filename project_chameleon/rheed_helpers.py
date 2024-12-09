@@ -18,6 +18,10 @@ def get_image_dimensions(input_file):
         header_size = 640
     elif signature == 'KSA00J':
         header_size = 685
+    elif signature == '%)\r\nNX':
+        height = 512
+        width = 512
+        header_size = 5120
     else:
         raise ValueError("ERROR: Ecountered unknown header.")
 
