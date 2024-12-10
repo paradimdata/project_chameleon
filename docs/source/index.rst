@@ -15,6 +15,7 @@ Welcome to the documentation for Project Chameleon. Project Chameleon is a packa
 
    brukerrawbackground
    brukerrawconverter
+   hs2converter
    mbeparser
    non4dstem
    ppmsmpms
