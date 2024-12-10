@@ -3,12 +3,10 @@ build:
   os: ubuntu-20.04  # Specify the desired OS version (e.g., Ubuntu 20.04)
   tools:
     python: "3.10"  # Specify your Python version as a string
+  apt_packages:
+    - libboost-dev
   jobs:
     pre_install:
-      - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc -o /tmp/debian-archive-keyring.asc
-      - curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc -o /tmp/debian-security-archive-keyring.asc
-      - apt-get update 
-      - apt-get -y install libboost-dev
       - pip install swig boost h5py
       - ls $HOME/.local/include/boost/shared_ptr.hpp
       - pip install -r docs/requirements.txt
