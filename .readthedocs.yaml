@@ -10,7 +10,8 @@ build:
       - wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz -O boost_1_76_0.tar.gz
       - tar -xvzf boost_1_76_0.tar.gz
       - cd boost_1_76_0
-      - ./boost_1_76_0/bootstrap.sh --prefix=$HOME/.local  # Install Boost locally
+      - cd boost_1_76_0
+      - ./bootstrap.sh --prefix=$HOME/.local  # Install Boost locally
       - ./b2 headers --prefix=$HOME/.local
       - ./b2
       - ./b2 install --prefix=$HOME/.local
