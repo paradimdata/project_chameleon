@@ -11,8 +11,9 @@ build:
       - tar -xvzf boost_1_76_0.tar.gz
       - cd boost_1_76_0
       - ./boost_1_76_0/bootstrap.sh --prefix=$HOME/.local  # Install Boost locally
-      - ./boost_1_76_0/b2 install --prefix=$HOME/.local
-      - ./boost_1_76_0/b2 headers --prefix=$HOME/.local
+      - ./b2 headers --prefix=$HOME/.local
+      - ./b2
+      - ./b2 install --prefix=$HOME/.local
       - export BOOST_ROOT=$HOME/.local  # Set BOOST_ROOT environment variable
       - export BOOST_INCLUDEDIR=$BOOST_ROOT/include  # Ensure Boost headers are found
       - export BOOST_LIBRARYDIR=$BOOST_ROOT/lib  # Ensure Boost libraries are found
