@@ -6,3 +6,4 @@ py4DSTEM>=0.14.15
 xylib-py>=1.6.1
 pandas>=2.2.2
 sphinx-rtd-theme>=1.0.0
+Pillow>=2.2.1
