@@ -11,7 +11,7 @@ Welcome to the documentation for Project Chameleon. Project Chameleon is a packa
 
 .. toctree::
    :maxdepth: 2
-   :caption: File Types
+   :caption: modules
 
    arpes
    brukerrawconverter
