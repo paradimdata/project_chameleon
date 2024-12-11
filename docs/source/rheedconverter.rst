@@ -2,7 +2,7 @@
 Reflection High Energy Electron Diffraction
 ==========================================
 
-This module contains a function called ``rheedconverter()``. ``rheedconverter()`` takes a 16bpp RHEED .img file as an input. The function then converts this image into an 8bpp image file that is more easily readable. Please note this function was design for .img files with dimensions of 1024x1024 as that is the standard size of the the images that this function was developed with.
+This module contains a function called ``rheedconverter()``. The function ``rheedconverter()`` takes a 16bpp RHEED .img file as input and converts it into an 8bpp image file that is more easily readable. Please note that this function was designed for .img files with dimensions of 1024x1024, as that is the standard size of the images it was developed with.
 
 .. automodule:: rheedconverter
    :members:
@@ -12,9 +12,9 @@ This module contains a function called ``rheedconverter()``. ``rheedconverter()`
 .. automodule:: rheed_video_converter
    :members:
    :undoc-members:
-   :show-inheritance: 
+   :show-inheritance:
 
 .. automodule:: rheed_helpers
    :members:
    :undoc-members:
-   :show-inheritance:  
+   :show-inheritance:

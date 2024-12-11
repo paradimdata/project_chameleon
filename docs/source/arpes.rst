@@ -14,3 +14,4 @@ Please note that if the `folder_name` is not a valid directory or if `workbook_n
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: main
