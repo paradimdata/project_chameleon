@@ -23,7 +23,19 @@ The functions support the following arguments:
 
 Please note that if the input file is not the expected file type or if an invalid file extension or argument is passed, exceptions will be raised.
 
-.. automodule:: rheed_video_processing
+.. automodule:: rheed_video_converter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members: main
+
+.. automodule:: rheedconverter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members: main
+
+.. automodule:: rheed_helpers
    :members:
    :undoc-members:
    :show-inheritance:
