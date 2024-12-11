@@ -8,14 +8,13 @@ This module contains a function called ``rheedconverter()``. ``rheedconverter()`
    :members:
    :undoc-members:
    :show-inheritance:
-   :exclude-members: main
-
-.. automodule:: rheed_helpers
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 .. automodule:: rheed_video_converter
    :members:
    :undoc-members:
-   :show-inheritance:   
+   :show-inheritance: 
+
+.. automodule:: rheed_helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:  
