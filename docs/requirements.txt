@@ -9,7 +9,6 @@ sphinx-rtd-theme>=1.0.0
 Pillow>=2.2.1
 h5py>=2.6.0
 datetime>=
-htmdec_formats  # Custom or third-party module; specify version if known
 h5py>=2.6.0
 openpyxl>=3.0.0
 PyQt5>=5.15.0
