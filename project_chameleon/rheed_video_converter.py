@@ -7,9 +7,9 @@ import shutil
 from sys import argv, exit
 from time import time, sleep
 from subprocess import Popen, PIPE, DEVNULL
-from .rheed_helpers import get_image_dimensions
-from .rheed_helpers import rheed_video_frame_parser
-from .rheed_helpers import rheed_video_image_parser
+from rheed_helpers import get_image_dimensions
+from rheed_helpers import rheed_video_frame_parser
+from rheed_helpers import rheed_video_image_parser
 import traceback
 
 def rheed_video_converter(input_file, output_file, output_type, keep_images = 0):
