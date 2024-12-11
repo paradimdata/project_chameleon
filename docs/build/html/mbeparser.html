@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Non-4D Scanning Transmission Electron Microscopy" href="non4dstem.html" />
-    <link rel="prev" title="Bruker XRD RAW" href="brukerrawconverter.html" /> 
+    <link rel="prev" title="Laue .hs2 X-Ray Diffraction" href="hs2.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,20 +46,19 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">project_chameleon</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="brukerrawbackground.html">Bruker Raw Background Subtraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Molecular Beam Epitaxy</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#mbeparser.find_shutter_values"><code class="docutils literal notranslate"><span class="pre">find_shutter_values()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mbeparser.mbeparser"><code class="docutils literal notranslate"><span class="pre">mbeparser()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="brukerrawbackground.html">Bruker Raw Background Subtraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hs2.html">Laue .hs2 X-Ray Diffraction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Molecular Beam Epitaxy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mbeparser.find_shutter_values"><code class="docutils literal notranslate"><span class="pre">find_shutter_values()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mbeparser.mbeparser"><code class="docutils literal notranslate"><span class="pre">mbeparser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mbeparser.mbeplot"><code class="docutils literal notranslate"><span class="pre">mbeplot()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
 </ul>
 
         </div>
@@ -76,7 +75,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">project_chameleon</a></li>
       <li class="breadcrumb-item active">Molecular Beam Epitaxy</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/mbeparser.rst.txt" rel="nofollow"> View page source</a>
@@ -125,13 +123,18 @@ and non useful data, then query the useful data for specific files. When the fun
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="mbeparser.mbeplot">
+<span class="sig-prename descclassname"><span class="pre">mbeparser.</span></span><span class="sig-name descname"><span class="pre">mbeplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">useful_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filechoice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shutter_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mbeparser.mbeplot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="brukerrawconverter.html" class="btn btn-neutral float-left" title="Bruker XRD RAW" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hs2.html" class="btn btn-neutral float-left" title="Laue .hs2 X-Ray Diffraction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="non4dstem.html" class="btn btn-neutral float-right" title="Non-4D Scanning Transmission Electron Microscopy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

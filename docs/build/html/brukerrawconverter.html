@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Molecular Beam Epitaxy" href="mbeparser.html" />
+    <link rel="next" title="Laue .hs2 X-Ray Diffraction" href="hs2.html" />
     <link rel="prev" title="Bruker Raw Background Subtraction" href="brukerrawbackground.html" /> 
 </head>
 
@@ -46,20 +46,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">project_chameleon</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="brukerrawbackground.html">Bruker Raw Background Subtraction</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Bruker XRD RAW</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#brukerrawconverter.brukerrawconverter"><code class="docutils literal notranslate"><span class="pre">brukerrawconverter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#brukerrawconverter.export_metadata"><code class="docutils literal notranslate"><span class="pre">export_metadata()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="brukerrawbackground.html">Bruker Raw Background Subtraction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bruker XRD RAW</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#brukerrawconverter.brukerrawconverter"><code class="docutils literal notranslate"><span class="pre">brukerrawconverter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#brukerrawconverter.export_metadata"><code class="docutils literal notranslate"><span class="pre">export_metadata()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="hs2.html">Laue .hs2 X-Ray Diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="non4dstem.html">Non-4D Scanning Transmission Electron Microscopy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
 </ul>
 
         </div>
@@ -76,7 +74,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">project_chameleon</a></li>
       <li class="breadcrumb-item active">Bruker XRD RAW</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/brukerrawconverter.rst.txt" rel="nofollow"> View page source</a>
@@ -92,7 +89,7 @@
 <p>This module contains a function called <code class="docutils literal notranslate"><span class="pre">brukerrawconverter()</span></code>. This function takes either Bruker .raw or Bruker .UXD files, extracts the data and metadata, and saves all extracted data to a .txt file.</p>
 <dl class="py function" id="module-brukerrawconverter">
 <dt class="sig sig-object py" id="brukerrawconverter.brukerrawconverter">
-<span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">brukerrawconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.brukerrawconverter" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">brukerrawconverter.</span></span><span class="sig-name descname"><span class="pre">brukerrawconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#brukerrawconverter.brukerrawconverter" title="Link to this definition"></a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">brukerrawconverter</span></code> is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
 This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib.</p>
 <dl class="field-list simple">
@@ -132,7 +129,7 @@ This function has been designed for Bruker .raw and Bruker .UXD files, but may w
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="brukerrawbackground.html" class="btn btn-neutral float-left" title="Bruker Raw Background Subtraction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mbeparser.html" class="btn btn-neutral float-right" title="Molecular Beam Epitaxy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="hs2.html" class="btn btn-neutral float-right" title="Laue .hs2 X-Ray Diffraction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

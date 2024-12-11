@@ -46,19 +46,17 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">project_chameleon</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="brukerrawbackground.html">Bruker Raw Background Subtraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Non-4D Scanning Transmission Electron Microscopy</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#non4dstem.non4dstem"><code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="brukerrawbackground.html">Bruker Raw Background Subtraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="brukerrawconverter.html">Bruker XRD RAW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hs2.html">Laue .hs2 X-Ray Diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mbeparser.html">Molecular Beam Epitaxy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-4D Scanning Transmission Electron Microscopy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#non4dstem.non4dstem"><code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="ppmsmpms.html">Physical/Magnetic Property Management System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rheedconverter.html">Reflection High Energy Electron Diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stemarray4d.html">4D Scanning Transmission Electron Microscopy</a></li>
 </ul>
 
         </div>
@@ -75,7 +73,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">project_chameleon</a></li>
       <li class="breadcrumb-item active">Non-4D Scanning Transmission Electron Microscopy</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/non4dstem.rst.txt" rel="nofollow"> View page source</a>
@@ -91,11 +88,11 @@
 <p>This module constains a function called <code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code>. <code class="docutils literal notranslate"><span class="pre">non4dstem()</span></code> is designed to handle files associated with STEM that are not 4 dimension scans. This function has been designed around 2D and 3D .dm4, .ser, and .emd files. All files to be input should be put into a folder and the function will process each image in the folder. This function should be able to process any filetypes that can be processed by the hyperspy <code class="docutils literal notranslate"><span class="pre">load</span></code> function. All outputs will be held in the folder named by the user input <code class="docutils literal notranslate"><span class="pre">output_folder</span></code>.</p>
 <dl class="py function" id="module-non4dstem">
 <dt class="sig sig-object py" id="non4dstem.non4dstem">
-<span class="sig-prename descclassname"><span class="pre">non4dstem.</span></span><span class="sig-name descname"><span class="pre">non4dstem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#non4dstem.non4dstem" title="Link to this definition"></a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">non4dstem</span></code> is a function that takes an input folder containing 2D and 3D STEM images and converts those files into plots that are saved to an output folder. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy ‘load’ function.</p>
+<span class="sig-prename descclassname"><span class="pre">non4dstem.</span></span><span class="sig-name descname"><span class="pre">non4dstem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#non4dstem.non4dstem" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">non4dstem</span></code> is a function that takes an input folder or file containing 2D and 3D STEM images and converts those files into plots that are saved either as an output folder or as a single output file. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy ‘load’ function. This file can only take inputs in specific pairings. <code class="docutils literal notranslate"><span class="pre">data_file</span></code> can be paired with <code class="docutils literal notranslate"><span class="pre">output_file</span></code> and <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code>. <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> may only be paired with <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Args<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This function has two inputs: <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> and <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code>. <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> should be a folder holding all non 4D files that are being processed. <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code> is a string which will be the name out the folder that holds all the processed images.</p>
+<dd class="field-odd"><p>This function has four inputs: <code class="docutils literal notranslate"><span class="pre">data_folder</span></code>, <code class="docutils literal notranslate"><span class="pre">data_file</span></code>, <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code>, <code class="docutils literal notranslate"><span class="pre">output_file</span></code>. <code class="docutils literal notranslate"><span class="pre">data_folder</span></code> should be a folder holding all non 4D files that are being processed. <code class="docutils literal notranslate"><span class="pre">data_file</span></code> should be a file containing a single non 4D stem file. <code class="docutils literal notranslate"><span class="pre">outputs_folder</span></code> is a string which will be the name out the folder that holds all the processed images. <code class="docutils literal notranslate"><span class="pre">output_file</span></code> is a string which will be the name of the single file output.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>this function does not return anything. It saves converted files as .png images in the folder labeled <code class="docutils literal notranslate"><span class="pre">output_folder</span></code>.</p>
