@@ -23,9 +23,15 @@ def hs2converter(file_name, output_file):
     if not os.path.isfile(file_name):
         raise ValueError("ERROR: Input should be a file. Check if your file exists.")
 
-    #Set file size
-    file_width = 256
-    file_height = 256
+    file_size = os.path.getsize(file_name)
+
+    if file_size < 530424:
+        #Set file size
+        file_width = 256
+        file_height = 256
+    else:
+        file_width = 512
+        file_height = 512
 
     #Read data from file, little endian. Once data is read, invert it, create an image, rotate the image 90 degrees, and save the image
     with open(file_name,"r") as f:
