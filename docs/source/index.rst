@@ -7,11 +7,14 @@
 Project Chameleon
 =============================================
 
-Welcome to the documentation for Project Chameleon. Project Chameleon is a package for querying and converting files typically found in material science research. Below is a list of the modules that are currently working. Each page gives a description of what kinds of files the modules are meant to be used for and how to properly call the functions. 
+.. image:: ../../ChameleonLogo.png
+   :width: 600
+
+Welcome to Project Chameleon. Project Chameleon is a package for designed for data processing in material science research. The functions listed below were written to help in the reserach process by allowing for data from files to be extracted more quickly, allowing for the plotting of data, and the conversion of data from an original format to a new, more accessible format. These functions were design based on test data from specific brands of tools. Many of these brands give specific file and data formats. If you are working with data from different brands, the functions may not work correctly. Each function details what kind of file it expects, so it should be easy to tell if a function will work for your purposes. 
 
 .. toctree::
    :maxdepth: 2
-   :caption: modules
+   :caption: Data Types
 
    arpes
    brukerrawconverter
@@ -23,6 +26,9 @@ Welcome to the documentation for Project Chameleon. Project Chameleon is a packa
    stemarray4d
 
 Project Chameleon is written and maintained by Peter Cauchy. Project Chameleon is a part of research done by the Platform for the Acelerated Research, Analysis, and Discovery of Interfaced Materials. 
+
+.. image:: ../../PARADIM_LOGO.png
+   :width: 400
 
 Indices and tables
 ==================
