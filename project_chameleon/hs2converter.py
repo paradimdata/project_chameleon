@@ -6,13 +6,13 @@ import argparse
 
 def hs2converter(file_name, output_file):
     """
-    ``hs2converter()`` is a function to allow users to convert a difficult to handle 16bpp hs2 to an easily readable 8bpp png image.
+    ``hs2converter()`` is a function that converts 16bpp hs2 images to 8bpp png image. This image is modified slightly from its original form so patterns in the data are easier to distinguish.
 
-    :args: This function has two inputs: ``file_name`` and ``output_file``. ``file_name`` should be a .hs2 file. ``output_file`` should be a string which will be the name of the output .png file. 
+    :args: ``file_name`` should be a .hs2 file. ``output_file`` should be a string which will be the name of the output .png file. 
 
     :return: this function does not return anything. The output is saved as an image file.
 
-    :exception: will throw an exception if the input file is not a .hs2 file, or if the input file does not exist.
+    :exception: `file_name` must be an .hs2 file. `file_name` must be a file. `output_file` must end with '.png'.
     """
 
     #Make sure input is a .img file
