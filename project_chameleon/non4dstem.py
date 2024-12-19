@@ -6,13 +6,13 @@ import argparse
 
 def non4dstem(data_folder = None, outputs_folder = None, data_file = None, output_file = None):
     """
-    ``non4dstem`` is a function that takes an input folder or file containing 2D and 3D STEM images and converts those files into plots that are saved either as an output folder or as a single output file. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy 'load' function. This file can only take inputs in specific pairings. ``data_file`` can be paired with ``output_file`` and ``outputs_folder``. ``data_folder`` may only be paired with ``outputs_folder``.
+    ``non4dstem`` is a function that takes an input folder or file containing 2D and 3D STEM images and converts those files into plots that are saved either in output folder or as a single output file. This function was tested on .dm4 files, .ser files, and .emd files, but can handle any filetypes that can be parserd by the hyperspy 'load' function. This file can only take inputs in specific pairings. ``data_file`` can be paired with ``output_file`` and ``outputs_folder``. ``data_folder`` may only be paired with ``outputs_folder``. There may only be one data input and one output type input.
  
-    :args: This function has four inputs: ``data_folder``, ``data_file``, ``outputs_folder``, ``output_file``. ``data_folder`` should be a folder holding all non 4D files that are being processed. ``data_file`` should be a file containing a single non 4D stem file. ``outputs_folder`` is a string which will be the name out the folder that holds all the processed images. ``output_file`` is a string which will be the name of the single file output. 
+    :args: ``data_folder`` should be a folder holding all non 4D files that are being processed. ``data_file`` should be a string or path to a single file non 4D stem file. ``outputs_folder`` is a string which will be the name out the folder that holds all the processed images. ``output_file`` is a string which will be the name of the single file output. All inputs are optional. Some are conditionally required.
 
-    :return: this function does not return anything. It saves converted files as .png images in the folder labeled ``output_folder``.
+    :return: this function does not return anything. It saves converted files as .png images in the folder labeled ``output_folder``, or as single .png images.
 
-    :exceptions: will throw an exception if the ``data_folder`` is not a folder.
+    :exceptions: ``data_folder`` must be a folder. ``data_folder`` must contain files. ``output_folder`` must not contain a file extension. Will throw exceptions if there are any mismatches in input pairings.  
     """
     if data_folder and os.path.isdir(data_folder) is False:
         raise ValueError("ERROR: bad input. Expected folder")

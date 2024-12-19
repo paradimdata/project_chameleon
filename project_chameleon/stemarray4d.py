@@ -8,13 +8,13 @@ from pathlib import Path
 
 def stemarray4d(file_name,output_name):
     """
-    ``stemarray4d()`` is a function designed to take raw 4D STEM files and process them into more disgestable images. 
+    ``stemarray4d()`` is a function designed to take raw 4D STEM files and process them into 2D image slices. This function also generates mean and max images from the 4D scan. Any 4D .raw scans that can be processed by py4DSTEM should be able to be processed by this function.  
 
-    :args: This function has two inputs: ``file_name`` and ``output_name``. ``file_name`` should be a 4D STEM .raw file. ``output_name`` should be a string which will be the name of all outputs combined with the designator of the specific output.
+    :args: ``file_name`` should be a 4D STEM .raw file ending in '.raw'. ``output_name`` should be a string which will be the name of all outputs combined with the designator of the specific output.
 
     :return: does not return anything. There are three primary outputs: a mean image, a max image, and a folder containing the decomposed 2D images of the 4D .raw image.
 
-    :exceptions: will throw an exception if the input is not a file.
+    :exceptions: ``file_name`` must be a file. ``file_name`` must end with '.raw'. ``output_name`` must not contain a file extension.
     """
 
     #Check if input is a file
