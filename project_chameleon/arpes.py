@@ -28,13 +28,13 @@ def get_sec(time_str):
 
 def build_arpes_workbook(workbook_name):
     """
-    ``build_arpes_workbook`` is a function that creates an excel file with a specific premade format. This format is used to hold ARPES data. The function is primarily used to create a new workbook for data to be put into.
+    ``build_arpes_workbook`` is a function that creates an excel .xlsx file with a specific premade format. This format is used to hold ARPES data. The function is used to create a new workbook for data to be put into in the ``arpes_folder_workbook`` function.
 
-    :args: This function has one input: ``workbook_name``. ``workbook_name`` is a string or path.
+    :args: ``workbook_name`` is a string or path that must end with '.xlsx'.
 
     :return: Does not return anything. Creates an excel file with a premade format. 
 
-    :exceptions: Will throw an exception if the input does not end with '.xlsx'.
+    :exceptions: ``workbook_name`` must end with '.xslx'.
     
     """
     #Error handling
@@ -119,13 +119,13 @@ def build_arpes_workbook(workbook_name):
 
 def get_wavenote_values(wavenote_file):
     """
-    ``get_wavenote_values`` is a function that extracts values from the wave note of the .pxt file using HTMDEC. This function does not extract all values. It extracts file name, date, start time, end time, comments, theta, phi, kinetic energy range, step size, run mode, acquisition mode, # of sweeps, pass energy, and photon energy.
+    ``get_wavenote_values`` is a function that extracts values from the wave note of the .pxt file using HTMDEC_formats. This function does not extract all values, only values that were consiedered relevant. All relevant values are returned. Which values are considered relevant can be easily changed locally. 
 
-    :args: This function has one input: ``wavenote_file``. ``wavenote_file`` is a string or path.
+    :args: ``wavenote_file`` is a string or path to a '.pxt' file.
 
-    :return: Returns an array that holds values from the wave note of the .pxt file.
+    :return: Returns a 1 dimensional array that holds relevant values from the wave note of the .pxt file.
 
-    :exceptions: Will throw an exception if the input does not end with '.pxt'.
+    :exceptions: ``wavenote_file`` must end with '.pxt'. ``wavenote_file`` must be a file.
     
     """
     #Initialization and error handling
@@ -174,13 +174,13 @@ def get_wavenote_values(wavenote_file):
 
 def get_varian_values(varian_file, date_time = None):
     """
-    ``get_varian_values`` is a function that extracts values from the varian .log file. This function does not extract all values. It extracts (x,y,z), theta, phi, analyzer slit.
+    ``get_varian_values`` is a function that extracts values from the 'varian' .log file. This function does not extract all values, only relevant values. This function was designed for the 'varian' logs generated from the ARPES machine on which this function was designed. 
 
-    :args: This function has two inputs: ``varian_file`` and ``date_time``. ``varian_file`` is a string or path.``date_time`` is an array that only holds a date and a time.
+    :args: ``varian_file`` is a string or path that end with '.log'.``date_time`` is an array of length 2, that only holds a date and a time. ``date_time`` is an optional input parameter.
 
-    :return: Returns an array that holds values from the varian file.
+    :return: Returns a 1 dimensional array that holds relevant values from the varian file.
 
-    :exceptions: Will throw an exception if the input does not end with '.log'.
+    :exceptions: ``varian_file`` must end with '.log'. ``varian_file`` must be a file.
     
     """
     #Initialization and error handling
@@ -254,13 +254,13 @@ def get_varian_values(varian_file, date_time = None):
 
 def get_jaina_values(jaina_file, date_time = None):
     """
-    ``get_jaina_values`` is a function that extracts values from the jaina .log file. This function does not extract all values. It extracts temperature(Diode A,Diode B) and pressure.
+    ``get_jaina_values`` is a function that extracts values from the 'jaina' .log file. This function does not extract all values, only relevant values. This function was designed for the 'jaina' logs generated from the ARPES machine on which this function was designed. 
 
-    :args: This function has two inputs: ``jaina_file`` and ``date_time``. ``jaina_file`` is a string or path.``date_time`` is an array that only holds a date and a time.
+    :args: ``jaina_file`` is a string or path that end with '.log'.``date_time`` is an array of length 2, that holds a date and a time. ``date_time`` is an optional input parameter.
 
-    :return: Returns an array that holds values from the jaina file.
+    :return: Returns a 1 dimensional array that holds relevant values from the varian file.
 
-    :exceptions: Will throw an exception if the input does not end with '.log'.
+    :exceptions: ``jaina_file`` must end with '.log'. ``jaina_file`` must be a file.
     
     """
     #Initialization and error handling
@@ -320,13 +320,13 @@ def get_jaina_values(jaina_file, date_time = None):
 
 def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     """
-    ``insert_scan_row`` is a function that extracts values from a .pxt wave note file, a jaina log file, a varian log file, and inserts all of the values into the first open row of the workbook ``workbook_name``.
+    ``insert_scan_row`` is a function that extracts relevant values from a .pxt wave note file, a jaina log file, a varian log file, and inserts all of the values into the first open row of the workbook ``workbook_name``. This function utilizes the functionality of ``get_wavenote_values``, ``get_jaina_values``, and ``get_varian_values``.
 
-    :args: This function has four inputs: ``wavenote_file``,``jaina_file``,``varian_file``, and ``workbook_name``. ``wavenote_file`` is a string or a path. ``jaina_file`` is a string or path. ``varian_file`` is a string or a path. ``workbook_name`` is a string or a path.
+    :args: ``wavenote_file`` is a string or a path. ``jaina_file`` is a string or path. ``varian_file`` is a string or a path. ``workbook_name`` is a string or a path.
 
     :return: Does not return anything. Inserts values into the workbook ``workbook_name``.
 
-    :exceptions: Will throw an exception if the input ``wavenote_file`` does not end with '.pxt'. Will throw an exception if the input ``jaina_file`` does not end with '.log'. Will throw an exception if the input ``varian_file`` does not end with '.log'. Will throw an exception if the input ``workbook_name`` does not end with '.xlsx'.
+    :exceptions: ``wavenote_file`` must end with '.pxt'. ``jaina_file`` must end with '.log'. ``varian_file`` must end with '.log'. ``workbook_name`` must end with '.xlsx'.
     
     """
     #Initialization and error handling
@@ -393,13 +393,13 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
 
 def arpes_folder_workbook(folder_name, workbook_name):
     """
-    ``arpes_folder_workbook`` is a function that creates a workbook, looks through the folder to see how many scans there are, extracts values from .pxt, jaina, and varian files for each scan, and creates a row with the extracted values for each scan. This function calls build_arpes_workbook and insert_scan_row.
+    ``arpes_folder_workbook`` is a function that creates a workbook, looks through the folder to see how many scans there are, extracts values from .pxt, jaina, and varian files for each scan, and creates a row with the extracted values for each scan. This function utilizes functionality of  ``build_arpes_workbook`` and ``insert_scan_row``.
 
-    :args: This function has two inputs: ``folder_name`` and ``workbook_name``. ``folder_name`` is a string or a path. ``workbook_name`` is a string or a path.
+    :args: ``folder_name`` is a string or a path. ``workbook_name`` is a string or a path that must end with '.xlsx'.
 
-    :return: Does not return anything. Creates a workbook will a row for each .pxt file in the folder.
+    :return: Does not return anything. Creates a workbook with a row for each .pxt file in the folder.
 
-    :exceptions: Will throw an exception if the input``folder_name`` is not a directory. Will throw an exception if the input ``workbook_name`` does not end with '.xlsx'.
+    :exceptions: ``folder_name`` must be a directory. ``workbook_name`` must end with '.xlsx'.
     
     """
     #Initialization and error handling
@@ -444,13 +444,13 @@ def arpes_folder_workbook(folder_name, workbook_name):
 
 def single_log_grapher(log_file, scan_folder, log_type, value):
     """
-    ``single_log_grapher`` is a function that take a single Varian or Jaina log file from an ARPES scan folder and plots it. The entire log time is graphed and the individual ARPES scans are represented by the different color segements in the plot.
+    ``single_log_grapher`` is a function that take a single Varian or Jaina log file from an ARPES scan folder and plots it. The x axis of the plot is 24 hours, the length of time of the log file, and the y axis is the value that is selected in the ``value`` variable. All scans over the time of the log will be plotted. Each scan will be in a different color. This function has been designed to handle 'Jaina' and 'Varian' log files, the types existing on the system for which this code was written. These logs may not exist, or may not be the same for all systems. 
 
-    :args: This function has four inputs: ``log_file``, ``scan_folder``,``log_type`, and ``value``. ``log_file`` is a string or a path to the log file that will be graphed. ``scan_folder`` is a string or a path to the folder that contains the scans that happen during the log time.``log_type`` is a string that is either Varian or Jaina.``value`` is a string that is the log value that will be graphed.
+    :args: ``log_file`` is a string or a path to the log file that will be graphed, ending in '.log'. ``scan_folder`` is a string or a path to the folder that contains the scans that happen during the log time.``log_type`` is a string that is either 'varian' or 'jaina'.``value`` is a string that is the log value that will be graphed.
     
-    :return: Does not return anything. Displays, plots, and creates a .png file of the plot.
+    :return: Does not return anything. Plots, displays, and saves a .png file of the plot.
     
-    :exceptions: Will throw an exception if the input``log_file`` is not a .log file. Will throw an exception if the input ``scan_folder`` is not a directory. Will throw an exception if the input ``log_type`` is not a valid log type. Will throw an exception if the input ``value`` is not a valid value.
+    :exceptions: ``log_file`` must be a .log file. ``scan_folder`` must be a folder.  ``scan_folder`` must have files in it. ``log_type`` must be either 'varian' or 'jaina'. ``value`` must be a valid value. 
     """
 
     if not log_file.endswith('.log'):
@@ -584,9 +584,9 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
 
 def arpes_previewer(pxt_file):
     """
-    ``previewer`` is a function that takes a pxt file as an input and displays the data and metadata from that file.
+    ``previewer`` is a function that takes a pxt file as an input and displays the scan data and metadata from that file.
 
-    :args: This function has one input: ``pxt_file``. ``pxt_file`` is an ARPES .pxt file that contains data from an ARPES scan.
+    :args: ``pxt_file`` is an ARPES .pxt file that contains data from an ARPES scan.
 
     :return: Does not return anything. Displays data and metadata from the file.
 

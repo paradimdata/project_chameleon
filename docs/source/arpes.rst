@@ -1,14 +1,8 @@
 ==========================================
-ARPES Data Workbook Creation
+Angle-Resolved Photoemission Spectroscopy
 ==========================================
 
-This module contains a function called ``arpes_folder_workbook()``. ``arpes_folder_workbook()`` creates a workbook, looks through a specified folder to count how many scans there are, extracts values from `.pxt`, `.jaina`, and `.varian` files for each scan, and creates a row in the workbook for each scan. This function calls `build_arpes_workbook` and `insert_scan_row` to perform these tasks.
-
-The function takes two arguments:
-- ``folder_name``: A string or path to the folder containing the scan files.
-- ``workbook_name``: A string or path for the name of the workbook to create. This should end with `.xlsx`.
-
-Please note that if the `folder_name` is not a valid directory or if `workbook_name` does not end with `.xlsx`, exceptions will be raised.
+This module contains all functions for Angle-Resolved Photoemission Spectroscopy(ARPES) data. Of the functions below, some of them are primarily helper functions while others are main functions. These functions have been developed for a specific file type and structure. The functions have been designed to read from .log log files and .pxt Cadillac files. All functions that take a folder input are designed for a specific folder structure. The folder structure can be easily changed if necessary. 
 
 .. automodule:: arpes
    :members:
