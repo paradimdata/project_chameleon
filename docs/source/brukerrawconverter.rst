@@ -2,7 +2,7 @@
 Bruker XRD
 ==========
 
-This module contains a function called ``brukerrawconverter()``. This function takes either Bruker .raw or Bruker .UXD files, extracts the data and metadata, and saves all extracted data to a .txt file. 
+ This module contains all functions for Bruker X-Ray Diffraction data. Of the functions below, ``brukerrawconverter`` and ``brukerrawbackground`` are main functions, while ``export_metadata`` is a helper function. These functions have been designed for Bruker .raw and Bruker .UXD files, and may not work for XRD file types that are not Bruker file types.
 
 .. automodule:: brukerrawconverter
    :members:

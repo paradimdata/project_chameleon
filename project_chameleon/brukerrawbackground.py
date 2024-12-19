@@ -10,16 +10,13 @@ import shutil
 
 def brukerrawbackground(background_input, sample_input, output_name):
     """
-    ``brukerrawbackground`` is a function that takes two input files and an output name. The first output file, ``sample_input``, is the sample file which can be either a bruker raw file 
-    or a csv file. The second output file, ``background_input``, is the background subtraction data to be subtracted from the sample file. The ``background_input`` file 
-    can be either a bruker raw file or a csv file. This function generates three plots all titled `output_name` + graph version. The plots are one plot of the raw sample 
-    data, one plot of the background adjusted data, and one plot of the sample data with the background data subtracted from it. All the plots are saved as .png files.
+    ``brukerrawbackground`` is a function that takes sample data and corresponding background subtraction data, and creates three plots: a plot of the sample data, a plot of the background data, and a plot of the sample data with background data subtracted. These plots are saved as .png files in a folder with name `output_name`. This function utilizes the functionality of the function ``brukerrawconverter``. 
 
-    :args: this function has three inputs: ``background_input``, ``sample_input``, and ``output_name``. ``background_input`` should be a Bruker .raw file or a .csv file of the background data. ``sample_input`` should be a Bruker .raw file or a .csv file of the sample data. ``output_name`` should be a string which will be the name of the outputs combined with specific output designators.
+    :args: ``background_input`` should be a Bruker .raw/.csv file of the background data. ``sample_input`` should be a Bruker .raw/.csv file of the sample data. ``output_name`` should be a string which will be the name of the outputs. This output should not contain file extensions. 
 
     :return: does not return anything. Saves outputs as .png files.
 
-    :exceptions: will throw an exception if the either the `background_input` or the `sample_input` are not files.
+    :exceptions: `background_input` and `sample_input` must be files. `background_input` and `sample_input` must be expected file types. `output_name` must not contain file extension.
     """
     
     if os.path.isfile(background_input) is False:
@@ -35,7 +32,7 @@ def brukerrawbackground(background_input, sample_input, output_name):
     if os.path.getsize(sample_input) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
     if '.' in str(output_name):
-        raise ValueError("ERROR: Output Folder should not contain '.'")
+        raise ValueError("ERROR: Output name should not contain '.'")
     
     output_name = str(output_name)
 

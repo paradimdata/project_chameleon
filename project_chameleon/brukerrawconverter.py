@@ -7,28 +7,27 @@ def export_metadata(f, meta):
     """
    ``export_metadata`` is a function that extracts metadata from the raw Bruker files. This function was taken from the package xylib for use in this function.
 
-   :args: this function has two inputs: ``f`` and ``meta``. ``f`` is a file that can be written to. ``meta`` is the section of data that the metadata needs to be extracted from. 
+   :args: ``f`` is a file that can be written to. ``meta`` is the section of data that the metadata needs to be extracted from. 
 
    :return: this function does not return anything. Metadata exported is writen to the file ``f``.
 
-   :exceptions: none
+   :exceptions: This function has no exceptions.
     """
     for i in range(meta.size()):
         key = meta.get_key(i)
         value = meta.get(key)
         f.write('# %s: %s\n' % (key, value.replace('\n', '\n#\t')))
 
-#Converts input file into a text file title "output_file.txt"
+#Converts input file into a text file title "output_file.csv"
 def brukerrawconverter(input_file, output_file, cps = None):
     """
-    ``brukerrawconverter`` is a function that takes an input file, extracts the data from the input, and writes it to the output file. This function extracts all data as well as metadata from the sample files. 
-    This function has been designed for Bruker .raw and Bruker .UXD files, but may work for other file formats that can be deciphered by xylib. 
+    ``brukerrawconverter`` is a function that extracts data and metadata from the raw data file, and puts it into a .csv output file. The function does not alter the data, only extracts it. This function has been designed for Bruker .raw and Bruker .UXD files using xylib, but may work for other file formats that can be deciphered by xylib. ``brukerrawconverter`` utilizes the functionality of ``export_metadata``.
 
-    :args: this function has two inputs: ``input_file`` and ``output_file``. ``input_file`` should be a Bruker .raw or Bruker .UXD file. ``Output_file`` is a string that will be used for the name of the output file that is created in the function
+    :args: ``input_file`` is a Bruker .raw or Bruker .UXD file. ``Output_file`` is a string or path that ends in '.csv'. ``cps`` is a boolean True/False value that allows the user to control if data headers are collected at the top (True), or integrated into data (False). This input is optional.
     
-    :return: does not return anything. Saves ``output_file`` as a text file.
+    :return: does not return anything. Saves ``output_file`` as a .csv file.
     
-    :exceptions: will throw an exception if the ``input_file`` is not a file.
+    :exceptions: ``input_file`` must be a file. ``input_file`` must be one of the expected file types. ``output_file`` must end with '.txt' or '.csv'. ``cps`` must be 'True', 'False', or 'None'.
     """
 
     #Check if input is a file
