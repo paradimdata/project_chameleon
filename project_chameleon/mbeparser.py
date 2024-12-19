@@ -10,7 +10,7 @@ def find_shutter_values(shutter_input):
     """
     ``find_shutter_values`` is a function that deciphers what shutters are open on a specific MBE run from the number given in the shutter control value text file. The number given is a combination of numbers that are 2 raised to an exponent.
 
-    :args: This function has one input: ``shutter_input``. ``shutter_input`` is an integer value.
+    :args: ``shutter_input`` is an integer value.
 
     :return: returns an array of the decompose exponents that make up the original shutter value.
 
@@ -47,14 +47,14 @@ def mbeplot(useful_directory_path, filechoice, shutter_data, output_directory_pa
 
 def mbeparser(file_folder):
     """
-    ``mbeparser()`` is a function to allow MBE users to parse their data more quickly and efficiently. Function allows users to sort their data into useful
+    ``mbeparser()`` is a function to allow MBE users to parse their data more quickly and efficiently. The function allows users to sort their data into useful
     and non useful data, then query the useful data for specific files. When the function is run, the user can choose from three different actions: graph a chosen file, graph and save a chosen file, and check a specific setpoint. These actions can be repeated until the user chooses to exit. 
 
-    :args: This function has one input: ``file_folder``. ``file_folder`` should be the folder containing all .txt files generated during the MBE run.
+    :args: ``file_folder`` should be the folder containing all .txt files generated during the MBE run.
 
-    :return: Does not return anything. Sorts data into two subdirectories within main directory. Displays graph of chosen file.
+    :return: Does not return anything. Sorts data into two subdirectories within main directory. Displays plot of chosen file. Saves plot if users decides to save plot. 
 
-    :exceptions: will throw an exception if the input is not a file folder. Will throw an exception if files in the folder are not text files.
+    :exceptions: `file_folder` must be a folder. `file_folder` must contain files.
     """
 
     #Make sure input is a folder
