@@ -5,13 +5,13 @@ import csv
 
 def ppmsmpmsparser(inputfile, outputfile, user_input = None):
     """
-    ``ppmsmpmsparser()`` is a function to allow users to parse their ppms and mpms data more efficiently. Allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file. The user also has the option to pick between 4 different kinds of files: heat capacity, magnetic suceptibility, 4-prode resistivity, and thermal transport.
+    ``ppmsmpmsparser()`` is a function that allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file. The user also has the option to pick between 4 different kinds of files: heat capacity, magnetic suceptibility, 4-prode resistivity, and thermal transport.
 
-    :args: This function has two inputs: ``inputfile`` and ``outputfile``. ``inputfile`` should be a .dat file. ``outputfile`` should be a string which will be the name of the final output file. 
+    :args: ``inputfile`` should be a string or path to a PPMS/MPMS file ending with '.dat'. ``outputfile`` should be a string ending with '.txt' or '.csv' which will be the name of the final output file. ``user_input`` allows the user to select their input file type as a function arguement rather than while the file is running. This input is optional.
 
     :return: this fucntion does not return anything. It saves outputs into a file called ``outputfile``.
 
-    :exceptions: will throw an exception if the input file is not a file.
+    :exceptions: `input_file` must be a file. `input_file` must end with '.dat'. `output_file` must end with '.txt' or '.csv'. `user_input` must be one of the possible values.
     """
 
     #Error if the input file is not a file
