@@ -23,7 +23,6 @@ Welcome to Project Chameleon. Project Chameleon is a package for designed for da
    non4dstem
    ppmsmpms
    rheedconverter
-   stemarray4d
 
 Project Chameleon is written and maintained by Peter Cauchy. Project Chameleon is a part of research done by the Platform for the Acelerated Research, Analysis, and Discovery of Interfaced Materials. 
 
