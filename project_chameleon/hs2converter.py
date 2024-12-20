@@ -25,23 +25,26 @@ def hs2converter(file_name, output_file):
 
     file_size = os.path.getsize(file_name)
 
+    # Set file dimensions based on file size so dimensions can be applied correctly when the array is reshaped
     if file_size < 530424:
-        #Set file size
         file_width = 256
         file_height = 256
     else:
         file_width = 512
         file_height = 512
 
-    #Read data from file, little endian. Once data is read, invert it, create an image, rotate the image 90 degrees, and save the image
+    #Read data from file, little endian. Reshape image to an array of image dimension size
     with open(file_name,"r") as f:
-            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_width,file_height))       
+            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_width,file_height))     
+
+    # Apply gamma filtering to data. 2/3 showed best results in testing. Other values could work better for other purposes  
     laue = ((laue/np.max(laue))**(2/3))*255
-    laue = 255 - laue
-    laue = laue.astype(np.uint8)
-    im = Image.fromarray(laue)
-    im = im.rotate(90)
+    laue = 255 - laue # Invert black and white
+    laue = laue.astype(np.uint8) # Change from 16 bit to 8 bit
+    im = Image.fromarray(laue) # Create image using PIL
+    im = im.rotate(90) # Rotate 90, expected image is rotated 90 degrees
     im.save(output_file)
+
 
 def main():
     parser = argparse.ArgumentParser()
