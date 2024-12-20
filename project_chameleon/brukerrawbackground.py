@@ -19,6 +19,7 @@ def brukerrawbackground(background_input, sample_input, output_name):
     :exceptions: `background_input` and `sample_input` must be files. `background_input` and `sample_input` must be expected file types. `output_name` must not contain file extension.
     """
     
+    # Make sure that all file are of the correct kind so the function can run without error
     if os.path.isfile(background_input) is False:
         raise ValueError("ERROR: bad input. Expected file")
     if os.path.isfile(sample_input) is False:
@@ -34,33 +35,40 @@ def brukerrawbackground(background_input, sample_input, output_name):
     if '.' in str(output_name):
         raise ValueError("ERROR: Output name should not contain '.'")
     
+    # Normalize output name to a string
     output_name = str(output_name)
 
+    # If input file is a .csv, just read the data from the csv into a pandas data frame
     if background_input.endswith('.csv'):
         Background = pd.read_csv(background_input)
+
+    # If the input file is not a .csv, we know it is a Bruker raw so we have to make a new text file, use that as an input for brukerrawconverter, and then read the output data from the new text file and put it into a data frame so we have a consistent file type to work from
     else:
         background_name = background_input + 'text.txt'
-        brukerrawconverter(background_input, background_name)
+        brukerrawconverter(background_input, background_name) # Call to brukerrawconverter with new text file
         with open(background_name, 'r') as txtfile:
             lines = txtfile.readlines()   
-        with open(background_input + '.csv', 'w', newline='') as csvfile:
+        with open(background_input + '.csv', 'w', newline='') as csvfile: # Write data from text file into a newly created .csv
             csvwriter = csv.writer(csvfile)
             for line in lines:
-                if ('#' in line):
+                if ('#' in line): 
                     continue
                 else:
                     columns = line.strip().split()
                     csvwriter.writerow(columns)
-        Background = pd.read_csv(background_input + '.csv', sep=' ', header=None, names=['Time','Measurement'])
+        Background = pd.read_csv(background_input + '.csv', sep=' ', header=None, names=['Time','Measurement']) # From the new .csv, read into data frame
 
+    # If input file is a .csv, just read the data from the csv into a pandas data frame
     if sample_input.endswith('.csv'):
         Sample = pd.read_csv(sample_input)
+
+    # If the input file is not a .csv, we know it is a Bruker raw so we have to make a new text file, use that as an input for brukerrawconverter, and then read the output data from the new text file and put it into a data frame so we have a consistent file type to work from
     else:
         sample_name = sample_input + 'text.txt'
-        brukerrawconverter(sample_input, sample_name)
+        brukerrawconverter(sample_input, sample_name) # Call to brukerrawconverter with new text file
         with open(sample_name, 'r') as txtfile:
             lines = txtfile.readlines()   
-        with open(sample_input + '.csv', 'w', newline='') as csvfile:
+        with open(sample_input + '.csv', 'w', newline='') as csvfile: # Write data from text file into a newly created .csv
             csvwriter = csv.writer(csvfile)
             for line in lines:
                 if ('#' in line):
@@ -68,8 +76,9 @@ def brukerrawbackground(background_input, sample_input, output_name):
                 else:
                     columns = line.strip().split()
                     csvwriter.writerow(columns)
-        Sample = pd.read_csv(sample_input + '.csv', sep=' ', header=None, names=['Time','Measurement'])   
+        Sample = pd.read_csv(sample_input + '.csv', sep=' ', header=None, names=['Time','Measurement']) # From the new .csv, read into data frame 
 
+    # Plot background data, and sample data independently on the same plot. Save as the raw data.png
     plt.plot(Background.iloc[:,0], Background.iloc[:,1], label='Background')
     plt.plot(Sample.iloc[:,0], Sample.iloc[:,1], label='Sample')
     plt.legend()
@@ -79,12 +88,15 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.show()
     plt.savefig(output_name + '_raw_data.png')
 
+    # User must put in their mutiplier so it can be applied to the background data
     mult = float(input("Please input your multiplier \n"))
     back_adj= Background.copy()
     back_adj.iloc[:,1] = back_adj.iloc[:,1].apply(lambda x: x*mult) 
 
+    # Create multiple plots in the same figure
     fig, ax = plt.subplots()
 
+    # Plot adjusted background data, and sample data independently on the same plot. Save as the raw data.png
     plt.plot(back_adj.iloc[:,0], back_adj.iloc[:,1], label='Adjusted Background')
     plt.plot(Sample.iloc[:,0], Sample.iloc[:,1], label='Sample')
     plt.legend(loc='upper left')
@@ -93,6 +105,7 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.ylabel('Intensity (Arb. Units)')
     plt.savefig(output_name + '_background_adjusted.png')
 
+    # Place plots in image
     x1, x2, y1, y2 = 60, 150, 0, 800  # subregion of the original image
     axins = ax.inset_axes(
         [0.5, 0.5, 0.47, 0.47],
@@ -103,9 +116,11 @@ def brukerrawbackground(background_input, sample_input, output_name):
     ax.indicate_inset_zoom(axins, edgecolor='black')
     plt.show()
 
+    # Subtract background data from sample data
     raw_diff= back_adj.copy()
     raw_diff.iloc[:,1] = Sample.iloc[:,1] - back_adj.iloc[:,1]
 
+    # Plot background subtracted data
     plt.plot(raw_diff.iloc[:,0], raw_diff.iloc[:,1], label='Sample Subtracted')
     plt.legend()
     plt.title('Background Subtracted Raw Data')
@@ -115,10 +130,11 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.savefig(output_name + '_background_subtracted.png')
     raw_diff.to_csv(output_name+ '_backgroundSubtracted.csv')
 
+    # Create new folder to hold outputs
     output_folder = Path(str(output_name))
     os.makedirs(output_folder)
 
-    #Sort all the slices into the directory
+    #Sort all the slices into the directory. We need extensive checks to make sure correct files are moved into the folder
     current_directory = os.getcwd()
     for filename in os.listdir(current_directory):
         if filename.endswith('.png') or filename.endswith('.csv'):
@@ -136,13 +152,15 @@ def brukerrawbackground(background_input, sample_input, output_name):
         else:  
             continue
 
+
 def main():
     parser = argparse.ArgumentParser(description="Process some input files for background and sample data")
     parser.add_argument("background_file_input", help="the input file for the background data")
     parser.add_argument("sample_file_input", help="the input file for the sample data")
     parser.add_argument("output_name", help="the name for all outputs that are saved")
     args = parser.parse_args()
-    brukerrawconverter(args.background_file_input, args.sample_file_input, args.output_name)
+    brukerrawbackground(args.background_file_input, args.sample_file_input, args.output_name)
+
 
 if __name__ == "__main__":
     main()
