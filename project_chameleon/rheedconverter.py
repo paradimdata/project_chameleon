@@ -7,13 +7,13 @@ from rheed_helpers import get_image_dimensions
 
 def rheedconverter(file_name, output_file):
     """
-    ``rheedconverter()`` is a function to allow RHEED users to convert 16 bpp .img images into 8 bpp more easily readable .png images
+    ``rheedconverter()`` is a function that converts 16 bpp .img images into 8 bpp .png images. This function distiguishes image size based on headers in the data. If your file is of a different type than the files on which this function was tested, this function may not work correctly. This function utilizes the functionality of `get_image_dimensions`.
 
-    :args: This function has two inputs: ``file_name`` and ``output_file``. ``file_name`` should be a rheed .img file. This function has been designed to handle images with dimensions of 1024x1024 as that is the standard size for RHEED images used for developing this function. ``output_file`` is a string which will be the name of the final output file. 
+    :args: ``file_name`` should be a string or path to a RHEED file ending in '.img'. ``output_file`` is a string which will be the name of the final output file, which should end with '.png'. 
 
-    :return: this function does not return anything. The output is saved as an image file.
+    :return: this function does not return anything. The output is saved as an .png image file.
 
-    :exception: will throw an exception if the input file is not a .img file, or if the input file is not the correct size.
+    :exception: `input_file` must end with '.img'. `output_file` must end with '.png'. 
     """
 
     #Make sure input is a .img file

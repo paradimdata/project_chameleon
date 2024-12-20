@@ -3,6 +3,16 @@ import numpy as np
 from PIL import Image
 
 def get_image_dimensions(input_file):
+    """
+    ``get_image_dimensions()`` is a function that extracts file dimensions from a RHEED image. This function has been designed based on RHEED images given, and may not work correctly if your files are of a different type. 
+
+    :args: ``input_file`` should be a RHEED image. This does not have to be a file. 
+
+    :return: height (int), width (int), header_size(int)
+
+    :exception: None
+    """
+
     with open(input_file,"rb") as f:
         f.seek(39)
         data = f.read(6)
@@ -28,6 +38,15 @@ def get_image_dimensions(input_file):
     return height, width, header_size
 
 def rheed_video_frame_parser(input_file, height, width, header_bytes):
+    """
+    ``rheed_video_frame_parser`` is a function that takes a file and images dimensions and converts them to a 2D array.
+
+    :args: ``input_file`` should be a RHEED image file. ``height`` should be an integer of the image height. ``width`` should be an integer of the image width. ``header_bytes`` should be an integer of the size of the header.  
+
+    :return: laue, a 2D array containing the image data for the given RHEED image. 
+
+    :exception: None
+    """
 
     with open(input_file,"r") as f:
         f.seek(header_bytes)
@@ -39,6 +58,16 @@ def rheed_video_frame_parser(input_file, height, width, header_bytes):
     return laue
 
 def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
+    """
+    ``rheed_video_image_parser`` is a function that gets the dimension of a given RHEED image, converters it to a .png image, and saves it to a folder. This function utilizes the functionality of the ``get_image_dimensions`` function. 
+
+    :args: ``input_file`` should be a RHEED image file. ``ouptut_folder`` should be a string or path leading to a folder. This argument is optional.
+
+    :return: This function does not return anything. A folder is created and all images are saved there. 
+
+    :exception: None
+    """
+
     index = 0
     file_size = os.path.getsize(input_file)
     height, width, header_size = get_image_dimensions(input_file)
