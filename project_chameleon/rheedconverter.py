@@ -22,12 +22,13 @@ def rheedconverter(file_name, output_file):
     if not str(output_file).endswith('.png'):
         raise ValueError("ERROR: please make your output file a .png file")
     
+    # Initialize values using helper function
     file_height, file_width, header_bytes = get_image_dimensions(file_name)
     
     #Open file as unknown type. Skip header bytes and adjust to a height X width image. 
     with open(file_name,"r") as f:
         f.seek(header_bytes)
-        if header_bytes == 5120:
+        if header_bytes == 5120: # Hard coded scenario for single crystal .img files
             laue = np.fromfile(f,dtype=np.uint8,count=512*512).reshape((512,512))
         else:
             laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))
@@ -35,7 +36,7 @@ def rheedconverter(file_name, output_file):
     #Operate to adjust from 16bpp to 8 bpp so the image can be displayed easier
     laue = ((laue/np.max(laue))**(2/3))*255
     laue = laue.astype(np.uint8)
-    im = Image.fromarray(laue)
+    im = Image.fromarray(laue) # Use PIL to create image
     if header_bytes == 5120:
         im = im.rotate(90)
     im.save(output_file)

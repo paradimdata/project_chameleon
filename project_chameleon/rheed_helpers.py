@@ -14,21 +14,30 @@ def get_image_dimensions(input_file):
     """
 
     with open(input_file,"rb") as f:
+
+        # Signature, needed so we know the header size
         f.seek(39)
         data = f.read(6)
         signature = data.decode('utf-8')
+
+        # Width, needed to for image dimensions
         f.seek(49)
         data = f.read(2)
         width = int.from_bytes(data, byteorder='big') 
+
+        # Height, needed for image dimensions
         f.seek(321)
         data = f.read(2)
         height = int.from_bytes(data, byteorder='big')
+
     f.close()
+
+    # Hard coded header sizes
     if signature == 'KSA00F':
         header_size = 640
     elif signature == 'KSA00J':
         header_size = 685
-    elif signature == '%)\r\nNX':
+    elif signature == '%)\r\nNX': # Hard coded for single crystal xray diffraction
         height = 512
         width = 512
         header_size = 5120
@@ -48,10 +57,11 @@ def rheed_video_frame_parser(input_file, height, width, header_bytes):
     :exception: None
     """
 
+    # Refactoring of image file to array process
     with open(input_file,"r") as f:
         f.seek(header_bytes)
         laue = np.fromfile(f,dtype="<u2",count=width*height).reshape((height,width))    
-    laue = ((laue/np.max(laue))**(2/3))*255
+    laue = ((laue/np.max(laue))**(2/3))*255 # Gamma adjust to get the best image quality
     laue = laue.astype(np.uint8)
     f.close()
     
@@ -68,21 +78,21 @@ def rheed_video_image_parser(input_file, output_folder = 'rheed_video_temp'):
     :exception: None
     """
 
+    # Initializing values
     index = 0
     file_size = os.path.getsize(input_file)
     height, width, header_size = get_image_dimensions(input_file)
-    cap = int(int(file_size) / (2*(height*width)))
+    cap = int(int(file_size) / (2*(height*width))) # Measurement of how many images are contained in the larger file
     os.mkdir(output_folder)
 
+    # Stop the loop when the index is larger than the amount of images contained in the file
     while cap > index:
         header_bytes = header_size + (2*(height*width) + header_size)*index
-        file_height = height
-        file_width = width
 
         #Open file as unknown type. Skip header bytes and adjust to a H X W image. 
         with open(input_file,"r") as f:
             f.seek(header_bytes)
-            laue = np.fromfile(f,dtype="<u2",count=file_width*file_height).reshape((file_height,file_width))    
+            laue = np.fromfile(f,dtype="<u2",count=width*height).reshape((height,width))    
         laue = ((laue/np.max(laue))**(2/3))*255
         laue = laue.astype(np.uint8)
         im = Image.fromarray(laue)

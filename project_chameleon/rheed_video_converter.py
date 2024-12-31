@@ -23,6 +23,7 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     :exception: ``input_file`` must end with '.imm'. ``output_file`` must not contain a file extension. ``output_type`` must be one of the accepted types: '.avi', '.mp4'. ``keep_images`` must be either 1 or 0. 
     """
 
+    # Make sure inputs are the right type
     if not input_file.endswith('.imm'):
         raise ValueError("ERROR: bad input. Expected .imm file")
     if output_file.endswith('.avi') or output_file.endswith('.mp4'):
@@ -32,10 +33,13 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     if not keep_images in [1,0]:
         raise ValueError("ERROR: invalid keep_images value. keep_images may only be a 1(keep) or 0(delete).")
     
+    # Initialize variables
     file_size = os.path.getsize(input_file)
     height, width, header_size = get_image_dimensions(input_file)
     cap = file_size // (2 * height * width)
     output_name = output_file + output_type
+
+    # Two output files types: .avi and .mp4. Each have different ffmpeg commands and variables within the command
     if output_type == '.avi':
         ffmpeg = Popen(
         [
@@ -54,6 +58,7 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
         stderr=DEVNULL
         )
 
+        # We need to disect the file as frames, and them as the frames using ffmpeg
         try:
             for index in range(cap):
                 additional_header = (2 * height * width + header_size) * index
@@ -67,6 +72,7 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
             ffmpeg.stdin.close()
             ffmpeg.wait()
 
+    # Second type of output file: .mp4
     elif output_type == '.mp4':
         ffmpeg = Popen(
         [
@@ -89,6 +95,7 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
         stderr=DEVNULL
         )
 
+        # We need to disect the file as frames, and them as the frames using ffmpeg
         try:
             for index in range(cap):
                 additional_header = (2 * height * width + header_size) * index
@@ -102,8 +109,10 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
             ffmpeg.stdin.close()
             ffmpeg.wait()
 
+    # If the user wants to keep all the images they are all saved here
     if keep_images != 0:
         rheed_video_image_parser(input_file, output_folder = output_file)
+
 
 def main():
     parser = argparse.ArgumentParser()
