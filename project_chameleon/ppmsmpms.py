@@ -14,7 +14,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
     :exceptions: `input_file` must be a file. `input_file` must end with '.dat'. `output_file` must end with '.txt' or '.csv'. `user_input` must be one of the possible values.
     """
 
-    #Error if the input file is not a file
+    # Error if the inputs are not of the correct type or within correct bounds
     if os.path.isfile(inputfile) is False:
         raise ValueError("ERROR: bad input. Expected file")
     if not inputfile.endswith('.dat'):
@@ -39,7 +39,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         lines = file.readlines()
         lines = [line.strip() for line in lines]
 
-    #Find where the header is and where the data starts
+    # Find where the header is and where the data starts so we know where to actually start reading from
     while metadata_limit < 1:  
         if ('Time Stamp' in lines[count]):
             header = lines[count].split(',')
@@ -48,7 +48,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         else:
             count += 1
 
-    #Take user input to choose which loop to enter
+    # Optional user input here based on function input. We want this to be able to run as a function either with or without user input
     if user_input == None:
         user_input = input("Which file type is this? \n (1)Heat Capacity \n (2)AC Magnetic Susceptibility \n (3)4-Probe Resistivity \n (4)Thermal Transport \n (Input the number of your choice) \n") 
     if user_input not in ['1', '2', '3', '4'] and user_input is not None:
@@ -56,26 +56,24 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
 
     #4-PROBE LOOP
     if('3' in user_input):
-        datafile.write(header[1] + ', ' + header[3] + ', ' + header[4] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + '\n')
-        count = limit_holder
-        count += 1  
+        datafile.write(header[1] + ', ' + header[3] + ', ' + header[4] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + '\n') # Relevant lines for 4-Probe file
+        count = limit_holder + 1
         
-        while count < size:
+        while count < size: # We count for the size for the file
             new_line = lines[count].split(',')
             if ('Error' in new_line[0]):
                 continue
             else:
-                datafile.write(new_line[1] + ', ' + new_line[3] + ', ' + new_line[4] + ', ' + new_line[6] + ', ' + new_line[8] + ', ' + new_line[10] + '\n')
+                datafile.write(new_line[1] + ', ' + new_line[3] + ', ' + new_line[4] + ', ' + new_line[6] + ', ' + new_line[8] + ', ' + new_line[10] + '\n') 
                 count += 1
         datafile.close()
 
     #HEAT CAPACITY LOOP
     elif('1' in user_input):
-        datafile.write(header[0] + ', ' + header[5] + ', ' + header[7] + ', ' + header[9] + ', ' + header[10] + ', ' + header[18] + ', ' + header[28] + '\n')
-        count = limit_holder
-        count += 1  
+        datafile.write(header[0] + ', ' + header[5] + ', ' + header[7] + ', ' + header[9] + ', ' + header[10] + ', ' + header[18] + ', ' + header[28] + '\n') # Relevant lines for Heat Capacity file
+        count = limit_holder + 1
         
-        while count < size:
+        while count < size: # We count for the size for the file
             new_line = lines[count].split(',')
             if ('Error' in new_line[1]):
                 continue
@@ -86,11 +84,10 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
 
     #AC MAGNETIC SUSCEPTIBILITY LOOP
     elif('2' in user_input):
-        datafile.write(header[1] + ', ' + header[2] + ', ' + header[3] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[9] + '\n')
-        count = limit_holder
-        count += 1  
+        datafile.write(header[1] + ', ' + header[2] + ', ' + header[3] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[9] + '\n') # Relevant lines for Magnetic Susceptibility file
+        count = limit_holder + 1
         
-        while count < size:
+        while count < size: # We count for the size for the file
             new_line = lines[count].split(',')
             if ('Error' in new_line[0]):
                 continue
@@ -101,11 +98,10 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
 
     #THERMAL TRANSPORT LOOP
     elif('4' in user_input):
-        datafile.write(header[1] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + ', ' + header[12] + '\n')
-        count = limit_holder
-        count += 1  
+        datafile.write(header[1] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + ', ' + header[12] + '\n') # Relevant lines for Thermal Transport file
+        count = limit_holder + 1
         
-        while count < size:
+        while count < size: # We count for the size for the file
             new_line = lines[count].split(',')
             if ('Error' in new_line[0]):
                 continue
