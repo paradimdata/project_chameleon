@@ -14,6 +14,8 @@ def non4dstem(data_folder = None, outputs_folder = None, data_file = None, outpu
 
     :exceptions: ``data_folder`` must be a folder. ``data_folder`` must contain files. ``output_folder`` must not contain a file extension. Will throw exceptions if there are any mismatches in input pairings.  
     """
+
+    # Errors if we have bad combinations of inputs, or if the inputs are not of the correct form
     if data_folder and os.path.isdir(data_folder) is False:
         raise ValueError("ERROR: bad input. Expected folder")
     if outputs_folder and '.' in str(outputs_folder):
@@ -29,30 +31,33 @@ def non4dstem(data_folder = None, outputs_folder = None, data_file = None, outpu
     if outputs_folder and output_file:
         raise ValueError("ERROR: Too many inputs. Can only have one of outputs_folder and output_file")
     
+    # We need if statement for the different combinations of inputs. First combination is folder input which requires folder output
     if data_folder:
-        #Create outputs folder and read in files from data folder
+        # Create outputs folder and read in files from data folder
         count = 0
         os.makedirs(outputs_folder)
-        for file in glob(data_folder + "/*"):
-            data = hs.load(file)
+        for file in glob(data_folder + "/*"): # Load all files from the folder
+            data = hs.load(file) # hs.load() is how we are reading all the data. Comes from hyperspy
 
         #For each file that gets read in, plot and save as a figure
         print(data)
         for obj in data:
             count = count + 1
             obj.plot()
-            plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}{count}.png")
+            plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(file)[-1])[0]}_{obj.metadata.Signal.signal_type}{count}.png") # Give all the outputs unique names
             plt.close()
 
+    # Second combo is file input with file outputs
     elif data_file and output_file:
-        data = hs.load(data_file)
+        data = hs.load(data_file) # hs.load() is how we are reading all the data. Comes from hyperspy
         data.plot()
         plt.savefig(output_file)
         plt.close()
 
+    # Final combo is file input with folder output
     elif data_file and outputs_folder:
         os.makedirs(outputs_folder)
-        data = hs.load(data_file)
+        data = hs.load(data_file) # hs.load() is how we are reading all the data. Comes from hyperspy
         data.plot()
         plt.savefig(f"{outputs_folder}/{os.path.splitext(os.path.split(data_file)[-1])[0]}_{data.metadata.Signal.signal_type}.png")
         plt.close()
