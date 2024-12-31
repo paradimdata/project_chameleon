@@ -17,7 +17,7 @@ def stemarray4d(file_name,output_name):
     :exceptions: ``file_name`` must be a file. ``file_name`` must end with '.raw'. ``output_name`` must not contain a file extension.
     """
 
-    #Check if input is a file
+    # Check if input is a file
     if os.path.isfile(file_name) is False:
         raise ValueError("ERROR: bad input. Expected file")
     if not file_name.endswith('.raw'):
@@ -27,17 +27,17 @@ def stemarray4d(file_name,output_name):
     if '.' in str(output_name):
         raise ValueError("ERROR: Output Name should not contain '.'")
     
-    #Import the file as 4D STEM array
+    # Import the file as 4D STEM array
     dataset = py4DSTEM.import_file(file_name)
 
-    #Calculate mean and max of the dataset
+    # Calculate mean and max of the dataset
     meanDP = dataset.get_dp_mean()
     maxDP = dataset.get_dp_max()
 
-    #Save an individual 2D slice from the 4D array
-    #vBF = dataset.data[:, :, 64, 64]
+    # Save an individual 2D slice from the 4D array
+    # vBF = dataset.data[:, :, 64, 64]
 
-    #Save mean as a png
+    # Save mean as a png
     plt.imsave(
     fname=Path(str(output_name) + "_mean_DP.png"),
     arr=meanDP.data,
@@ -46,7 +46,7 @@ def stemarray4d(file_name,output_name):
     cmap="gray",
     )
 
-    #Save max as a png
+    # Save max as a png
     plt.imsave(
     fname=Path(str(output_name) + "_max_DP.png"),
     arr=maxDP.data,
@@ -55,7 +55,7 @@ def stemarray4d(file_name,output_name):
     cmap="gray",
     )
 
-    #Save individual 2D slice as a png
+    # Save individual 2D slice as a png
     count = 0
     upper_limit = len(dataset.data[2])
     while 0 <= count < upper_limit:
@@ -69,11 +69,11 @@ def stemarray4d(file_name,output_name):
         )
         count += 1
 
-    #Make a folder to holder all the images from the 4d array
+    # Make a folder to holder all the images from the 4d array
     output_folder = Path(str(output_name) + 'array')
     os.makedirs(output_folder)
 
-    #Sort all the slices into the directory
+    # Sort all the slices into the directory
     current_directory = os.getcwd()
     for filename in os.listdir(current_directory):
         if filename.endswith('.png'):
