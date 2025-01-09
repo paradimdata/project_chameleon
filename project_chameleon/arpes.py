@@ -52,13 +52,13 @@ def build_arpes_workbook(workbook_name):
              'Slit Change','Slit Change','Theta Offset:','0','Phi Offset:','0','Omega Offset:','0']
     row_2 = ['Scan Number/File Name','Date','Time Start', 'Time End', 'Notes/Comments','FS Position','(X,Y,Z)','Theta(encoder)','Theta(true)','Phi(encoder)','Phi(true)',
              'Omega(Manipulator,approx)','Omega(true)','Kinetic Energy Range(eV)','Step Size(eV)','Temperature(K)[Diode A,Diode B]','Run Mode','Acquisition Mode',
-             '[# of Sweeps, Layers]','Pass Energy','Analyzer Slit','Pressure(Torr)','Photon Energy(eV)']
+             '[# of Sweeps, Layers]','Pass Energy','Analyzer Slit','Pressure(Torr)','Photon Energy(eV)', 'Full Notes/Comments']
     
     # Column values are set so we know how long to set for loops to
     first_col = 1
     last_col = 28
     row_1_last_col = 19
-    row_2_last_col = 24
+    row_2_last_col = 25
     end_col = 14
 
     # Border is style is set to thin because that fits our design
@@ -393,11 +393,16 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
 
     # Set columns so for loops are the correct length
     first_col = 1
-    last_col = 24
+    last_col = 25
 
     # Set staring row based on known excel format, set starting cell to 0 so we know the starting cell hasnt been found
     starting_row = 6
     starting_cell = 0
+
+    delimiters = r"[;,]"
+    old_comment = ''
+    old_split = []
+    final_comment = []
 
     # Read wavenote, extract start and end time for jaina,varian if wavenote does not return error
     w = get_wavenote_values(wavenote_file)
@@ -421,6 +426,23 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
         else:
             starting_row += 1
 
+    # Check comments. Only keep new information in comments
+    if starting_row > 6:
+        old_comment = ws['E6'].value
+        old_split = re.split(delimiters, old_comment)
+    new_comment = w[4]
+    new_split = re.split(delimiters, new_comment)
+
+    for e in new_split:
+        if not e in old_split:
+            final_comment.append(e)
+
+    final_comment = ', '.join(final_comment)
+    if final_comment == '':
+        final_comment = new_comment
+
+
+
     # Make the each cell in the row read "Error" if wavenote cant be read
     if w == None:
         ws.row_dimensions[starting_row].height = 40
@@ -433,7 +455,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     else:
         # Insert all data into a 1D array in the format that fits predefined excel sheet format
         # [Scan, Date, Start time, End time, Notes/Comments, '', (X,Y,Z), Theta, '', Phi, '', '', '', Kinetic Energy, Step size, Temp[A,B], Run mode, Acquisition mode, # # of sweeps, Pass energy, Analyzer slit, Pressure, Photon Energy]
-        row = [w[0],w[1],w[2],w[3],w[4],'',v[0],v[1],'',v[2],'','','',w[5],w[6],j[0],w[7],w[8],w[9],w[10],v[3],j[1],w[11]]
+        row = [w[0],w[1],w[2],w[3],final_comment,'',v[0],v[1],'',v[2],'','','',w[5],w[6],j[0],w[7],w[8],w[9],w[10],v[3],j[1],w[11],w[4]]
 
         # Insert values into rows, set height of cells larger so more data can fit in them
         ws.row_dimensions[starting_row].height = 40
@@ -441,6 +463,12 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
 
             # For the notes column make the font smaller so all of the notes can fit into the cell
             if col == 5:
+                cell = ws.cell(row=starting_row, column=col)
+                cell.value = row[col-1] 
+                cell.font = Font(bold=False, size = 8)
+                cell.alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+
+            elif col == 24:
                 cell = ws.cell(row=starting_row, column=col)
                 cell.value = row[col-1] 
                 cell.font = Font(bold=False, size = 8)
@@ -455,6 +483,8 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
 
     # Close and save workbook so all data added is saved and workbook isn't altered further
     wb.save(workbook_name)
+
+    return v[3]
 
 
 def arpes_folder_workbook(folder_name, workbook_name):
@@ -480,6 +510,7 @@ def arpes_folder_workbook(folder_name, workbook_name):
     # Set arrays here so we make sure they are empty and we can add to them later
     jaina_logs = []
     varian_logs = []
+    slit = None
 
     # Set directory paths based on pre-defined directory structure, get a list of all files in directories so we can look for the ones we need later
     wavenote_directory = folder_name + '/'
@@ -512,7 +543,13 @@ def arpes_folder_workbook(folder_name, workbook_name):
     # Call insert_scan_rows on each .pxt file in our ordered list to get all the data from the file and insert it into our open workbook
     for f in sorted_waves:
         if f.endswith('.pxt'):
-            insert_scan_row(wavenote_directory + f,jaina_logs[0],varian_logs[0],workbook_name)
+            new_slit = insert_scan_row(wavenote_directory + f,jaina_logs[0],varian_logs[0],workbook_name)
+            if slit == None:
+                slit = new_slit
+            elif slit != new_slit:
+                analyzer_slit_row(new_slit, workbook_name)
+                insert_scan_row(wavenote_directory + f,jaina_logs[0],varian_logs[0],workbook_name)
+                slit = new_slit
     
 
 def single_log_grapher(log_file, scan_folder, log_type, value):
@@ -736,6 +773,35 @@ def arpes_previewer(pxt_file):
     # Show the window
     window.show()
     app.exec_()
+
+def analyzer_slit_row(slit, workbook_name):
+
+    starting_row = 6
+    starting_cell = 0
+    first_col = 1
+    light_yellow_fill = PatternFill(start_color="FFFACD", end_color="FFFACD", fill_type="solid")#light yellow
+
+    wb = wb = load_workbook(filename = workbook_name)
+    ws = wb.active
+
+    while starting_cell == 0:
+        cell = ws.cell(row=starting_row, column=first_col)
+        if not cell.value:
+            starting_cell = 1
+        else:
+            starting_row += 1
+    starting_row -= 1
+
+    ws.merge_cells(f'A{starting_row}:X{starting_row}')
+    cell = ws[f'A{starting_row}']
+    cell.value = '* * *  Analyzer Slit Value = ' + str(slit) + '  * * *'
+    cell.font = Font(bold=True)
+    cell.alignment = Alignment(horizontal='center', vertical='center')
+    font = Font(size=14)  # Set font size to 16
+    ws[f'A{starting_row}'].font = font
+    ws[f'A{starting_row}'].fill = light_yellow_fill
+
+    wb.save(workbook_name)
 
 
 def main():
