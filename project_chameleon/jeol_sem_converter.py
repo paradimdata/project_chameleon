@@ -16,8 +16,40 @@ def get_element_peaks(element, df):
     
     return result, element_name
 
+def sem_base_plot(file_name, output_file, color, label = None):
+
+    x = []
+    y = []
+
+    with open(file_name,"rb") as f:
+        data = f.read()
+    data = str(data)
+    data = data.split("\\r\\n")
+    for i in data:
+        if ',' in i:
+            x.append(float(i.split(',')[0]))  # Convert first value to float
+            y.append(float(i.split(',')[1]))  # Convert second value to float
+
+    # Convert to numpy arrays (optional, for efficiency)
+    x = np.array(x)
+    y = np.array(y)
+
+    # Create the bar plot
+    fig, ax = plt.subplots(figsize=(20, 6))  # Set figure size here
+    bars = ax.bar(x, y, width=0.025, color = color)
+
+    if label == None:
+        ax.set_title('Plot of ' + str(file_name))
+    else:
+        ax.set_title(str(label))
+    ax.set_ylabel('Counts')
+    ax.set_xlabel('keV')
+    ax.set_xlim(0, 14)
+
+    plt.savefig(output_file)
+
 #Current working function
-def sem_spectra_grapher(file_name, output_file, elements_in_plot = ''):
+def sem_spectra_peak_labeler(file_name, output_file, elements_in_plot = ''):
     
     input_file = file_name
     x = []
