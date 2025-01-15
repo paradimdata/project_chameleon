@@ -52,9 +52,8 @@ def sem_base_plot(file_name, output_file, color = None, label = None):
     plt.savefig(output_file)
 
 #Current working function
-def sem_spectra_peak_labeler(file_name, output_file, elements_in_plot = ''):
-    
-    input_file = file_name
+def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
+
     x = []
     y = []
     r_final = []
@@ -79,23 +78,22 @@ def sem_spectra_peak_labeler(file_name, output_file, elements_in_plot = ''):
     plt.bar(x,y,align='center',width=0.025)
     plt.xlabel('keV')
     plt.ylabel('Counts')
-    plt.title(file_name)
+    plt.title(input_file)
     plt.xlim(0, 14)
     
-    #Get all peaks from data
+    
     peaks, _ = find_peaks(y, height=20, distance = 15)
     peak_heights = _['peak_heights']
     unknown_peaks = []
-    #Load input file containing spectra data and put it into a data frame
+    
     input_file = 'Emissions Spectra Data - Sheet2.csv'
     data_for_peaks = pd.read_csv(input_file, header=0)
-    #From given elements, find their peaks and save them
     if elements_in_plot:
         for element in elements:
             r, e = get_element_peaks(element, data_for_peaks)
             r_final = r_final + r
             e_final = e_final + e
-    #Compare all peaks and peaks of given elements. Find 5 largest peaks that are not given.
+
     index = 0
     for peak in peaks:
         start, end = peak - 3, peak + 3
@@ -109,51 +107,42 @@ def sem_spectra_peak_labeler(file_name, output_file, elements_in_plot = ''):
     for peak in sorted_peaks:
         peak[0] = peak[0]/100
 
-    #from 5 largest peaks, find any energies that are within .01 of a peak. Save the elements that have the energies closest to the peak.
     data_for_peaks.columns = data_for_peaks.columns.str.strip()
     data_for_peaks.iloc[:, 1:] = data_for_peaks.iloc[:, 1:].apply(pd.to_numeric, errors='coerce')
     for peak in sorted_peaks:
         numeric_data = data_for_peaks.iloc[:, 1:]
-        indices = np.where((numeric_data >= peak[0] - 0.01) & (numeric_data <= peak[0] + 0.01))
+        indices = np.where((numeric_data >= peak[0] - 0.03) & (numeric_data <= peak[0] + 0.03))
         if len(indices[0]) > 0:
             row_indices.append(indices[0]) 
             col_indices.append(indices[1])
         elif len(indices[0]) == 0:
-            indices = np.where((numeric_data >= peak[0] - 0.02) & (numeric_data <= peak[0] + 0.02))
+            indices = np.where((numeric_data >= peak[0] - 0.04) & (numeric_data <= peak[0] + 0.04))
             row_indices.append(indices[0]) 
             col_indices.append(indices[1])
 
-    #Get elements from values that are close to unidentified peaks
     unknown_elements = []
     unknown_x = []
     for idx, value in enumerate(row_indices):
         holder_array = []
-        for a in range(len(value)):   
-            holder_array.append(data_for_peaks.iloc[row_indices[idx][a],0])
+        for a in range(len(value)):
+            if data_for_peaks.iloc[row_indices[idx][a],0] not in holder_array:
+                holder_array.append(data_for_peaks.iloc[row_indices[idx][a],0])
         unknown_elements.append(str(holder_array))
+
+    print(unknown_elements)
     for z in sorted_peaks:
         unknown_x.append(int(z[0] * 100))
     
-    #Created labels with arrows
-    green_texts = []
     for i, j in enumerate(r_final):
-        green_texts.append(
-            plt.text(
-                x[j], y[j], f"{e_final[i]}",  
-                ha="center", va="bottom", color='green', fontsize=14
-            )
-        )
-    adjust_text(green_texts, arrowprops=dict(arrowstyle='->', color='green', lw=0.5), min_distance=20, only_move='y+')
+        plt.text(x[j], y[j], f"{e_final[i]}", color="green")
+        
     # Create red labels and adjust them with arrows
-    red_texts = []
+    count = 0
     for k, l in enumerate(unknown_x):
-        red_texts.append(
-            plt.text(
-                x[l], y[l], f"{unknown_elements[k]}",  # Use i as the index for the element
-                ha="center", va="bottom", color='red', fontsize=14
-            )
-        )
-    adjust_text(red_texts, arrowprops=dict(arrowstyle='->', color='red', lw=0.5), min_distance=20, only_move='y+')
+        count += 1
+        plt.plot([], [], 'ro', label=f"{count}: {unknown_elements[k]}")
+        plt.text(x[l], y[l], f"{count}", color="red")
 
+    plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     plt.savefig(output_file)
     plt.show()
