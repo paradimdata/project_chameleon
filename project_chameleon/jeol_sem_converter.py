@@ -16,10 +16,13 @@ def get_element_peaks(element, df):
     
     return result, element_name
 
-def sem_base_plot(file_name, output_file, color, label = None):
+def sem_base_plot(file_name, output_file, color = None, label = None):
 
     x = []
     y = []
+
+    if not color:
+        color = 'Black'
 
     with open(file_name,"rb") as f:
         data = f.read()
