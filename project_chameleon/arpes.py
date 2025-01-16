@@ -7,6 +7,7 @@ import h5py
 import subprocess
 import traceback
 import argparse
+from htmdec_formats import ARPESDataset
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from configparser import ParsingError
@@ -136,65 +137,61 @@ def build_arpes_workbook(workbook_name):
 
 def get_wavenote_values(wavenote_file):
     """
-    ``get_wavenote_values`` is a function that extracts values from the wave note of the .pxt file using HTMDEC_formats. This function does not extract all values, only values that were consiedered relevant. All relevant values are returned. Which values are considered relevant can be easily changed locally. 
+    Extracts relevant values from the wave note of a .pxt file using HTMDEC_formats.
 
-    :args: ``wavenote_file`` is a string or path to a '.pxt' file.
-
-    :return: Returns a 1 dimensional array that holds relevant values from the wave note of the .pxt file.
-
-    :exceptions: ``wavenote_file`` must end with '.pxt'. ``wavenote_file`` must be a file.
-    
+    :param wavenote_file: Path to a '.pxt' file.
+    :return: 1D list of relevant values from the wave note.
+    :raises ValueError: If the file is not a .pxt file or does not exist.
     """
-    # We need the file to be a pxt file for this code to work
+    # Validate input file
     if not wavenote_file.endswith('.pxt'):
-        raise ValueError("ERROR: input file must end with '.pxt'")
-    if os.path.isfile(wavenote_file) is False:
-        raise ValueError("ERROR: bad input. Expected file")
+        raise ValueError("ERROR: Input file must end with '.pxt'")
+    if not os.path.isfile(wavenote_file):
+        raise ValueError("ERROR: File not found")
 
-    # Lines set here so data can be added to it
-    lines = []
-
-    # Get the date the file was modified so it can be used as the end time
-    ti_m = os.path.getmtime(wavenote_file)
-
-    # Convert time in seconds to time in HH:MM:SS format because thats what people are used to reading
-    m_ti = time.ctime(ti_m) 
-
-    # Make sure we get only time because time.ctime gives 'day month day time year'
-    if ':' in m_ti.split(' ')[3]:
-        end_time = m_ti.split(' ')[3]
-    else:
-        end_time = m_ti.split(' ')[4]
-
-    # Read .pxt to dataset, read lines from file by splitting up data by /n
     try:
-        dataset = htmdec_formats.ARPESDataset.from_file(wavenote_file)
+        # Get file metadata
+        ti_m = os.path.getmtime(wavenote_file)
+        end_time = time.strftime("%H:%M:%S", time.localtime(ti_m))  # Format as HH:MM:SS
+        
+        # Load dataset and split metadata into lines
+        dataset = ARPESDataset.from_file(wavenote_file)
         lines = dataset._metadata.split("\n")
-        lines[20] = lines[20].split('\\')
-        # Gets the scan number by know scan number comes before '.pxt' in lines[20] which holds the file name
-        for l in lines[20]:
-            if '.pxt' in l:
-                scan_number = l
-        # Need to figure out what scan mode it is so we can put it in the data later. Use hardcoded characteristics of each run mode to figure out which is which
+        
+        # Extract scan number from lines[20]
+        scan_number = next((l for l in lines[20].split('\\') if '.pxt' in l), None)
+        
+        # Determine scan type based on specific characteristics
         if lines[35]:
             scan_type = 'Add Dimension'
         elif len(dataset.run_mode_info) > 0:
             scan_type = 'Manipulator Scan'
         else:
             scan_type = 'Normal Mode'
-            
-    # Put all data into a 1D array. Almost all data needs to be extracted using .split() because data is in form data = number
-    # After we have the data, return it
-    # [File, Start Date, Start Time, End Time, Comments, Kinetic Energy Range, Step Size, Run Mode, Acquisition Mode, # of sweeps, Pass Energy, Photon Energy]
-        r =[scan_number,lines[28].split('=')[1],lines[29].split('=')[1],end_time, lines[27].split('=')[1],
-        '[' + lines[11].split('=')[1] + ',' + lines[12].split('=')[1] + ']',lines[13].split('=')[1],
-        scan_type,lines[8].split('=')[1], '[' + lines[5].split('=')[1] + ',' + str(dataset.num_layers) + ']',lines[4].split('=')[1],lines[6].split('=')[1]]
-        return r
+
+        # Extract and format relevant data
+        result = [
+            scan_number,
+            lines[28].split('=', 1)[-1].strip(),  # Start Date
+            lines[29].split('=', 1)[-1].strip(),  # Start Time
+            end_time,  # End Time
+            lines[27].split('=', 1)[-1].strip(),  # Comments
+            f"[{lines[11].split('=', 1)[-1].strip()}, {lines[12].split('=', 1)[-1].strip()}]",  # Kinetic Energy Range
+            lines[13].split('=', 1)[-1].strip(),  # Step Size
+            scan_type,
+            lines[8].split('=', 1)[-1].strip(),  # Acquisition Mode
+            f"[{lines[5].split('=', 1)[-1].strip()}, {dataset.num_layers}]",  # # of sweeps
+            lines[4].split('=', 1)[-1].strip(),  # Pass Energy
+            lines[6].split('=', 1)[-1].strip(),  # Photon Energy
+        ]
+        
+        return result
+
     except ParsingError as e:
-        print(f"An error occurred while parsing the configuration: {e}")
+        print(f"Parsing error in get_wavenote_values: {e}")
         traceback.print_exc()
     except Exception as e:
-        print(f"An unexpected error occurred in get_wavenote_values: {e}")
+        print(f"Unexpected error in get_wavenote_values: {e}")
         traceback.print_exc()
 
 
