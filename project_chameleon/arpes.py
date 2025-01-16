@@ -137,11 +137,14 @@ def build_arpes_workbook(workbook_name):
 
 def get_wavenote_values(wavenote_file):
     """
-    Extracts relevant values from the wave note of a .pxt file using HTMDEC_formats.
+    ``get_wavenote_values`` is a function that extracts values from the wave note of the .pxt file using HTMDEC_formats. This function does not extract all values, only values that were consiedered relevant. All relevant values are returned. Which values are considered relevant can be easily changed locally. 
 
-    :param wavenote_file: Path to a '.pxt' file.
-    :return: 1D list of relevant values from the wave note.
-    :raises ValueError: If the file is not a .pxt file or does not exist.
+    :args: ``wavenote_file`` is a string or path to a '.pxt' file.
+
+    :return: Returns a 1 dimensional array that holds relevant values from the wave note of the .pxt file.
+
+    :exceptions: ``wavenote_file`` must end with '.pxt'. ``wavenote_file`` must be a file.
+    
     """
     # Validate input file
     if not wavenote_file.endswith('.pxt'):
