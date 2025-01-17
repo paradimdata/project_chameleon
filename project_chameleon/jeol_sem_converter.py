@@ -4,6 +4,7 @@ import os
 from matplotlib import pyplot as plt
 from scipy.signal import find_peaks
 from adjustText import adjust_text
+import argparse
 
 def get_element_peaks(element, df):
     """
@@ -197,3 +198,14 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
     plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     plt.savefig(output_file)
     plt.show()
+
+def main():
+    parser = argparse.ArgumentParser(description="Process input files for JEOL SEM data")
+    parser.add_argument("input_file", help="the input file for the background data")
+    parser.add_argument("output_file", help="the input file for the sample data")
+    args = parser.parse_args()
+    sem_base_plot(args.intput_file, args.output_file)
+    
+
+if __name__ == "__main__":
+    main()
