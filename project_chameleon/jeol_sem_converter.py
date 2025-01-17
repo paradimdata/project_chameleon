@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 from matplotlib import pyplot as plt
 from scipy.signal import find_peaks
 from adjustText import adjust_text
@@ -17,10 +18,28 @@ def get_element_peaks(element, df):
     return result, element_name
 
 def sem_base_plot(file_name, output_file, color = None, label = None):
+    """
+    ``sem_base_plot()`` is a function that converts JEOL SEM .EMSA files into a plot. This plot displays the number of counts at each energy level.
+
+    :args: ``file_name`` should be a .EMSA file. ``output_file`` should be a string which will be the name of the output .png file. 
+
+    :return: this function does not return anything. The output is saved as an image file.
+
+    :exception: `file_name` must be an .EMSA file. `file_name` must be a file. `output_file` must end with '.png'.
+    """
+
+    #Make sure inputs are of correct type
+    if not str(file_name).endswith('.EMSA'):
+        raise ValueError("ERROR: bad input. Expected .EMSA file")
+    if not str(output_file).endswith('.png'):
+        raise ValueError("ERROR: please make your output file a .png file")
+    if not os.path.isfile(file_name):
+        raise ValueError("ERROR: Input should be a file. Check if your file exists.")
 
     x = []
     y = []
 
+    # Set black as default color
     if not color:
         color = 'Black'
 
