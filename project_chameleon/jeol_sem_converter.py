@@ -72,6 +72,28 @@ def sem_base_plot(file_name, output_file, color = None, label = None):
 
 #Current working function
 def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
+    """
+    ``sem_spectra_peak_labeler()`` is a function that converts JEOL SEM .EMSA files into a plot. This plot displays the number of counts at each energy level, and labels the peaks with the expected elements.
+
+    :args: ``file_name`` should be a .EMSA file. ``output_file`` should be a string which will be the name of the output .png file. 
+
+    :return: this function does not return anything. The output is saved as an image file.
+
+    :exception: `file_name` must be an .EMSA file. `file_name` must be a file. `output_file` must end with '.png'.
+    """
+
+    elements = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"]
+
+    #Make sure inputs are of correct type
+    if not str(input_file).endswith('.EMSA'):
+        raise ValueError("ERROR: bad input. Expected .EMSA file")
+    if not str(output_file).endswith('.png'):
+        raise ValueError("ERROR: please make your output file a .png file")
+    if not os.path.isfile(input_file):
+        raise ValueError("ERROR: Input should be a file. Check if your file exists.")
+    for element in elements_in_plot:
+        if element not in elements:
+            raise ValueError("ERROR: elements should be real elements. Make sure all elements are correct.")
 
     x = []
     y = []
