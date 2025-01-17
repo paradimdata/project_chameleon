@@ -6,6 +6,16 @@ from scipy.signal import find_peaks
 from adjustText import adjust_text
 
 def get_element_peaks(element, df):
+    """
+    ``get_element_peaks()`` is a helper function for the SEM plotting functions. This function extracts the energy values of the peak of the element that was input.
+
+    :args: ``element`` should be an element from the periodic table. ``df`` should be a pandas data frame containing periodic elements and their energy peaks. 
+
+    :return: ''result'' is the integer values of the energy peaks. ''element_name'' is the name of the element input.
+
+    :exception: `file_name` must be an .EMSA file. `file_name` must be a file. `output_file` must end with '.png'.
+    """
+
     data = df
     data.columns = data.columns.str.strip()
     result = data.loc[data['Element'] == element].values[0][2:]
