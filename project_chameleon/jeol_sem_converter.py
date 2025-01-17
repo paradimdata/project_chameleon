@@ -13,7 +13,7 @@ def get_element_peaks(element, df):
 
     :return: ''result'' is the integer values of the energy peaks. ''element_name'' is the name of the element input.
 
-    :exception: `file_name` must be an .EMSA file. `file_name` must be a file. `output_file` must end with '.png'.
+    :exception: None
     """
 
     data = df
@@ -85,7 +85,7 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
     """
     ``sem_spectra_peak_labeler()`` is a function that converts JEOL SEM .EMSA files into a plot. This plot displays the number of counts at each energy level, and labels the peaks with the expected elements.
 
-    :args: ``file_name`` should be a .EMSA file. ``output_file`` should be a string which will be the name of the output .png file. 
+    :args: ``file_name`` should be a .EMSA file. ``output_file`` should be a string which will be the name of the output .png file. ``elements_in_plot`` is a comma separated string containing the elements that are expected to be in the plot.
 
     :return: this function does not return anything. The output is saved as an image file.
 
