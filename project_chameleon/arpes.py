@@ -775,6 +775,19 @@ def arpes_previewer(pxt_file):
     app.exec_()
 
 def analyzer_slit_row(slit, workbook_name):
+    """
+    ``analyzer_slit_row`` is a function that creates a row in an excel .xlsx file with a specific premade format containing the slit information. This row is inserted each time there is a change the analyzer slit value. 
+
+    :args: ``slit`` a string that is the value of the analyzer slit that is passed. ``workbook_name`` is a string or a path that must end with '.xlsx'.
+
+    :return: Does not return anything. Creates a row within an excel file. 
+
+    :exceptions: ``workbook_name`` must end with '.xslx'.
+    
+    """
+
+    if not str(workbook_name).endswith('.xlsx'):
+        raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
 
     starting_row = 6
     starting_cell = 0
