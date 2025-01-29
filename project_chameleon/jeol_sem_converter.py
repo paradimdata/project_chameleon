@@ -17,13 +17,20 @@ def get_element_peaks(element, df):
     :exception: None
     """
 
+    # Define data frame and extract values
     data = df
     data.columns = data.columns.str.strip()
+
+    # Extract the row for the element that matches input element. 2: because we just want energies, not name or atomic number
     result = data.loc[data['Element'] == element].values[0][2:]
+
+    # Format data so it matches form of data coming from EMSA files 
     result = [x for x in result if str(x)[0].isdigit() and x < 20]
     result = np.around(np.array(result), 2)  # Assuming you want integers
     result = result*100
     result = [int(x) for x in result]
+
+    # Make a list with the name of the element for each energy level being returned so they can all be labeled
     element_name = np.full(len(result), element, dtype=object).tolist()
     
     return result, element_name
@@ -46,7 +53,8 @@ def sem_base_plot(file_name, output_file, color = None, label = None):
         raise ValueError("ERROR: please make your output file a .png file")
     if not os.path.isfile(file_name):
         raise ValueError("ERROR: Input should be a file. Check if your file exists.")
-
+    
+    # Initialize variables
     x = []
     y = []
 
@@ -54,6 +62,7 @@ def sem_base_plot(file_name, output_file, color = None, label = None):
     if not color:
         color = 'Black'
 
+    # Open and extract data
     with open(file_name,"rb") as f:
         data = f.read()
     data = str(data)
@@ -71,6 +80,7 @@ def sem_base_plot(file_name, output_file, color = None, label = None):
     fig, ax = plt.subplots(figsize=(20, 6))  # Set figure size here
     bars = ax.bar(x, y, width=0.025, color = color)
 
+    # Set graph and axis titles
     if label == None:
         ax.set_title('Plot of ' + str(file_name))
     else:
@@ -106,12 +116,15 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
         if element not in elements:
             raise ValueError("ERROR: elements should be real elements. Make sure all elements are correct.")
 
+    # Initialize variables
     x = []
     y = []
     r_final = []
     e_final = []
     row_indices = []
     col_indices = []
+
+    # Extract input data from initial sources
     elements = elements_in_plot.split(',')
     with open(input_file,"rb") as f:
         data = f.read()
@@ -126,6 +139,7 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
     x = np.array(x)
     y = np.array(y)
 
+    # Create a base plot containing bar graph
     plt.figure(figsize=(20,6))
     plt.bar(x,y,align='center',width=0.025)
     plt.xlabel('keV')
@@ -133,11 +147,12 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
     plt.title(input_file)
     plt.xlim(0, 14)
     
-    
+    # Generate peaks from the y data set
     peaks, _ = find_peaks(y, height=20, distance = 15)
     peak_heights = _['peak_heights']
     unknown_peaks = []
     
+    # Find energy peaks for each expected element in the plot
     input_file = 'Emissions Spectra Data - Sheet2.csv'
     data_for_peaks = pd.read_csv(input_file, header=0)
     if elements_in_plot:
@@ -146,6 +161,7 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
             r_final = r_final + r
             e_final = e_final + e
 
+    # Check which peaks fall close to a known peak. Add the peaks that do not fall close to a peak to a list
     index = 0
     for peak in peaks:
         start, end = peak - 3, peak + 3
@@ -153,12 +169,13 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
         if not in_range:
             unknown_peaks.append((peak,peak_heights[index]))
         index+=1
-    sorted_peaks = sorted( unknown_peaks, key=lambda x: x[1])
-    sorted_peaks = sorted_peaks[-5:]
-    sorted_peaks = [list(t) for t in sorted_peaks]
+    sorted_peaks = sorted( unknown_peaks, key=lambda x: x[1]) # Sort peaks by size
+    sorted_peaks = sorted_peaks[-5:] # Only take the 5 largest peaks
+    sorted_peaks = [list(t) for t in sorted_peaks] # Make it a list
     for peak in sorted_peaks:
-        peak[0] = peak[0]/100
+        peak[0] = peak[0]/100 # Adjust scale for plotting
 
+    # For each unknown peak, check which element is closest to it, add close elements to a list
     data_for_peaks.columns = data_for_peaks.columns.str.strip()
     data_for_peaks.iloc[:, 1:] = data_for_peaks.iloc[:, 1:].apply(pd.to_numeric, errors='coerce')
     for peak in sorted_peaks:
@@ -172,6 +189,7 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
             row_indices.append(indices[0]) 
             col_indices.append(indices[1])
 
+    # Parse throw the elements of the sublists of row_indices. Add each element max once for the holder array. Once each possible element for a peak has been added, add the peak to the unkown elements list
     unknown_elements = []
     unknown_x = []
     for idx, value in enumerate(row_indices):
@@ -181,20 +199,22 @@ def sem_spectra_peak_labeler(input_file, output_file, elements_in_plot = ''):
                 holder_array.append(data_for_peaks.iloc[row_indices[idx][a],0])
         unknown_elements.append(str(holder_array))
 
-    print(unknown_elements)
+    # Adjust numbers for plotting
     for z in sorted_peaks:
         unknown_x.append(int(z[0] * 100))
     
+    # Label known elements in green at the x,y value of their peaks
     for i, j in enumerate(r_final):
         plt.text(x[j], y[j], f"{e_final[i]}", color="green")
         
-    # Create red labels and adjust them with arrows
+    # Label unknown peaks in red at the x,y value of the unidentified peaks
     count = 0
     for k, l in enumerate(unknown_x):
         count += 1
         plt.plot([], [], 'ro', label=f"{count}: {unknown_elements[k]}")
         plt.text(x[l], y[l], f"{count}", color="red")
 
+    # Plot legend and save figure
     plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     plt.savefig(output_file)
     plt.show()
