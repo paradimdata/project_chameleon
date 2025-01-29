@@ -546,7 +546,7 @@ def arpes_folder_workbook(folder_name, workbook_name):
             new_slit = insert_scan_row(wavenote_directory + f,jaina_logs[0],varian_logs[0],workbook_name)
             if slit == None:
                 slit = new_slit
-            elif slit != new_slit:
+            elif slit != new_slit and abs(float(slit) - float(new_slit)) > 7:
                 analyzer_slit_row(new_slit, workbook_name)
                 insert_scan_row(wavenote_directory + f,jaina_logs[0],varian_logs[0],workbook_name)
                 slit = new_slit
@@ -789,6 +789,7 @@ def analyzer_slit_row(slit, workbook_name):
     if not str(workbook_name).endswith('.xlsx'):
         raise ValueError("ERROR: workbook_name input must end with '.xlsx'")
 
+    # Initialize known workbook values, set specific color
     starting_row = 6
     starting_cell = 0
     first_col = 1
@@ -797,6 +798,7 @@ def analyzer_slit_row(slit, workbook_name):
     wb = wb = load_workbook(filename = workbook_name)
     ws = wb.active
 
+    # Find first empty row
     while starting_cell == 0:
         cell = ws.cell(row=starting_row, column=first_col)
         if not cell.value:
@@ -805,12 +807,33 @@ def analyzer_slit_row(slit, workbook_name):
             starting_row += 1
     starting_row -= 1
 
+    adjusted_slit = round(float(slit), -2)
+    if adjusted_slit == 100:
+        slit_text = '100 (0.1n)'
+    elif adjusted_slit == 200:
+        slit_text = '200 (0.2n)'
+    elif adjusted_slit == 300:
+        slit_text = '300 (0.3n)'
+    elif adjusted_slit == 400:
+        slit_text = '400 (0.2a)'
+    elif adjusted_slit == 500:
+        slit_text = '500 (0.3a)'
+    elif adjusted_slit == 600:
+        slit_text = '600 (0.5a)'
+    elif adjusted_slit == 700:
+        slit_text = '700 (0.8a)'
+    elif adjusted_slit == 800:
+        slit_text = '800 (1.5a)'
+    elif adjusted_slit == 900:
+        slit_text = '900 (2.5a)'
+
+    # Merge all the cells so we have one big break in the rows, input and format text
     ws.merge_cells(f'A{starting_row}:X{starting_row}')
     cell = ws[f'A{starting_row}']
-    cell.value = '* * *  Analyzer Slit Value = ' + str(slit) + '  * * *'
+    cell.value = '* * *  Analyzer Slit Value = ' + slit_text + '  * * *' # Actual text
     cell.font = Font(bold=True)
     cell.alignment = Alignment(horizontal='center', vertical='center')
-    font = Font(size=14)  # Set font size to 16
+    font = Font(size=14)  # Set font size 
     ws[f'A{starting_row}'].font = font
     ws[f'A{starting_row}'].fill = light_yellow_fill
 
