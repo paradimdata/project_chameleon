@@ -1,8 +1,8 @@
 import os
-import numpy as np 
+import numpy as np
 import argparse
 from PIL import Image
-from rheed_helpers import get_image_dimensions
+from .rheed_helpers import get_image_dimensions
 
 
 def rheedconverter(file_name, output_file):
