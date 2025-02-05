@@ -10,12 +10,13 @@ Bruker XRD
    :show-inheritance:
    :exclude-members: main
 
-.. automodule:: brukerrawbackground
+.. automodule:: brml_converter
    :members:
+   :undoc-members:
    :show-inheritance:
    :exclude-members: main
 
-.. automodule:: brml_converter
+.. automodule:: brukerrawbackground
    :members:
    :undoc-members:
    :show-inheritance:
