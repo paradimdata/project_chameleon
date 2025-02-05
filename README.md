@@ -14,10 +14,10 @@ Project Chameleon is a collection of Python scripts written to assist in data pr
 - JEOL SEM: .EMSA to basic plot of data
 - Bruker BRML: Bruker brml to TXT/CSV
 
+For more information on the working files, see the official documentation at https://project-chameleon.readthedocs.io/en/latest/
+
 ## Functions still in progress
 - EBSD
-
-For more information on the working files, see the official documentation at https://project-chameleon.readthedocs.io/en/latest/
 
 ## Dependencies Install Instructions
 Full listed of dependencies used by Project Chameleon
