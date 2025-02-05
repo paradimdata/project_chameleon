@@ -12,7 +12,6 @@ Bruker XRD
 
 .. automodule:: brukerrawbackground
    :members:
-   :undoc-members:
    :show-inheritance:
    :exclude-members: main
 
