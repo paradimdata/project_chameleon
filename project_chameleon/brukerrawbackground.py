@@ -161,6 +161,5 @@ def main():
     args = parser.parse_args()
     brukerrawbackground(args.background_file_input, args.sample_file_input, args.output_name)
 
-
 if __name__ == "__main__":
     main()

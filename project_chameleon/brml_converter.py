@@ -95,3 +95,6 @@ def main():
     parser.add_argument("output", help="the output file")
     args = parser.parse_args()
     brml_converter(args.input, args.output)
+
+if __name__ == "__main__":
+    main()
