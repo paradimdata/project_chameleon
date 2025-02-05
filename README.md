@@ -11,11 +11,11 @@ Project Chameleon is a collection of Python scripts written to assist in data pr
 - PPMS/MPMS: Relevant lines extracted and saved
 - ARPES: Extracts data from pxt files
 - HS2 Files: 16bpp .hs2 images to PNG
+- JEOL SEM: .EMSA to basic plot of data
+- Bruker BRML: Bruker brml to TXT/CSV
 
 ## Functions still in progress
-- JEOL SEM
 - EBSD
-- Bruker BRML
 
 ## Description of individual working functions
 
