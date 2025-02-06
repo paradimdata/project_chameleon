@@ -2,6 +2,8 @@ import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 import argparse
 import zipfile
+import shutil
+import time
 import os
 
 def brml_converter(input_file, output_file):
@@ -17,8 +19,8 @@ def brml_converter(input_file, output_file):
     # Check input values for correct types
     if os.path.isfile(input_file) is False:
         raise ValueError("ERROR: bad input. Expected file")
-    if not (str(input_file).endswith('.xml')):
-        raise ValueError("ERROR: bad input. Expected .xml file.")
+    if not (str(input_file).endswith('.brml')):
+        raise ValueError("ERROR: bad input. Expected .brml file.")
     if not (str(output_file).endswith('.txt') or str(output_file).endswith('.csv')):
         raise ValueError("ERROR: Output file should be a text file.")
     if os.path.getsize(input_file) < 10:
@@ -40,14 +42,9 @@ def brml_converter(input_file, output_file):
     for Datum in root.iter('Datum'):
         string_array.append(Datum.text.split(','))
 
-    # Open file to write information
-    f = open(output_file,"w+")
-    f.write('# exported by project chameleon from a bruker brml file' + '\n')
-
-    # Extract metadata values from the data file
     voltage_value = root.find(".//Voltage").attrib.get("Value") # Voltage value
-    current_value = root.find(".//Current").attrib.get("Value") # Current value 
-    scan_type = root.find(".//ScanInformation").attrib.get("ScanName") # Scan type value
+    current_value = root.find(".//Current").attrib.get("Value") # Current value
+    scan_type = root.find(".//ScanInformation").attrib.get("ScanName") # Scan name
     theta2_value = root.find(".//Start").text # Start 2Theta, Start angle value
 
     beam_translation = root.find(".//InfoData[@LogicName='BeamTranslation']")
@@ -62,12 +59,40 @@ def brml_converter(input_file, output_file):
 
     measurement_points = root.find(".//MeasurementPoints").text
     scan_steps = root.find(".//SubScanInfo").attrib.get("Steps") # Steps value
-    measured_scan_steps = root.find(".//SubScanInfo").attrib.get("MeasuredTimePerStep") # Time per step value
 
     two_theta_axis = root.find(".//ScanAxisInfo[@AxisId='TwoTheta']")
     increment_value = two_theta_axis.find("./Increment").text # Step size value
+ 
+    # Find all SubScanInfo elements and extract and store MeasuredTimePerStep and PlannedTimePerStep values
+    subscan_infos = root.findall(".//SubScanInfo")
+    subscan_data = [
+        {
+            "MeasuredTimePerStep": subscan.get("MeasuredTimePerStep"),
+            "PlannedTimePerStep": subscan.get("PlannedTimePerStep"),
+        }
+        for subscan in subscan_infos
+    ]
 
-    # write all metadata into file
+    # If there are multiple scans we want to find the start and stop angles for each scan. Theres only one stop value, but multiple start values. First start value is repeated.
+    if len(subscan_data) > 1:
+        two_theta_starts = [
+            scan_axis.find("Start").text
+            for scan_axis in root.findall(".//ScanAxisInfo[@AxisId='TwoTheta']")
+        ]
+        two_theta_stop = root.find(".//ScanAxisInfo[@AxisId='TwoTheta']")
+        two_theta_stop_value = two_theta_stop.find("./Stop").text
+
+    # Read file creation date/time
+    ti_m = os.path.getmtime(input_file)
+    end_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ti_m))
+
+    # Open file to write. Write individual lines
+    f = open(output_file,"w+")
+    f.write('# exported by project chameleon from a bruker brml file' + '\n')
+
+    f.write('# FILE: ' + str(input_file) + '\n')
+    f.write('# DATE_AND_TIME: ' + str(end_time) + '\n')
+
     f.write('# GENERATOR_CURRENT: ' + str(current_value) + '\n')
     f.write('# GENERATOR_VOLTAGE: ' + str(voltage_value) + '\n')
     f.write('# SCAN_TYPE: ' + str(scan_type) + '\n')
@@ -78,16 +103,38 @@ def brml_converter(input_file, output_file):
     f.write('# START_THETA: ' + str(theta_value) + '\n')
     f.write('# STEPS: ' + str(scan_steps) + '\n')
     f.write('# STEP_SIZE: ' + str(increment_value) + '\n')
-    f.write('# TIME_PER_STEP: ' + str(measured_scan_steps) + '\n')
-    f.write('# column_1	   column_2' + '\n')
 
-    # Write data from array to file, close file when data is written
+    # If there is no VCT we only need to print 2 lines. If there is VCT we need to print a block for each subscan
+    if len(subscan_data) <= 1:
+        f.write('# TOTAL_TIME_PER_STEP: ' + str(subscan_data[0]["MeasuredTimePerStep"]) + '\n') # Total time
+        f.write('# TIME_PER_STEP: ' + str(subscan_data[0]["PlannedTimePerStep"]) + '\n') # Time per step
+    else:
+        # Find start values
+        two_theta_starts = [
+            scan_axis.find("Start").text
+            for scan_axis in root.findall(".//ScanAxisInfo[@AxisId='TwoTheta']")
+        ]
+        
+        # Crop repeated start value, add end value
+        two_theta_values = two_theta_starts[1:] + [two_theta_stop_value]
+
+        # Create VCT blocks
+        f.write('# # # VARIABLE_COUNT_TIME # # # ' + '\n')
+        for i in range(len(two_theta_values) - 1):
+            f.write('# SUB_SCAN_START: ' + str(two_theta_values[i]) + '\n')
+            f.write('# SUB_SCAN_END: ' + str(two_theta_values[i + 1]) + '\n')
+            f.write('# TOTAL_TIME_PER_STEP: ' + str(subscan_data[i]["MeasuredTimePerStep"]) + '\n')
+            f.write('# TIME_PER_STEP: ' + str(subscan_data[i]["PlannedTimePerStep"]) + '\n')
+            f.write('#' + '\n')
+
+    # Write data
+    f.write('# column_1	   column_2' + '\n')
     for row in string_array:
         f.write(str(row[2]) + '	           ' + str(row[4]) + '\n')
     f.close()
 
     # Remove directory, files aren't needed after data is extracted
-    os.rmdir(extract_to)
+    shutil.rmtree(extract_to)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -95,4 +142,3 @@ def main():
     parser.add_argument("output", help="the output file")
     args = parser.parse_args()
     brml_converter(args.input, args.output)
-
