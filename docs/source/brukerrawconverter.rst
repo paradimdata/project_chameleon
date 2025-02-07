@@ -15,9 +15,3 @@ Bruker X-Ray Diffraction
    :undoc-members:
    :show-inheritance:
    :exclude-members: main
-
-.. automodule:: brml_converter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :exclude-members: main
