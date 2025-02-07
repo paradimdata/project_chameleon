@@ -16,7 +16,7 @@ Bruker X-Ray Diffraction
    :show-inheritance:
    :exclude-members: main
 
-.. automodule:: brukerrawbackground
+.. autofunction:: brukerrawbackground.brukerrawbackground
    :members:
    :undoc-members:
    :show-inheritance:
