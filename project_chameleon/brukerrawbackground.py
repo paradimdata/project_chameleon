@@ -152,7 +152,6 @@ def brukerrawbackground(background_input, sample_input, output_name):
         else:  
             continue
 
-
 def main():
     parser = argparse.ArgumentParser(description="Process some input files for background and sample data")
     parser.add_argument("background_file_input", help="the input file for the background data")
@@ -161,4 +160,5 @@ def main():
     args = parser.parse_args()
     brukerrawbackground(args.background_file_input, args.sample_file_input, args.output_name)
 
-
+if __name__ == "__main__":
+    main()
