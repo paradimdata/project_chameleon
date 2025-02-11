@@ -1,10 +1,19 @@
+from datetime import datetime
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 import argparse
 import zipfile
 import shutil
 import time
+import pytz
 import os
+import re
+
+def convert_to_datetime(timestamp):
+    timestamp = re.sub(r"(\.\d{6})\d+", r"\1", timestamp)  # Trim to 6 decimal places
+    dt = datetime.fromisoformat(timestamp)
+    est = pytz.timezone("US/Eastern")
+    return dt.astimezone(est).strftime("%Y-%m-%d %H:%M:%S")
 
 def brml_converter(input_file, output_file):
     """
@@ -29,6 +38,8 @@ def brml_converter(input_file, output_file):
     # Initialize variables
     extract_to = "holder"
     string_array = []  
+
+    namespaces = {'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
 
     # Bruker brml files can be treated like zip files. Here ZipFile is used to extract data from compressed to readable format. Data is put into a folder called 'holder'. Within the folder, there are a series of .xml files holding data and metadata.
     with zipfile.ZipFile(input_file, 'r') as zip_ref:
@@ -62,63 +73,119 @@ def brml_converter(input_file, output_file):
 
     two_theta_axis = root.find(".//ScanAxisInfo[@AxisId='TwoTheta']")
     increment_value = two_theta_axis.find("./Increment").text # Step size value
+
+    bsml_file_element = root.findall(".//InfoItem[@Name='BsmlFileName']")
+    bsml_filepath = bsml_file_element[0].attrib.get('Value')
+    bsml_file = bsml_filepath.split("\\")[-1] # BSML file name
+
+    goniometer_radius_element = root.findall(".//Radius")
+    goniometer_radius_value = goniometer_radius_element[0].attrib.get('Value') # Goniometer radius
+
+    rotation_speed_element = root.findall(".//RotationSpeed")
+    rotation_speed_value = rotation_speed_element[0].attrib.get('Value') # Sample rotation
+
+    tube_material_element = root.findall(".//TubeMaterial")
+    tube_material_value = tube_material_element[0].text # Anode 
+
+    wavelength_alpha1_element = root.findall(".//WaveLengthAlpha1")
+    wavelength_alpha1_value = wavelength_alpha1_element[0].attrib.get('Value') # ka1
+
+    wavelength_alpha2_element = root.findall(".//WaveLengthAlpha2")
+    wavelength_alpha2_value = wavelength_alpha2_element[0].attrib.get('Value') # ka2
+
+    lower_discriminator_element = root.findall(".//LowerDiscriminator")
+    lower_discriminator_value = lower_discriminator_element[0].attrib.get('Value') # Lower discriminator value
+
+    upper_discriminator_element = root.findall(".//UpperDiscriminator")
+    upper_discriminator_value = upper_discriminator_element[0].attrib.get('Value') # Upper discriminator value
+
+    axial_divergence_element = root.find(".//InfoData[@xsi:type='SollerInfoData']/AxialDivergence", namespaces)
+    axial_divergence_value = axial_divergence_element.attrib.get("Value") # Primary soller
  
-    # Find all SubScanInfo elements and extract and store MeasuredTimePerStep and PlannedTimePerStep values
+    secondary_axial_divergence = root.find(".//SecondaryTracks//InfoData[@xsi:type='SollerInfoData']/AxialDivergence", namespaces)
+    if secondary_axial_divergence is not None:
+        secondary_axial_divergence_value = secondary_axial_divergence.attrib.get("Value") # Secondary soller (does not exist in all scans)
+
+    time_started = convert_to_datetime(root.find("TimeStampStarted").text) # Start time
+    time_finished = convert_to_datetime(root.find("TimeStampFinished").text) # End time
+
+    # Find all SubScanInfo elements
     subscan_infos = root.findall(".//SubScanInfo")
+
+    # Extract and store MeasuredTimePerStep and PlannedTimePerStep values
     subscan_data = [
         {
             "MeasuredTimePerStep": subscan.get("MeasuredTimePerStep"),
             "PlannedTimePerStep": subscan.get("PlannedTimePerStep"),
+            "Steps": subscan.get("Steps")
         }
         for subscan in subscan_infos
     ]
 
-    # If there are multiple scans we want to find the start and stop angles for each scan. Theres only one stop value, but multiple start values. First start value is repeated.
+    # If there are multiple scans, get TwoTheta value
     if len(subscan_data) > 1:
         two_theta_starts = [
             scan_axis.find("Start").text
             for scan_axis in root.findall(".//ScanAxisInfo[@AxisId='TwoTheta']")
         ]
-        two_theta_stop = root.find(".//ScanAxisInfo[@AxisId='TwoTheta']")
-        two_theta_stop_value = two_theta_stop.find("./Stop").text
 
-    # Read file creation date/time
-    ti_m = os.path.getmtime(input_file)
-    end_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ti_m))
-
-    # Open file to write. Write individual lines
+    # Generate text time to hold data. Block to present data in a more organized fashion
     f = open(output_file,"w+")
     f.write('# exported by project chameleon from a bruker brml file' + '\n')
+    f.write('#' + '\n')
 
-    f.write('# FILE: ' + str(input_file) + '\n')
-    f.write('# DATE_AND_TIME: ' + str(end_time) + '\n')
-
+    f.write('# # # INSTRUMENT_PARAMETERS # # # ' + '\n')
+    f.write('# ANODE: ' + str(tube_material_value) + '\n')
+    f.write('# kα1: ' + str(wavelength_alpha1_value) + '\n')
+    f.write('# kα2: ' + str(wavelength_alpha2_value) + '\n')
+    f.write('# LOWER_DISCRIMINATOR_VALUE: ' + str(lower_discriminator_value) + '\n')
+    f.write('# UPPER_DISCRIMINATOR_VALUE: ' + str(upper_discriminator_value) + '\n')
     f.write('# GENERATOR_CURRENT: ' + str(current_value) + '\n')
     f.write('# GENERATOR_VOLTAGE: ' + str(voltage_value) + '\n')
+    f.write('#' + '\n')
+
+    f.write('# # # STAGE_PARAMETERS # # # ' + '\n')
+    f.write('# GONIOMETER_RADIUS: ' + str(goniometer_radius_value) + '\n')
+    f.write('# SAMPLE_ROTATION: ' + str(rotation_speed_value) + '\n')
+    f.write('# PRIMARY_SOLLER_SLIT: ' + str(axial_divergence_value) + '\n')
+    if secondary_axial_divergence is not None: # Only print secondary soller if it exists
+        f.write('# SECONDARY_SOLLER_SLIT: ' + str(secondary_axial_divergence_value) + '\n')
+    f.write('#' + '\n')
+
+    f.write('# # # SCAN_PARAMETERS # # # ' + '\n')
+    f.write('# BRML_FILE: ' + str(input_file) + '\n')
+    f.write('# BSML_FILE: ' + str(bsml_file) + '\n')
+    f.write('# START_TIME: ' + str(time_started) + '\n')
+    f.write('# END_TIME: ' + str(time_finished) + '\n')
     f.write('# SCAN_TYPE: ' + str(scan_type) + '\n')
     f.write('# START_2THETA: ' + str(theta2_value) + '\n')
     f.write('# START_ANGLE: ' + str(theta2_value) + '\n')
     f.write('# START_BEAM_TRANSLATION: ' + str(virtual_position_value) + '\n')
     f.write('# START_PHI: ' + str(position_value) + '\n')
     f.write('# START_THETA: ' + str(theta_value) + '\n')
-    f.write('# STEPS: ' + str(scan_steps) + '\n')
+    if len(subscan_data) <= 1: # If there is only one scan, print steps
+        f.write('# STEPS: ' + str(scan_steps) + '\n')
+    else: # If there are multiple scans, print steps and step sizes for all scans
+        scan_steps = 0
+        for i in range(len(subscan_data)):
+            scan_steps = scan_steps + int(subscan_data[i]["Steps"])
+        f.write('# STEPS: ' + str(scan_steps) + '\n')
     f.write('# STEP_SIZE: ' + str(increment_value) + '\n')
 
-    # If there is no VCT we only need to print 2 lines. If there is VCT we need to print a block for each subscan
-    if len(subscan_data) <= 1:
-        f.write('# TOTAL_TIME_PER_STEP: ' + str(subscan_data[0]["MeasuredTimePerStep"]) + '\n') # Total time
-        f.write('# TIME_PER_STEP: ' + str(subscan_data[0]["PlannedTimePerStep"]) + '\n') # Time per step
-    else:
-        # Find start values
+    if len(subscan_data) <= 1: # If there is one scan, print only time measurements
+        f.write('# TOTAL_TIME_PER_STEP: ' + str(subscan_data[0]["MeasuredTimePerStep"]) + '\n')
+        f.write('# TIME_PER_STEP: ' + str(subscan_data[0]["PlannedTimePerStep"]) + '\n')
+    else: # If there are multiple scans, print variable time measurements for each scan
+        f.write('#' + '\n')
         two_theta_starts = [
             scan_axis.find("Start").text
             for scan_axis in root.findall(".//ScanAxisInfo[@AxisId='TwoTheta']")
         ]
+        two_theta_stop = root.find(".//ScanAxisInfo[@AxisId='TwoTheta']")
+        two_theta_stop_value = two_theta_stop.find("./Stop").text
         
-        # Crop repeated start value, add end value
         two_theta_values = two_theta_starts[1:] + [two_theta_stop_value]
 
-        # Create VCT blocks
         f.write('# # # VARIABLE_COUNT_TIME # # # ' + '\n')
         for i in range(len(two_theta_values) - 1):
             f.write('# SUB_SCAN_START: ' + str(two_theta_values[i]) + '\n')
@@ -127,7 +194,7 @@ def brml_converter(input_file, output_file):
             f.write('# TIME_PER_STEP: ' + str(subscan_data[i]["PlannedTimePerStep"]) + '\n')
             f.write('#' + '\n')
 
-    # Write data
+    # Print data
     f.write('# column_1	   column_2' + '\n')
     for row in string_array:
         f.write(str(row[2]) + '	           ' + str(row[4]) + '\n')
