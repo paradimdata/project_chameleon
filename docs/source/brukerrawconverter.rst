@@ -15,3 +15,9 @@ This module contains all functions for Bruker X-Ray Diffraction data. Of the fun
    :undoc-members:
    :show-inheritance:
    :exclude-members: main
+
+.. automodule:: brml_converter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members: main
