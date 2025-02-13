@@ -405,7 +405,7 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     old_split = []
     final_comment = []
 
-    light_orange_fill = PatternFill(start_color="FFD580", end_color="FFD580", fill_type="solid")
+    light_orange_fill = PatternFill(start_color="FFE5B2", end_color="FFE5B2", fill_type="solid")
 
     # Read wavenote, extract start and end time for jaina,varian if wavenote does not return error
     w = get_wavenote_values(wavenote_file)
