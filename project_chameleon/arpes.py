@@ -14,6 +14,7 @@ from configparser import ParsingError
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl import load_workbook
@@ -404,6 +405,8 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     old_split = []
     final_comment = []
 
+    light_orange_fill = PatternFill(start_color="FFD580", end_color="FFD580", fill_type="solid")
+
     # Read wavenote, extract start and end time for jaina,varian if wavenote does not return error
     w = get_wavenote_values(wavenote_file)
     if w != None:
@@ -455,6 +458,12 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
     else:
         # Insert all data into a 1D array in the format that fits predefined excel sheet format
         # [Scan, Date, Start time, End time, Notes/Comments, '', (X,Y,Z), Theta, '', Phi, '', '', '', Kinetic Energy, Step size, Temp[A,B], Run mode, Acquisition mode, # # of sweeps, Pass energy, Analyzer slit, Pressure, Photon Energy]
+        if w[7] == 'Manipulator Scan':
+            dataset = htmdec_formats.ARPESDataset.from_file(wavenote_file)
+            df = pd.DataFrame(dataset.run_mode_info)
+            v[1] = str((float(df.iloc[0,4]),float(df.iloc[-1,4])))
+            v[2] = str((float(df.iloc[0,5]),float(df.iloc[-1,5])))
+
         row = [w[0],w[1],w[2],w[3],final_comment,'',v[0],v[1],'',v[2],'','','',w[5],w[6],j[0],w[7],w[8],w[9],w[10],v[3],j[1],w[11],w[4]]
 
         # Insert values into rows, set height of cells larger so more data can fit in them
@@ -480,6 +489,12 @@ def insert_scan_row(wavenote_file,jaina_file,varian_file,workbook_name):
                 cell.value = row[col-1] 
                 cell.font = Font(bold=True)
                 cell.alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+
+        if w[7] == 'Manipulator Scan':
+            for i in range(last_col):
+                ws[f'{chr(65 + i)}{starting_row}'].fill = light_orange_fill
+                cell = ws.cell(row=starting_row, column=i + 1)
+                cell.border = Border(top=Side(style='thin'),bottom=Side(style='thin'),left=Side(style='thin'),right=Side(style='thin')) 
 
     # Close and save workbook so all data added is saved and workbook isn't altered further
     wb.save(workbook_name)
