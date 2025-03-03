@@ -25,7 +25,7 @@ RUN git config --global credential.helper store && \
 RUN git clone https://github.com/paradimdata/project_chameleon.git .
 # # Install project dependencies 
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py htmdec_formats openpyxl
-RUN pip install PyQt5==5.15.10
+RUN apt-get update && apt-get install -y qtbase5-dev
 
 EXPOSE 5020
 EXPOSE 8080
