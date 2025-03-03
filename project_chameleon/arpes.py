@@ -2,12 +2,12 @@ import os.path
 import os
 import re
 import time
-import htmdec_formats
+import htmdec-formats
 import h5py
 import subprocess
 import traceback
 import argparse
-from htmdec_formats import ARPESDataset
+from htmdec-formats import ARPESDataset
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from configparser import ParsingError
