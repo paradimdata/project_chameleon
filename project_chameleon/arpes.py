@@ -21,7 +21,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 from openpyxl.styles import Border, Side
 from openpyxl.styles import Font, Alignment
-from PyQt5.QtWidgets import QApplication, QLabel, QTextEdit, QVBoxLayout, QWidget
+#from PyQt5.QtWidgets import QApplication, QLabel, QTextEdit, QVBoxLayout, QWidget
 
 def get_sec(time_str):
     """Get seconds from time."""
@@ -718,7 +718,7 @@ def single_log_grapher(log_file, scan_folder, log_type, value):
     plt.savefig('plot.png', bbox_inches='tight', dpi=500)
     plt.show()
 
-
+'''
 def arpes_previewer(pxt_file):
     """
     ``previewer`` is a function that takes a pxt file as an input and displays the scan data and metadata from that file.
@@ -788,6 +788,7 @@ def arpes_previewer(pxt_file):
     # Show the window
     window.show()
     app.exec_()
+    '''
 
 def analyzer_slit_row(slit, workbook_name):
     """
