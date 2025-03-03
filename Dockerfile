@@ -25,6 +25,8 @@ RUN git config --global credential.helper store && \
 RUN git clone https://github.com/paradimdata/project_chameleon.git .
 # # Install project dependencies 
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py htmdec_formats openpyxl
+RUN apt-get update && apt-get install -y gnupg
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853 BDE6D2B9216EC7A8 || apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 54404762BBB6E853 BDE6D2B9216EC7A8
 RUN apt-get update && apt-get install -y qtbase5-dev
 
 EXPOSE 5020
