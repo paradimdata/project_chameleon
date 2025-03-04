@@ -171,13 +171,8 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
     common_handler_method_auth_check(request, data, access_token)
     input_file,output_file = common_file_handler_parse_request(request, data, '.dat', '.csv') 
 
-    if 'value_name' in data:
-        value = data['value_name']
-    else:
-        value = 1
-
     try:
-        ppmsmpmsparser(input_file, output_file, value)
+        ppmsmpmsparser(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
         traceback.print_exc()
