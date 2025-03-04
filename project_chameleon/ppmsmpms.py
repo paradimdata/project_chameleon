@@ -3,15 +3,15 @@ import argparse
 import os
 import csv
 
-def ppmsmpmsparser(inputfile, outputfile, user_input = None):
+def ppmsmpmsparser(inputfile, outputfile):
     """
     ``ppmsmpmsparser()`` is a function that allows users to separate out relevant columns for 4 different mpms and ppms file types. Relevant columns are saved from the input file into the output file. The user also has the option to pick between 4 different kinds of files: heat capacity, magnetic suceptibility, 4-prode resistivity, and thermal transport.
 
-    :args: ``inputfile`` should be a string or path to a PPMS/MPMS file ending with '.dat'. ``outputfile`` should be a string ending with '.txt' or '.csv' which will be the name of the final output file. ``user_input`` allows the user to select their input file type as a function argument rather than while the file is running. This input is optional.
+    :args: ``inputfile`` should be a string or path to a PPMS/MPMS file ending with '.dat'. ``outputfile`` should be a string ending with '.txt' or '.csv' which will be the name of the final output file. 
 
     :return: this fucntion does not return anything. It saves outputs into a file called ``outputfile``.
 
-    :exceptions: `input_file` must be a file. `input_file` must end with '.dat'. `output_file` must end with '.txt' or '.csv'. `user_input` must be one of the possible values.
+    :exceptions: `input_file` must be a file. `input_file` must end with '.dat'. `output_file` must end with '.txt' or '.csv'. 
     """
 
     # Error if the inputs are not of the correct type or within correct bounds
@@ -23,8 +23,6 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
     if not str(outputfile).endswith('.txt') or str(outputfile).endswith('.csv'):
         raise ValueError("ERROR: outputfile should be a .csv file.")
-    if user_input not in ['1', '2', '3', '4'] and user_input is not None:
-        raise ValueError("ERROR: User Input should be 1, 2, 3, 4, or None")
 
     #Initialize values and open file
     metadata_limit = 0
@@ -45,17 +43,23 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
             header = lines[count].split(',')
             metadata_limit += 1
             limit_holder = count
+        elif('PPMS MultiVu Application' in lines[count]):
+            file_type = 3
+            count+=1
+        elif('PPMS ACMS Option' in lines[count]):
+            file_type = 2
+            count+=1
+        elif('PPMS Heat Capacity Option' in lines[count]):
+            file_type = 1
+            count+=1
+        elif('PPMS Thermal Transport Option' in lines[count]):
+            file_type = 4
+            count+=1
         else:
             count += 1
 
-    # Optional user input here based on function input. We want this to be able to run as a function either with or without user input
-    if user_input == None:
-        user_input = input("Which file type is this? \n (1)Heat Capacity \n (2)AC Magnetic Susceptibility \n (3)4-Probe Resistivity \n (4)Thermal Transport \n (Input the number of your choice) \n") 
-    if user_input not in ['1', '2', '3', '4'] and user_input is not None:
-        raise ValueError("ERROR: User Input should be 1, 2, 3, 4, or None")
-
     #4-PROBE LOOP
-    if('3' in user_input):
+    if(file_type == 3):
         datafile.write(header[1] + ', ' + header[3] + ', ' + header[4] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + '\n') # Relevant lines for 4-Probe file
         count = limit_holder + 1
         
@@ -69,7 +73,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         datafile.close()
 
     #HEAT CAPACITY LOOP
-    elif('1' in user_input):
+    elif(file_type == 1):
         datafile.write(header[0] + ', ' + header[5] + ', ' + header[7] + ', ' + header[9] + ', ' + header[10] + ', ' + header[18] + ', ' + header[28] + '\n') # Relevant lines for Heat Capacity file
         count = limit_holder + 1
         
@@ -83,7 +87,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         datafile.close()
 
     #AC MAGNETIC SUSCEPTIBILITY LOOP
-    elif('2' in user_input):
+    elif(file_type == 2):
         datafile.write(header[1] + ', ' + header[2] + ', ' + header[3] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[9] + '\n') # Relevant lines for Magnetic Susceptibility file
         count = limit_holder + 1
         
@@ -97,7 +101,7 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
         datafile.close()
 
     #THERMAL TRANSPORT LOOP
-    elif('4' in user_input):
+    elif(file_type == 4):
         datafile.write(header[1] + ', ' + header[4] + ', ' + header[5] + ', ' + header[6] + ', ' + header[8] + ', ' + header[10] + ', ' + header[12] + '\n') # Relevant lines for Thermal Transport file
         count = limit_holder + 1
         
@@ -110,9 +114,9 @@ def ppmsmpmsparser(inputfile, outputfile, user_input = None):
                 count += 1
         datafile.close()
 
-    #IF THERE IS A TYPO
+    #If file type cannot be extracted from the metadata
     else:
-        print('Please pick one of the file types')
+        raise ValueError("ERROR: File type could not be detected.")
 
 def main():
     parser = argparse.ArgumentParser()
