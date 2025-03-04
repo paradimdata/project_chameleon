@@ -172,6 +172,8 @@ def ppmsmpms_convert_route(request: Request, data: dict = Body(...), access_toke
     input_file,output_file = common_file_handler_parse_request(request, data, '.dat', '.csv') 
 
     try:
+        print(input_file)
+        print(output_file)
         ppmsmpmsparser(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
