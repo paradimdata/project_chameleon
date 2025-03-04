@@ -21,7 +21,7 @@ def ppmsmpmsparser(inputfile, outputfile):
         raise ValueError("ERROR: bad input. Expected .dat file")
     if os.path.getsize(inputfile) < 10:
         raise ValueError("ERROR: This size of file cannot be handled by this function. File too small.")
-    if not str(outputfile).endswith('.txt') or str(outputfile).endswith('.csv'):
+    if not str(outputfile).endswith('.csv'):
         raise ValueError("ERROR: outputfile should be a .csv file.")
 
     #Initialize values and open file
