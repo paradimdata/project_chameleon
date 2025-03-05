@@ -45,6 +45,8 @@ def brml_converter(input_file, output_file):
     with zipfile.ZipFile(input_file, 'r') as zip_ref:
         zip_ref.extractall(extract_to)
 
+    print("Extracted files:", os.listdir(extract_to))
+
     # Establish .xml file strucutre
     tree = ET.parse(extract_to + '/experiment0/RawData0.xml')
     root = tree.getroot()
