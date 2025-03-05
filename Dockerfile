@@ -27,8 +27,10 @@ RUN git clone https://github.com/paradimdata/project_chameleon.git .
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py htmdec_formats openpyxl
 RUN pip install adjustText 
 
-RUN apt-get -y update
-RUN apt-get install -y ffmpeg
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5020
 EXPOSE 8080
