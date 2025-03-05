@@ -8,7 +8,7 @@ RUN apt-get update && \
     curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc | gpg --batch --no-tty --dearmor -o /tmp/debian-security-archive-keyring.gpg && \
     mv /tmp/debian-security-archive-keyring.gpg /usr/share/keyrings/debian-security-archive-keyring.gpg
 RUN apt-get update && \
-    apt-get install -y git gcc python3-dev libhdf5-dev pkg-config swig g++ build-essential libboost-all-dev && \
+    apt-get install -y git gcc ffmpeg python3-dev libhdf5-dev pkg-config swig g++ build-essential libboost-all-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 #RUN apt-get update && apt-get install -y curl
@@ -26,12 +26,6 @@ RUN git clone https://github.com/paradimdata/project_chameleon.git .
 # # Install project dependencies 
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py htmdec_formats openpyxl
 RUN pip install adjustText 
-
-RUN apt-get update
-RUN apt-get install -y ffmpeg
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
-
 
 EXPOSE 5020
 EXPOSE 8080
