@@ -26,7 +26,12 @@ RUN git clone https://github.com/paradimdata/project_chameleon.git .
 # # Install project dependencies 
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py htmdec_formats openpyxl
 RUN pip install adjustText 
-RUN apt-get update && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gnupg ca-certificates && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853 BDE6D2B9216EC7A8
+
+# Install FFmpeg
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg
 
 EXPOSE 5020
 EXPOSE 8080
