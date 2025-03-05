@@ -48,7 +48,7 @@ def brml_converter(input_file, output_file):
     print("Extracted files:", os.listdir('holder/Experiment0'))
 
     # Establish .xml file strucutre
-    tree = ET.parse(extract_to + '/experiment0/RawData0.xml')
+    tree = ET.parse(extract_to + '/Experiment0/RawData0.xml')
     root = tree.getroot()
 
     # Extract main data from the xml file. Held in the 'Datum' header
