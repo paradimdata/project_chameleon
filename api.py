@@ -68,7 +68,7 @@ def rheed_vide_convert_route(request: Request, data: dict = Body(...), access_to
     common_handler_method_auth_check(request, data, access_token)
     input_file,output_file = common_file_handler_parse_request(request, data, '.imm', '.avi')
     try:
-        rheed_video_converter(input_file, output_file, '.avi')
+        rheed_video_converter(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
         traceback.print_exc()
