@@ -12,7 +12,7 @@ from .rheed_helpers import rheed_video_frame_parser
 from .rheed_helpers import rheed_video_image_parser
 import traceback
 
-def rheed_video_converter(input_file, output_file, output_type, keep_images = 0):
+def rheed_video_converter(input_file, output_file, keep_images = 0):
     """
     ``rheed_video_converter()`` is a function that allows for .imm video files tobe converterd to either .avi(lossless) or .mp4(lossy) video files. This function was written using the package ffmpeg, and it utilizes the functionality of `get_image_dimensions`, `rheed_video_frame_parser`, and `rheed_video_image_parser`. 
 
@@ -26,10 +26,8 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     # Make sure inputs are the right type
     if not input_file.endswith('.imm'):
         raise ValueError("ERROR: bad input. Expected .imm file")
-    if output_file.endswith('.avi') or output_file.endswith('.mp4'):
-        raise ValueError("ERROR: output_file should not contain file extension, just file name.")
-    if not output_type in ['.avi','.mp4']:
-        raise ValueError("ERROR: invalid output type. Output type must be either .avi or .mp4.")
+    if not (output_file.endswith('.avi') or output_file.endswith('.mp4')):
+        raise ValueError("ERROR: output_file should should be a .avi or .mp4 file.")
     if not keep_images in [1,0]:
         raise ValueError("ERROR: invalid keep_images value. keep_images may only be a 1(keep) or 0(delete).")
     
@@ -37,7 +35,12 @@ def rheed_video_converter(input_file, output_file, output_type, keep_images = 0)
     file_size = os.path.getsize(input_file)
     height, width, header_size = get_image_dimensions(input_file)
     cap = file_size // (2 * height * width)
-    output_name = output_file + output_type
+    output_name = output_file 
+
+    if output_file.endswith('.avi'):
+        output_type = '.avi'
+    elif output_file.endswith('.mp4'):
+        output_type = '.mp4'
 
     # Two output files types: .avi and .mp4. Each have different ffmpeg commands and variables within the command
     if output_type == '.avi':
