@@ -272,11 +272,7 @@ async def jeol_sem_convert_route(request: Request, data: dict = Body(...), acces
     input_file,output_file = common_file_handler_parse_request(request, data, '.EMSA', '.png')
 
     try:
-        print(data)
-        if 'label' in data:
-            sem_base_plot(input_file, output_file, label = data['label'])
-        else:
-            sem_base_plot(input_file, output_file)
+        sem_base_plot(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:
         traceback.print_exc()
