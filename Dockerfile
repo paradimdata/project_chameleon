@@ -27,8 +27,10 @@ RUN git clone https://github.com/paradimdata/project_chameleon.git .
 RUN pip install matplotlib numpy hyperspy py4dstem pandas xylib-py htmdec_formats openpyxl
 RUN pip install adjustText 
 
-# Install FFmpeg
-RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg
+RUN apt-get update && apt-get install -y --no-install-recommends curl gnupg && \
+    curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | tee /usr/share/keyrings/debian-archive-keyring.gpg > /dev/null && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg
 
 EXPOSE 5020
 EXPOSE 8080
