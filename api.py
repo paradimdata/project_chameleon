@@ -40,9 +40,6 @@ app.add_middleware(
 
 @app.post('/rheedconverter')
 async def rheed_convert_route(request: Request, data: dict = Body(...), access_token: str = Header(default=''), x_auth_access_token: str = Header(default='')):
-    print(request)
-    print(data)
-    print(access_token)
     access_token = common_handler_access_token(request, data, access_token, x_auth_access_token)
 
     er = common_handler_early_response(request, data)
