@@ -192,7 +192,13 @@ def common_file_handler_parse_request(request, data, input_ext, output_ext):
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_name = temp_file.name + input_ext
             os.unlink(temp_file.name) # cleanup
-            urllib.request.urlretrieve(file_url, filename = temp_name)
+            if 'girderToken' in data:
+                headers = {"Girder-Token": data['girderToken']}
+                request = urllib.request.Request(file_url, headers=headers)
+                with urllib.request.urlopen(request) as response, open(temp_name, "wb") as out_file:
+                    out_file.write(response.read())
+            else:
+                urllib.request.urlretrieve(file_url, filename = temp_name)
         except r.exceptions.RequestException as e:
             traceback.print_exc()
             if e.response is not None:
