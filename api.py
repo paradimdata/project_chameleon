@@ -148,8 +148,11 @@ def non4dstem_file_convert_route(request: Request, data: dict = Body(...), acces
     if not (er is None):
         return er
     
+    if 'input_ext' in data:
+        input_ext = str(data['input_ext'])
+    
     common_handler_method_auth_check(request, data, access_token)
-    input_file,output_file = common_file_handler_parse_request(request, data, '.emd', '.png')
+    input_file,output_file = common_file_handler_parse_request(request, data, input_ext, '.png')
 
     try:
         non4dstem(data_file = input_file, output_file = output_file)
