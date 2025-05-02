@@ -50,8 +50,8 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
     input_file,output_file = common_file_handler_parse_request(request, data, '.img', '.png')
     try:
         with open(input_file,"rb") as f:
-            data = f.read(100)
-            print(data)
+            file_data = f.read(100)
+            print(file_data)
         rheedconverter(input_file, output_file)
         return common_file_handler_prepare_output(request, data, output_file)
     except:

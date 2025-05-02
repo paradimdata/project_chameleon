@@ -23,7 +23,6 @@ def rheedconverter(file_name, output_file):
         raise ValueError("ERROR: please make your output file a .png file")
     
     # Initialize values using helper function
-    print(file_name)
     file_height, file_width, header_bytes = get_image_dimensions(file_name)
     
     #Open file as unknown type. Skip header bytes and adjust to a height X width image. 
