@@ -15,5 +15,5 @@ PyQt5>=5.15.0
 scipy>=1.7.0
 adjustText>=0.7.3
 ffmpeg-python==0.2.0
-sphinx-design>=1.0.0
+sphinx-design==0.6.1
 git+https://github.com/htmdec/htmdec_formats.git
