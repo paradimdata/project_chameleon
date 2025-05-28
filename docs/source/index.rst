@@ -10,7 +10,14 @@ Project Chameleon
 .. image:: ../../ChameleonLogo.png
    :width: 600
 
-Welcome to Project Chameleon. Project Chameleon is a package for designed for data processing in material science research. The functions listed below were written to help in the reserach process by allowing for data from files to be extracted more quickly, allowing for the plotting of data, and the conversion of data from an original format to a new, more accessible format. These functions were design based on test data from specific brands of tools. Many of these brands give specific file and data formats. If you are working with data from different brands, the functions may not work correctly. Each function details what kind of file it expects, so it should be easy to tell if a function will work for your purposes. 
+Welcome to **Project Chameleon** — a software package designed for data processing in materials science research.
+
+Project Chameleon provides a collection of functions to streamline research workflows by enabling:
+- Fast extraction of data from files
+- Efficient data plotting
+- Conversion of data formats to more accessible and standardized formats
+
+These functions are tailored to specific data formats produced by certain brands of scientific tools. Because these formats can vary significantly between manufacturers, some functions may not work correctly with unsupported data types. Each function’s documentation specifies the expected input file format, helping users determine its compatibility with their data.
 
 .. toctree::
    :maxdepth: 2
@@ -32,15 +39,16 @@ Welcome to Project Chameleon. Project Chameleon is a package for designed for da
    data/rheedconverter
    data/jeolsem
 
- .. toctree::
+.. toctree::
    :maxdepth: 2
    :caption: Existing Implementation
 
    implementation/docker
    implementation/plugin
 
+---
 
-Project Chameleon is written and maintained by Peter Cauchy. Project Chameleon is a part of research done by the Platform for the Acelerated Research, Analysis, and Discovery of Interfaced Materials. 
+Project Chameleon is written and maintained by **Peter Cauchy** and is part of the research conducted by the **Platform for the Accelerated Research, Analysis, and Discovery of Interfaced Materials (PARADIM)**.
 
 .. image:: ../../PARADIM_LOGO.png
    :width: 400
