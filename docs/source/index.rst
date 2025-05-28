@@ -1,5 +1,7 @@
 .. Project Chameleon documentation master file, created by
    sphinx-quickstart on Fri May 31 11:47:08 2024.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
 =============================================
 Project Chameleon
@@ -8,50 +10,37 @@ Project Chameleon
 .. image:: ../../ChameleonLogo.png
    :width: 600
 
-Welcome to Project Chameleon. Project Chameleon is a package designed for data processing in material science research. The functions listed below help extract, plot, and convert data quickly. They are tailored for data formats from specific brands of tools.
-
-.. grid:: 1 1 1 1
-   :gutter: 2
-
-   .. grid-item-card:: Introduction
-      :link: introduction
-      :text-align: center
-
-      Learn what Project Chameleon is and its purpose.
-
-   .. grid-item-card:: Setup Up
-      :link: setup
-      :text-align: center
-
-      Instructions for installing and configuring the project.
-
-   .. grid-item-card:: Data Types
-      :link: data-types
-      :text-align: center
-
-      Explore the supported data types and their converters.
-
-   .. grid-item-card:: Docker File
-      :link: docker
-      :text-align: center
-
-      Docker setup to run the project in a containerized environment.
-
-   .. grid-item-card:: Plugin
-      :link: plugin
-      :text-align: center
-
-      Details about available plugins and integration.
+Welcome to Project Chameleon. Project Chameleon is a package for designed for data processing in material science research. The functions listed below were written to help in the reserach process by allowing for data from files to be extracted more quickly, allowing for the plotting of data, and the conversion of data from an original format to a new, more accessible format. These functions were design based on test data from specific brands of tools. Many of these brands give specific file and data formats. If you are working with data from different brands, the functions may not work correctly. Each function details what kind of file it expects, so it should be easy to tell if a function will work for your purposes. 
 
 .. toctree::
-   :hidden:
    :maxdepth: 2
+   :caption: Introduction to Chameleon
 
-   introduction
-   setup
-   data-types/index
-   docker
-   plugin
+   introduction/introduction
+   introduction/installing_chameleon
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Data Types
+
+   data/arpes
+   data/brukerrawconverter
+   data/hs2converter
+   data/mbeparser
+   data/non4dstem
+   data/ppmsmpms
+   data/rheedconverter
+   data/jeolsem
+
+ .. toctree::
+   :maxdepth: 2
+   :caption: Existing Implementation
+
+   implementation/docker
+   implementation/plugin
+
+
+Project Chameleon is written and maintained by Peter Cauchy. Project Chameleon is a part of research done by the Platform for the Acelerated Research, Analysis, and Discovery of Interfaced Materials. 
 
 .. image:: ../../PARADIM_LOGO.png
    :width: 400
