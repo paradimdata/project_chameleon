@@ -23,28 +23,28 @@ These functions are tailored to specific data formats produced by certain brands
    :maxdepth: 2
    :caption: Introduction to Chameleon
 
-   introduction/introduction
-   introduction/installing_chameleon
+   introduction
+   installing_chameleon
 
 .. toctree::
    :maxdepth: 2
    :caption: Data Types
 
-   data/arpes
-   data/brukerrawconverter
-   data/hs2converter
-   data/mbeparser
-   data/non4dstem
-   data/ppmsmpms
-   data/rheedconverter
-   data/jeolsem
+   arpes
+   brukerrawconverter
+   hs2converter
+   mbeparser
+   non4dstem
+   ppmsmpms
+   rheedconverter
+   jeolsem
 
 .. toctree::
    :maxdepth: 2
    :caption: Existing Implementation
 
-   implementation/docker
-   implementation/plugin
+   docker
+   plugin
 
 ---
 
