@@ -7,6 +7,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../project_chameleon'))
 
+def setup(app):
+    app.add_css_file('my_theme.css')
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
