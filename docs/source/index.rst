@@ -10,14 +10,14 @@ Project Chameleon
 .. image:: ../../ChameleonLogo.png
    :width: 600
 
-Welcome to **Project Chameleon** — a software package designed for data processing in materials science research.
+**Project Chameleon** provides data processing tools for files commonly found in materials science research. More information is available on the introduction page for users. Project Chameleon is maintained as part of the **Platform for the Accelerated Research, Analysis, and Discovery of Interfaced Materials (PARADIM)**, funded by the **National Science Foundation**.
 
-Project Chameleon provides a collection of functions to streamline research workflows by enabling:
-- Fast extraction of data from files
-- Efficient data plotting
-- Conversion of data formats to more accessible and standardized formats
+Project Chameleon is free and open source. It can be found on `Github <https://github.com/paradimdata/project_chameleon>`. It can also be found as a docker image in the Github repository.
 
-These functions are tailored to specific data formats produced by certain brands of scientific tools. Because these formats can vary significantly between manufacturers, some functions may not work correctly with unsupported data types. Each function’s documentation specifies the expected input file format, helping users determine its compatibility with their data.
+.. image:: ../../PARADIM_LOGO.png
+   :width: 400
+
+---
 
 .. toctree::
    :maxdepth: 2
@@ -46,13 +46,7 @@ These functions are tailored to specific data formats produced by certain brands
    implementation/docker
    implementation/plugin
 
----
-
-Project Chameleon is written and maintained by **Peter Cauchy** and is part of the research conducted by the **Platform for the Accelerated Research, Analysis, and Discovery of Interfaced Materials (PARADIM)**.
-
-.. image:: ../../PARADIM_LOGO.png
-   :width: 400
-
+==================
 Indices and tables
 ==================
 
