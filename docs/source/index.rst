@@ -16,6 +16,9 @@ Project Chameleon
    :alt: Python
 .. image:: https://img.shields.io/github/license/paradimdata/project_chameleon
    :alt: License 
+.. image:: https://readthedocs.org/projects/project-chameleon/badge/?version=latest
+   :target: https://project-chameleon.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 Project Chameleon is free and open source. It can be found on `Github <https://github.com/paradimdata/project_chameleon>`_. It can also be found as a docker image in the Github repository.
 
