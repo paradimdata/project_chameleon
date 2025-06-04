@@ -10,14 +10,14 @@ In the field of material science research, there are some materials and measurem
 
 The main programs offered by Project Chameleon process files from:
 
-* `Angle-Resolved Photoemission Spectroscopy <../data/arpes>`
-* `Bruker X-Ray Diffraction <../data/brukerrawconverter>`
-* `Laue hs2 X-Ray Diffraction <../data/hs2converter>`
-* `JEOL Scanning Electron Microscopy <../data/jeolsem>`
-* `Molecular Beam Epitaxy <../data/mbeparser>`
-* `Scanning Transmission Electron Microscopy <../data/non4dstem>`
-* `Physical/Magnetic Property Management System <../data/ppmsmpms>`
-* `Reflection High-Energy Electron Diffraction <../data/rheedconverter>`
+* Angle-Resolved Photoemission Spectroscopy
+* Bruker X-Ray Diffraction
+* Laue hs2 X-Ray Diffraction 
+* JEOL Scanning Electron Microscopy 
+* Molecular Beam Epitaxy 
+* Scanning Transmission Electron Microscopy 
+* Physical/Magnetic Property Management System 
+* Reflection High-Energy Electron Diffraction 
 
 Next Steps
 ----------
