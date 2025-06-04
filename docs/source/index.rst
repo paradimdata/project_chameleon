@@ -10,7 +10,6 @@ Project Chameleon
 .. image:: ../../ChameleonLogo.png
    :width: 400
 
-
 **Project Chameleon** provides data processing tools for files commonly found in materials science research. More information is available on the introduction page for users. Project Chameleon is maintained as part of the **Platform for the Accelerated Research, Analysis, and Discovery of Interfaced Materials (PARADIM)**, funded by the **National Science Foundation**.
 
 Project Chameleon is free and open source. It can be found on `Github <https://github.com/paradimdata/project_chameleon>`_. It can also be found as a docker image in the Github repository.
