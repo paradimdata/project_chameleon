@@ -2,4 +2,15 @@
 Installing Project Chameleon
 =============================
 
-This is the installation page.
+Docker Image
+------------
+
+Quick start with miniconda3
+---------------------------
+
+Installation and requirements
+-----------------------------
+
+Running in Jupyter Notebooks
+----------------------------
+
