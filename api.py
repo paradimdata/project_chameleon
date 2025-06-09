@@ -47,6 +47,10 @@ async def rheed_convert_route(request: Request, data: dict = Body(...), access_t
         return er
 
     common_handler_method_auth_check(request, data, access_token)
+    print("##TEST##")
+    print(request)
+    print(data)
+    print("##TEST##")
     input_file,output_file = common_file_handler_parse_request(request, data, '.img', '.png')
     try:
         rheedconverter(input_file, output_file)
