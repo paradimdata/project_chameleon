@@ -39,113 +39,30 @@ The U.S. interagency Materials Genome Initiative[6-10] demands a leap in FAIR-co
 
 `Project Chameleon` was designed to be used by material science researchers, but is applicable to any field of research using instrumental characterization tools. `Project Chameleon` is already in use in the NSF PARADIM Materials Innovation Platform (Cornell and Johns Hopkins universities) as well as the McQueen Lab at Johns Hopkins where the ARPES, Bruker RAW, Bruker BRML, 4D STEM, Non-4D STEM, RHEED, MBE, PPMS/MPMS, Laue HS2, and JEOL SEM functions have been implemented. These functions are used in the lab file server for McQueen Lab and to create FAIR datasets published with DOIs in the PARADIM Data Portal[11], allowing for the download of the raw file or converted file without any work done on the users end. Further integrations such as this one will allow for significant leaps in the efficiency and flexibility of material science workflows that include these file types. 
   
-# Citations
-
-@article{wilkinson2016fair,
-  author  = {Wilkinson, Mark D. and Dumontier, Michel and Aalbersberg, IJsbrand Jan and Appleton, Gavin and Axton, Myles and Baak, Arie and Blomberg, Niklas and Boiten, Jan Willem and da Silva Santos, Luiz Bonino and Bourne, Philip E. and others},
-  title   = {The FAIR Guiding Principles for scientific data management and stewardship},
-  journal = {Scientific Data},
-  volume  = {3},
-  year    = {2016},
-  issn    = {2052-4463},
-  doi     = {10.1038/sdata.2016.18}
-}
-
-@article{savitzky2021py4dstem,
-  author  = {Savitzky, Benjamin H. and others},
-  title   = {py4DSTEM: a software package for four-dimensional scanning transmission electron microscopy data analysis},
-  journal = {Microscopy and Microanalysis},
-  volume  = {27},
-  pages   = {712},
-  year    = {2021},
-  doi     = {10.1017/S1431927621003251}
-}
-
-@software{pena2025hyperspy,
-  author    = {Peña, Francisco de la and others},
-  title     = {{Hyperspy/Hyperspy: V2.3.0}},
-  version   = {v2.3.0},
-  date      = {2025-03-02},
-  publisher = {Zenodo},
-  url       = {https://doi.org/10.5281/zenodo.14956374},
-  doi       = {10.5281/zenodo.14956374}
-}
-
-@software{wojdyr2025xylib,
-  author    = {Wojdyr, Marcin},
-  title     = {{Wojdyr/Xylib}},
-  year      = {2025},
-  date      = {2025-05-24},
-  url       = {https://github.com/wojdyr/xylib},
-  note      = {GitHub repository}
-}
-
-@software{htmdec2025formats,
-  author    = {{HTMDEC}},
-  title     = {{Htmdec/Htmdec\_formats}},
-  year      = {2025},
-  date      = {2025-01-17},
-  url       = {https://github.com/htmdec/htmdec_formats},
-  note      = {High-Throughput Materials Discovery for Extreme Conditions (HTMDEC), GitHub repository}
-}
-
-@misc{ostp2021mgi,
-  author       = {{U.S. White House Office of Science and Technology Policy}},
-  title        = {Materials Genome Initiative Strategic Plan},
-  year         = {2021},
-  url          = {https://www.mgi.gov/sites/default/files/documents/MGI-2021-Strategic-Plan.pdf},
-  note         = {Accessed 2025-06-13}
-}
-
-@article{brinson2024fair,
-  author  = {Brinson, L. C. and Bartolo, L. M. and Blaiszik, B. and others},
-  title   = {Community action on FAIR data will fuel a revolution in materials research},
-  journal = {MRS Bulletin},
-  volume  = {49},
-  pages   = {12--16},
-  year    = {2024},
-  doi     = {10.1557/s43577-023-00498-4}
-}
-
-@article{odegard2023strategy,
-  author  = {Odegard, G. M. and Liang, Z. and Siochi, E. J. and others},
-  title   = {A successful strategy for MGI-inspired research},
-  journal = {MRS Bulletin},
-  volume  = {48},
-  pages   = {434--438},
-  year    = {2023},
-  doi     = {10.1557/s43577-023-00525-4}
-}
-
-@article{depablo2019frontiers,
-  author  = {de Pablo, Juan J. and Jackson, Nicholas E. and Webb, Michael A. and others},
-  title   = {New frontiers for the materials genome initiative},
-  journal = {npj Computational Materials},
-  volume  = {5},
-  pages   = {41},
-  year    = {2019},
-  doi     = {10.1038/s41524-019-0173-4}
-}
-
-@book{nasem2024digitaltwins,
-  author    = {{National Academies of Sciences, Engineering, and Medicine}},
-  title     = {Foundational Research Gaps and Future Directions for Digital Twins},
-  year      = {2024},
-  publisher = {The National Academies Press},
-  address   = {Washington, DC},
-  doi       = {10.17226/26894},
-  url       = {https://doi.org/10.17226/26894}
-}
-
-@online{paradimdata,
-  title        = {PARADIM Data Portal},
-  year         = {2025},
-  url          = {https://data.paradim.org/index.php},
-  note         = {Accessed: 2025-06-13},
-  organization = {Platform for the Accelerated Realization, Analysis, and Discovery of Interface Materials (PARADIM)}
-}
-
-
 # Acknowledgements 
 
 We acknowledge contributions and support from Maggie Eminizer, Matt Turk, Ali Rachidi, Steve Zeltman, Ben Redemann, Abby Neil, and Evan Crites.  
+
+# References 
+
+1. Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J. J., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. Scientific Data, 3. https://doi.org/10.1038/sdata.2016.18
+
+2. Savitzky, B. H., et al. (2021). py4DSTEM: a software package for four-dimensional scanning transmission electron microscopy data analysis. Microscopy and Microanalysis, 27, 712. https://doi.org/10.1017/S1431927621003251
+
+3. Peña, F. de la, et al. (2025). Hyperspy/Hyperspy: V2.3.0 [Software]. Zenodo. https://doi.org/10.5281/zenodo.14956374
+
+4. Wojdyr, M. (2025). Wojdyr/Xylib [Software]. GitHub. https://github.com/wojdyr/xylib
+
+5. HTMDEC. (2025). Htmdec/Htmdec_formats [Software]. GitHub. https://github.com/htmdec/htmdec_formats
+
+6. U.S. White House Office of Science and Technology Policy. (2021). Materials Genome Initiative Strategic Plan. https://www.mgi.gov/sites/default/files/documents/MGI-2021-Strategic-Plan.pdf (Accessed: 2025-06-13)
+
+7. Brinson, L. C., Bartolo, L. M., Blaiszik, B., et al. (2024). Community action on FAIR data will fuel a revolution in materials research. MRS Bulletin, 49, 12–16. https://doi.org/10.1557/s43577-023-00498-4
+
+8. Odegard, G. M., Liang, Z., Siochi, E. J., et al. (2023). A successful strategy for MGI-inspired research. MRS Bulletin, 48, 434–438. https://doi.org/10.1557/s43577-023-00525-4
+
+9. de Pablo, J. J., Jackson, N. E., Webb, M. A., et al. (2019). New frontiers for the materials genome initiative. npj Computational Materials, 5, 41. https://doi.org/10.1038/s41524-019-0173-4
+
+10. National Academies of Sciences, Engineering, and Medicine. (2024). Foundational Research Gaps and Future Directions for Digital Twins. Washington, DC: The National Academies Press. https://doi.org/10.17226/26894
+
+11. Platform for the Accelerated Realization, Analysis, and Discovery of Interface Materials (PARADIM). (2025). PARADIM Data Portal. https://data.paradim.org/index.php (Accessed: 2025-06-13)1
