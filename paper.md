@@ -39,8 +39,6 @@ The U.S. interagency Materials Genome Initiative[6-10] demands a leap in FAIR-co
 
 `Project Chameleon` was designed to be used by material science researchers, but is applicable to any field of research using instrumental characterization tools. `Project Chameleon` is already in use in the NSF PARADIM Materials Innovation Platform (Cornell and Johns Hopkins universities) as well as the McQueen Lab at Johns Hopkins where the ARPES, Bruker RAW, Bruker BRML, 4D STEM, Non-4D STEM, RHEED, MBE, PPMS/MPMS, Laue HS2, and JEOL SEM functions have been implemented. These functions are used in the lab file server for McQueen Lab and to create FAIR datasets published with DOIs in the PARADIM Data Portal[11], allowing for the download of the raw file or converted file without any work done on the users end. Further integrations such as this one will allow for significant leaps in the efficiency and flexibility of material science workflows that include these file types. 
   
-
-
 # Citations
 
 @article{wilkinson2016fair,
