@@ -1,43 +1,43 @@
----
-title: 'Project Chameleon: A Python package for material science research'
-tags:
+
+# Title: 
+###Project Chameleon: A Python Package for Interoperability in Experimental Materials Science Research Data
+
+####tags:
   - Python
-  - material science
+  -  FAIR Data
+  -  materials science
   - crystal growth
   - reflection high-energy electron diffraction
   - angle-resolved photoemission spectroscopy
   - molecular beam epitaxy
   - scanning transmission electron microscopy
   - x-ray diffraction
-authors:
-  - name: Peter Julien Kohler Cauchy
-    orcid: 0009-0007-1155-0509
-    equal-contrib: true
-    affiliation: "1, 2, 3"
-  - name: David Elbert
-    orcid: 0000-0002-2292-180X
-    corresponding: true
-    affiliation: "1, 2"
-affiliations:
- - name: National Science Foundation (Platform for the Accelerated Realization, Analysis, and Discovery of Interface Materials (PARADIM))
-   index: 1
- - name: Johns Hopkins University, Baltimore, Maryland, USA
-   index: 2
- - name: Cornell University, Ithaca, New York, USA
-   index: 3
-date: 13 November 2024
----
+
+# Authors:
+  
+- Peter Cauchy<sup>1</sup> (https://orcid.org/0009-0007-1155-0509) 
+- David Elbert<sup>1, 2</sup> (https://orcid.org/0000-0002-2292-180X)
+- Tyrel McQueen<sup>1, 3, 4</sup> (https://orcid.org/0000-0002-8493-4630)
+
+# Affiliations:
+1. PARADIM, William H. Miller III Department of Physics and Astronomy, Johns Hopkins University, Baltimore 21218, MD (https://ror.org/04pw1zg89)
+2. Hopkins Extreme Materials Institute, Johns Hopkins University, Baltimore, MD 21218 (https://ror.org/02ed2th17)
+3. Department of Chemistry, Johns Hopkins University, Baltimore 21218, MD, 
+4. Department of Materials Science and Engineering, Johns Hopkins University, Baltimore 21218, MD, 
+
+
 
 # Summary
 
 Project Chameleon is a versatile Python package for extensible data transformation and interoperability. Chameleon streamlines analysis and combination of scientific data from different sources and provides a foundational pillar for implementation of the FAIR (Findable, Accessible, Interoperable, and Reusable) data principles[1]. In the context of FAIR, interoperability refers to the ability of diverse datasets, tools, and systems to seamlessly interact, integrate, and exchange data. Interoperability ensures that scientific data can be readily combined or used alongside related datasets, software, and analytical tools across different domains and disciplines.  A central barrier to interoperability arises from heterogeneous data formats and differing metadata conventions encoded in the varied file formats of different laboratories.  Project Chameleon transformations eliminate this barrier to provide effective interoperability that facilitates comprehensive analyses and machine learning that accelerate scientific discovery and enhance reproducibility of scientific findings.
+
 Project Chameleon provides a collection of conversion scripts accessed through a REST API that enables researchers to simply convert specialized, often manufacturer-specific file formats for data such as RHEED electron diffraction patterns, scanning transmission electron microscopy (STEM) arrays, molecular beam epitaxy (MBE) logs, magnetic property measurement system analyses (PPMS/MPMS), and X-ray diffraction patterns into universally accessible formats like CSV for tabular data and PNG for image data. These universal formats provide the research community the ability to use open and readily available tools to analyze and visualize data from different instruments or laboratories. The API for Project Chameleon provides a function-based, user-friendly interface that allows simple conversions of some common file types. The API is also designed to handle multiple input and output types, including raw bytes, json, and URLs, giving flexibility in how it can be implemented. Project Chameleon itself leverages several open source packages for conversion and processing of specialized formats [2-5].  
 
 # Statement of Need
 
 The U.S. interagency Materials Genome Initiative[6-10] demands a leap in FAIR-compliant data to accelerate materials discovery, AI/ML applications, high-throughput experimentation, advanced digital twins, and growing interest in autonomous laboratories and manufacturing. Fundamental research in materials science, chemistry, and solid-state physics, however, depends on structure and property characterizations that use a wide range of techniques including, but not limited to, diffraction, microscopy, and spectroscopy. While these methods are a common thread in modern science, they rely on a wide variety of laboratory instrumentation developed by a wide range of manufacturers, creating a multitude of data formats demanding use of specialized analysis tools; The wide variation in data formats hinders FAIR interoperability; the inability to combine data from different sources or reproduce analyzes done in different labs thwarts Open Science and MGI goals. 
 
-`Project Chameleon` was designed to be used by material science researchers, but is applicable to any field of research using instrumental characterization tools. `Project Chameleon` is already in use in the NSF PARADIM Materials Innovation Platform (Cornell and Johns Hopkins universities) as well as the McQueen Lab at Johns Hopkins where the ARPES, Bruker RAW, Bruker BRML, 4D STEM, Non-4D STEM, RHEED, MBE, PPMS/MPMS, Laue HS2, and JEOL SEM functions have been implemented. These functions are used in the lab file server for McQueen Lab and to create FAIR datasets published with DOIs in the PARADIM Data Portal[11], allowing for the download of the raw file or converted file without any work done on the users end. Further integrations such as this one will allow for significant leaps in the efficiency and flexibility of material science workflows that include these file types. 
+Project Chameleon was designed to be used by material science researchers, but is applicable to any field of research using instrumental characterization tools. Project Chameleon is already in use in the NSF PARADIM Materials Innovation Platform (Cornell and Johns Hopkins universities) as well as the McQueen Lab at Johns Hopkins where the ARPES, Bruker RAW, Bruker BRML, 4D STEM, Non-4D STEM, RHEED, MBE, PPMS/MPMS, Laue HS2, and JEOL SEM functions have been implemented. These functions are used in the lab file server for McQueen Lab and to create FAIR datasets published with DOIs in the PARADIM Data Portal [11], allowing for the download of the raw file or converted file without any work done on the users end. Further integrations such as this one will allow for significant leaps in the efficiency and flexibility of material science workflows that include these file types. 
   
 # Acknowledgements 
 
