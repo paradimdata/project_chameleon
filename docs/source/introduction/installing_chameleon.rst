@@ -19,7 +19,7 @@ Installation and requirements
 1. Poetry
 This package is managed using [Poetry](https://python-poetry.org/), which you should install globaly on your system. Once you have Poetry installed, you can install this package and its dependencies in any environment of your choice 
 
-### Install Poetry with pipx 
+**Install Poetry with pipx** 
 The easiest way to install Poetry is with pipx. If you do not already have pipx installed you can find the instructions [here](https://pipx.pypa.io/stable/installation/). Once pipx has been installed, restart your shell/terminal window. After Poetry has been installed, you can install poetry with::
 
     pipx install poetry
@@ -59,7 +59,7 @@ For quick and easy use of Project Chameleon functions, Jupyter notebooks are rec
 
 In this example, the function being accessed is `rheedconverter`. This function has two parameters: a .img file, and a .png file. The `rheedconverter` function is one of the easiest to use to test if the package is working. A test file can be found in the 'tests' folder of the repository. A full list of functions that can be accessed and use can be found in the Data Types section. Each function has a more in depth description of what it can do and how it should be used. 
 
-## Dependencies and Futher Information
+**Dependencies and Futher Information**
 Full listed of dependencies used by Project Chameleon
 - matplolib.pyplot 
 - numpy 
