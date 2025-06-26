@@ -1,30 +1,27 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "project-chameleon"
+[tool.poetry]
+name = "project_chameleon"
 version = "0.1.0"
 description = "A package for transforming and querying different file formats commonly found in material science research"
-authors = [{name = "Peter Cauchy", email = "peter.cauchy@example.com"}]
-license = {text = "MIT"}
+authors = ["Peter Cauchy <peter.cauchy@example.com>"]
+license = "MIT"
 readme = "README.md"
-requires-python = ">=3.10.15"
-dependencies = [
-    "sphinx>=8.1.3",
-    "matplotlib>=3.9.0",
-    "numpy>=1.26.4",
-    "hyperspy>=2.1.0",
-    "py4DSTEM>=0.14.15",
-    "pandas>=2.2.2",
-    "sphinx-rtd-theme>=1.0.0",
-    "xylib-py>=1.6.1"
-]
+packages = [{ include = "project_chameleon" }]
 
-[project.optional-dependencies]
+[tool.poetry.dependencies]
+python = ">=3.12.2"
+sphinx = ">=8.1.3"
+matplotlib = ">=3.9.0"
+numpy = ">=1.26.4"
+hyperspy = ">=2.1.0"
+py4DSTEM = ">=0.14.15"
+pandas = ">=2.2.2"
+sphinx-rtd-theme = ">=1.0.0"
+xylib-py = ">=1.6.1"
+
+[tool.poetry.extras]
 docs = ["sphinx-rtd-theme"]
 
-[project.scripts]
+[tool.poetry.scripts]
 non4dstem = "project_chameleon.non4dstem:main"
 stemarray4d = "project_chameleon.stemarray4d:main"
 mbeparser = "project_chameleon.mbeparser:main"
@@ -33,13 +30,6 @@ rheed = "project_chameleon.rheedconverter:main"
 brukerraw = "project_chameleon.brukerrawconverter:main"
 brukerrawbackground = "project_chameleon.brukerrawbackground:main"
 
-[tool.setuptools]
-# Explicitly list the package to avoid issues with flat-layout
-packages = ["project_chameleon"]
-
-# Optionally, use src-layout if you prefer to restructure your package
-# package-dir = {"" = "src"}
-
-# You can also explicitly exclude other directories
-# exclude = ["conda", "*.tests"]
-
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
