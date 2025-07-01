@@ -61,15 +61,15 @@ In this example, the function being accessed is `rheedconverter`. This function 
 
 **Dependencies and Futher Information**
 Full listed of dependencies used by Project Chameleon
-- matplolib.pyplot 
-- numpy 
-- ffmpeg 
-- openpyxl 
-- libhdf5
-- hyperspy (Further information can be found [here](https://hyperspy.org/hyperspy-doc/current/user_guide/install.html))
-- py4dstem (Further information can be found [here](https://github.com/py4dstem/py4DSTEM))
-- xylib (install directions can be found [here](https://github.com/wojdyr/xylib))
-- htmdec_formats (install directions can be found [here](https://github.com/htmdec/htmdec_formats))
+* matplolib.pyplot 
+* numpy 
+* ffmpeg 
+* openpyxl 
+* libhdf5
+* hyperspy (Further information can be found [here](https://hyperspy.org/hyperspy-doc/current/user_guide/install.html))
+* py4dstem (Further information can be found [here](https://github.com/py4dstem/py4DSTEM))
+* xylib (install directions can be found [here](https://github.com/wojdyr/xylib))
+* htmdec_formats (install directions can be found [here](https://github.com/htmdec/htmdec_formats))
 If further instructions are needed for the xylib install, reference the file ["xylib_Install_Instructions_Windows"](https://github.com/paradimdata/project_chameleon/blob/main/xylib%20Install%20Instructions.txt) for a second set of instructions of how to download xylib on a windows machine, or reference the file ["xylib_Install_Instructions_MacOS"](https://github.com/paradimdata/project_chameleon/blob/main/xylib_Install_Instructions_MacOS.txt) for a second set of instructions of how to download xylib on a MacOS machine. 
 
 
