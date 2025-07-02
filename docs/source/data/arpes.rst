@@ -2,7 +2,7 @@
 Angle-Resolved Photoemission Spectroscopy
 ==========================================
 
-This module contains all functions for Angle-Resolved Photoemission Spectroscopy (ARPES) data. Of the functions below, the higher level functions are `arpes_folder_workbook` and `single_log_grapher`. All other functions are helper functions for the main functions. The functions have been designed to read from .log log files and .pxt Cadillac files. All functions that take a folder input are designed for a specific folder structure. The structure is as follows:
+This module contains all functions for Angle-Resolved Photoemission Spectroscopy (ARPES) data. Of the functions below, the higher level functions are ``arpes_folder_workbook`` and `single_log_grapher`. All other functions are helper functions for the main functions. The functions have been designed to read from .log log files and .pxt Cadillac files. All functions that take a folder input are designed for a specific folder structure. The structure is as follows:
 
 .. code-block:: python
 
@@ -21,15 +21,18 @@ This module contains all functions for Angle-Resolved Photoemission Spectroscopy
                      - All scans
       - Data - Other
 
+The folder structure can be easily changed for personal use if necessary.
 
-The folder structure can be easily changed for personal use if necessary. Here is an example of how the main function, `arpes_folder_workbook`, can be used: 
+ARPES Folder Workbook 
+---------------------
+ The main function ``arpes_folder_workbook`` takes a folder as an input, extracts data from .pxt files in the folder, and writes the data into a .xlsx file. Here is an example of how the main function, ``arpes_folder_workbook``, can be used: 
 
 .. code-block:: python
 
    from project_chameleon.arpes import arpes_folder_workbook
    arpes_folder_workbook('Example/Folder/Path/XXX', 'example_excel_file.xlsx')
 
-In this example, the example folder should hold the .pxt files that data will be extracted from. When looking at the file structure, it should be on of the sample folders from the ARPES raw data section of the file structure. The example excel file should be empty before data is added. Once data is initially written, more can be added in the same file if new data files need to be added. The function extracts the following data from the .pxt and .log files:
+In this example, the example folder 'XXX' holds the .pxt files that data will be extracted from. When looking at the file structure, it should be one of the sample folders from the ARPES raw data section of the file structure. The example excel file should be empty before data is added. If no .xlsx file exists with the name 'example_excel_file.xlsx', one will be created with that name. Once data is initially written, more can be added in the same file if new data files need to be added. The function extracts the following data from the .pxt and .log files:
 
 - Scan Number/File Name
 - Date 
