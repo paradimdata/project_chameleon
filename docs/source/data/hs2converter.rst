@@ -11,7 +11,11 @@ HS2 Converter
 .. code-block:: python
 
    from project_chameleon.hs2converter import hs2converter
-   hs2converter('example_file.raw','new_file.csv')
+   hs2converter('example.hs2','example.png')
+
+In this example. the file 'example.hs2' is the Laue .hs2 file that holds the scan data. 'example.png' is the .png file that the data will be written to. This function can handle images with two different sets of dimensions: 256 x 256 and 512 x 512. 
+
+Below is more information on the main functions, as well as some of the helper functions.
 
 .. automodule:: hs2converter
    :members:
