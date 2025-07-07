@@ -24,7 +24,7 @@ Non 4D STEM
    from project_chameleon.non4dstem import non4dstem
    non4dstem(data_file = 'test_file.ser', output_file = 'new_file.png')
 
-In this example, the file 'test_file.ser' is the non 4D STEM file that hold the data. 'new_file.png' is the image file that the plot of the .ser file will be saved to. This is an example of how the function can be used for files. To use the function for folders, replace ``data_file`` with ``data_folder``, and replace ``output_file`` with ``output_folder``. These two new parameters should be folders. No metadata is collected or displayed as part of this function.
+In this example, the file 'test_file.ser' is the non 4D STEM file that hold the data. 'new_file.png' is the image file that the plot of the .ser file will be saved to. This is an example of how the function can be used for files. To use the function for folders, replace ``data_file`` with ``data_folder``, and replace ``output_file`` with ``output_folder``. These two new parameters should be folders. No metadata is collected or displayed as part of this function. When using this function for folders, all files that are processible in the given folder will be processed and their plots will be placed in .png files in the output folder. 
 
 Below is more information on the main functions.
 
