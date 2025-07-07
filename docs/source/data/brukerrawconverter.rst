@@ -2,76 +2,88 @@
 Bruker X-Ray Diffraction
 =========================
 
-This module contains functions for Bruker X-Ray Diffraction data. Functions have been developed for three different forms of Bruker X-Ray data: Bruker .raw/.uxd files, Bruker .brml files, and Bruker .raw/.uxd/.csv background and data files. These file types correspond to the following functions: ``brukerrawconverter``, ``brml_converter``, and ``brukerrawbackground``. These functions have been designed for Bruker files, and may not work for XRD file types that are not Bruker file types. 
+This module contains functions for Bruker X-Ray Diffraction (XRD) data. Functions have been developed for three different forms of Bruker X-Ray data: Bruker `.raw`/`.uxd` files, Bruker `.brml` files, and Bruker `.raw`/`.uxd`/`.csv` background and data files. These file types correspond to the following functions: ``brukerrawconverter``, ``brml_converter``, and ``brukerrawbackground``. These functions are specifically designed for Bruker files and may not work with XRD file types that are not in a Bruker format.
 
 Bruker Raw Converter 
 --------------------
-``brukerrawconverter`` takes a Bruker .raw or .uxd file as an input, extracts the data from the file, and writes it into a .csv or .txt file. Here is an example of how the function ``brukerrawconverter`` can be used:
+``brukerrawconverter`` takes a Bruker `.raw` or `.uxd` file as input, extracts data from the file, and writes it to a `.csv` or `.txt` file. Here is an example of how the function can be used:
 
 .. code-block:: python
 
    from project_chameleon.brukerrawconverter import brukerrawconverter
-   brukerrawconverter('example_file.raw','new_file.csv')
+   brukerrawconverter('example_file.raw', 'new_file.csv')
 
-In this example, the file 'example_file.raw' is the Bruker raw file that holds the XRD data. 'new_file.csv' is the CSV file that the data will be added to. The CSV should be empty before data is written. If no file exists with the name 'new_file.csv', a file will be created with that name. The function extracts data and metadata from the file given. Here is a list of the metadata values extracted from the file:
+In this example, `'example_file.raw'` is the Bruker raw file that contains the XRD data. `'new_file.csv'` is the CSV file to which the data will be written. The CSV file should be empty before data is written. If no file with the name `'new_file.csv'` exists, one will be created. The function extracts both data and metadata from the input file. Below is a list of metadata values extracted:
 
-- Generator Current 
-- Generator Voltage 
-- Scan Type 
-- Start 2 Theta 
-- Start Angle 
-- Start Theta 
-- Steps 
-- Step Size 
-- Time Per Step 
-- Used Lambda 
+- Generator Current  
+- Generator Voltage  
+- Scan Type  
+- Start 2 Theta  
+- Start Angle  
+- Start Theta  
+- Steps  
+- Step Size  
+- Time per Step  
+- Used Lambda  
 
 Bruker BRML Converter 
 ---------------------
-``brml_converter`` takes a Bruker .brml file as an input, extracts the data from the file, and writes it into a .csv or .txt file. Here is an example of how the function ``brml_converter`` can be used:
+``brml_converter`` takes a Bruker `.brml` file as input, extracts data from the file, and writes it to a `.csv` or `.txt` file. Here is an example of how the function can be used:
 
 .. code-block:: python
 
    from project_chameleon.brml_converter import brml_converter
-   brukerrawconverter('example_file.brml','new_file.csv')
+   brml_converter('example_file.brml', 'new_file.csv')
 
-In this example, the file 'example_file.brml' is the Bruker .brml file that holds the XRD data. 'new_file.csv' is the CSV file that the data will be added to. The CSV should be empty before data is written. If no file exists with the name 'new_file.csv', a file will be created with that name. The function extracts data and metadata from the file given. Here is a list of the metadata values extracted from the file:
+In this example, `'example_file.brml'` is the Bruker BRML file that contains the XRD data. `'new_file.csv'` is the CSV file to which the data will be written. The CSV file should be empty before data is written. If no file with the name `'new_file.csv'` exists, one will be created. The function extracts both data and metadata from the input file. Below is a list of metadata values extracted:
 
-- Anode 
-- kα1
-- kα2
-- Lower Discriminator Value 
-- Upper Dicriminator Value 
-- Generator Current 
-- Generator Voltage 
-- Goniometer Radius 
-- Sample Rotation 
-- Primary Soller Slit 
-- BRML File Name 
-- BSML File Name 
-- Start Time 
-- End Time 
-- Scan Type 
-- Start 2 Theta 
-- Start Angle 
-- Start Beam Translation 
-- Start Phi 
-- Start Theta 
-- Steps 
-- Step Size 
-- Total Time per Step 
-- Time Per Step
+- Anode  
+- Kα1  
+- Kα2  
+- Lower Discriminator Value  
+- Upper Discriminator Value  
+- Generator Current  
+- Generator Voltage  
+- Goniometer Radius  
+- Sample Rotation  
+- Primary Soller Slit  
+- BRML File Name  
+- BSML File Name  
+- Start Time  
+- End Time  
+- Scan Type  
+- Start 2 Theta  
+- Start Angle  
+- Start Beam Translation  
+- Start Phi  
+- Start Theta  
+- Steps  
+- Step Size  
+- Total Time per Step  
+- Time per Step  
 
 Bruker Background 
 -----------------
-``brukerrawbackground`` takes two input files: one is a file containing data from a XRD scan, and the other is a file containing background data associated with the XRD scan. These files can be either Bruker .raw files, Bruker .uxd files, or .csv files. The function returns three plots saved as .png files and one .csv file, all in a folder. The first plot is of just the sample data. The second plot is of just the background data. The third plot is of the sample data with the background data subtracted. The .csv file holds the background subtracted data. Here is an example of how the function ``brukerrawbackground`` can be used:
+``brukerrawbackground`` takes two input files: one containing XRD scan data, and the other containing background data associated with the scan. These files can be Bruker `.raw`, `.uxd`, or `.csv` files. The function returns three plots saved as `.png` files and one `.csv` file, all stored in a folder.
+
+- The first plot shows the sample data.  
+- The second plot shows the background data.  
+- The third plot shows the sample data with the background subtracted.  
+- The `.csv` file contains the background-subtracted data.  
+
+Here is an example of how the function can be used:
 
 .. code-block:: python
 
    from project_chameleon.brukerrawbackground import brukerrawbackground
-   brukerrawbackground('test_background.csv','test_sample.csv', 'test_out')
+   brukerrawbackground('test_background.csv', 'test_sample.csv', 'test_out')
 
-In this example, the file 'test_background.csv' is the .csv file holding the background data from the XRD scan. 'test_sample.csv' is the .csv holding the data from the XRD scan of the sample. 'test_out' is the name of the folder that will hold the new files generated, as well as the beginning of the name of the files generated. For example, the plot of the sample XRD scan is named 'test_out_raw_data.png'. When this function is run, the user must input a multiplier for the background data. 
+In this example:
+- `'test_background.csv'` is the file containing background data from the XRD scan.
+- `'test_sample.csv'` is the file containing the sample scan data.
+- `'test_out'` is the name of the folder where output files will be saved and also serves as a prefix for the filenames.
+
+For example, the plot of the sample XRD scan is saved as `'test_out_raw_data.png'`. When this function is executed, the user must also input a multiplier for the background data.
 
 
 Below is more information on the main functions, as well as some of the helper functions.

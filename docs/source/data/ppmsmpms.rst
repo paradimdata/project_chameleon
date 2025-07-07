@@ -2,22 +2,21 @@
 Physical/Magnetic Property Management System
 =============================================
 
-This module contains the function for Physical/Magnetic Property Management System (PPMS/MPMS) data. The function in this module takes a PPMS/MPMS .dat file, detects the measurement type for the file, and extracts the relevant metadata and columns of data from the .dat file. The measurement types were created based on the measurement types of the given PPMS/MPMS machine. 
-
+This module contains a function for handling Physical/Magnetic Property Management System (PPMS/MPMS) data. The function takes a PPMS/MPMS `.dat` file, detects its measurement type, and extracts relevant metadata and data columns. The measurement types are based on the specific configurations of the PPMS/MPMS machine used.
 
 PPMS/MPMS Parser
 ----------------
-``ppmsmpmsparser`` takes a PPMS/MPMS .dat file as an input, extracts the data from the file, and writes it into a .csv file. Here is an example of how the function ``ppmpsmpmsparser`` can be used: 
+``ppmsmpmsparser`` takes a PPMS/MPMS `.dat` file as input, extracts the data, and writes it to a `.csv` file. Here is an example of how the function ``ppmsmpmsparser`` can be used: 
 
 .. code-block:: python
 
-   from project_chameleon.ppmsmpms import ppmpsmpmsparser
-   ppmpsmpmsparser('measurement.dat','data.csv')
+   from project_chameleon.ppmsmpms import ppmsmpmsparser
+   ppmsmpmsparser('measurement.dat', 'data.csv')
 
-In this example, the file 'measurement.dat' is the file that holds the PPMS/MPMS data. 'data.csv' is the CSV file that the data will be added to. The CSV should be empty before data is written. If no file exists with the name 'data.csv', one will be created witht that name. No meta data is extracted or displayed as part of this function. 
+In this example, `'measurement.dat'` is the input file containing the PPMS/MPMS data. `'data.csv'` is the CSV file where the extracted data will be saved. The CSV file should be empty before writing. If a file named `'data.csv'` does not already exist, one will be created. No metadata is extracted or displayed by this function.
 
 
-Below is more information on the main function.
+Below is more information on the main function:
 
 
 .. automodule:: ppmsmpms
