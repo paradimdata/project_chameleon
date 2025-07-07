@@ -26,7 +26,9 @@ SEM Spectra Peak Labeler
 
 In this example, the file 'jeol_sem.EMSA' is the raw JEOL SEM file that hold the energy count data. 'jeol_sem.png' is the image file that the plot of the data will be saved to. 'elements_in_plot' is an optional comma separated string paramenter that contains the elements expected by the user. The energy levels for the elements in this comma separated string will all be labeled, regardless of whether there is a peak at them or not. Any other peaks not that are not labeled with one of these elements will be labeled with other possible elements that could have caused the peak. This function does not extract any metadata and only creates a plot of the data. 
 
+
 Below is more information on the main functions, as well as some of the helper functions.
+
 
 .. automodule:: jeol_sem_converter
    :members:

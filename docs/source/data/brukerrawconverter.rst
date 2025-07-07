@@ -73,7 +73,9 @@ Bruker Background
 
 In this example, the file 'test_background.csv' is the .csv file holding the background data from the XRD scan. 'test_sample.csv' is the .csv holding the data from the XRD scan of the sample. 'test_out' is the name of the folder that will hold the new files generated, as well as the beginning of the name of the files generated. For example, the plot of the sample XRD scan is named 'test_out_raw_data.png'. When this function is run, the user must input a multiplier for the background data. 
 
+
 Below is more information on the main functions, as well as some of the helper functions.
+
 
 .. automodule:: brukerrawconverter
    :members:

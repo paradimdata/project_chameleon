@@ -26,7 +26,9 @@ RHEED Video Converter
 
 In this example. the file 'new_image.imm' in the RHEED video files. 'new_video.avi' is the adjust video file that will be produced after the video is adjusted. The output names can have two possible extensions: .avi and .mp4. These extensions directly affect the video generated with .avi being lossless and .mp4 being lossy. The parameter 'keep_images' is an optional parameter. If set to '1', a folder will be created along with the adjusted video that holds each frame of the video as it's own image file. If set to '0', no images will be created. This parameter defaults to '0'. 
 
+
 Below is more information on the main functions, as well as some of the helper functions.
+
 
 .. automodule:: rheed_video_converter
    :members:

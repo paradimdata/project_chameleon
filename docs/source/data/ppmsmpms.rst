@@ -16,7 +16,9 @@ PPMS/MPMS Parser
 
 In this example, the file 'measurement.dat' is the file that holds the PPMS/MPMS data. 'data.csv' is the CSV file that the data will be added to. The CSV should be empty before data is written. If no file exists with the name 'data.csv', one will be created witht that name. No meta data is extracted or displayed as part of this function. 
 
+
 Below is more information on the main function.
+
 
 .. automodule:: ppmsmpms
    :members:
