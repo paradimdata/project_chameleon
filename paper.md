@@ -1,6 +1,5 @@
 
-# Title: 
-###Project Chameleon: A Python Package for Interoperability in Experimental Materials Science Research Data
+# Project Chameleon: A Python Package for Interoperability in Experimental Materials Science Research Data
 
 ####tags:
   - Python
