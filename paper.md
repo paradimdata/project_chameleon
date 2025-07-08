@@ -1,7 +1,7 @@
 
 # Project Chameleon: A Python Package for Interoperability in Experimental Materials Science Research Data
 
-####tags:
+## tags:
   - Python
   -  FAIR Data
   -  materials science
