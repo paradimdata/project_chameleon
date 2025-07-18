@@ -52,7 +52,19 @@ Installation and Requirements
 
        brew install boost
 
-5. **Install Project Chameleon**
+   Instructions for how to install boost on windows can be found in the 'Instructions and Specifications' folder.
+
+5. **Install Swig**
+
+   Project Chameleon requires the latest version of Swig in the environment where it is installed. On macOS, you can install Swig using Homebrew:
+
+   .. code-block:: bash
+
+       brew install swig
+
+   Instructions for how to install boost on windows can be found in the 'Instructions and Specifications' folder.
+
+6. **Install Project Chameleon**
 
    Navigate to the project directory and install the `project_chameleon` package and its dependencies:
 
@@ -69,12 +81,23 @@ Installation and Requirements
 
 Running in Jupyter Notebooks
 ----------------------------
-Jupyter notebooks are recommended for quick access to Project Chameleon functions.
+Jupyter notebooks are recommended for quick access to Project Chameleon functions. 
 
 To use:
 
-1. Open a Jupyter notebook.
-2. In a new cell, add:
+1. Install Jupyter Notebooks in your conda environment
+
+   .. code-block:: python
+
+      pip install notebook
+
+2. Open a Jupyter notebook.
+
+   .. code-block:: python
+
+      jupyter notebook
+
+3. In a new cell, add:
 
    .. code-block:: python
 
