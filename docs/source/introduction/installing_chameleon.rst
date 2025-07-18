@@ -103,7 +103,8 @@ Full list of dependencies used by Project Chameleon:
 
 If you need help installing xylib, see the following files in the repository:
 
-- [`xylib_Install_Instructions_Windows.txt <https://github.com/paradimdata/project_chameleon/blob/main/xylib%20Install%20Instructions.txt>`_]
-- [`xylib_Install_Instructions_MacOS.txt <https://github.com/paradimdata/project_chameleon/blob/main/xylib_Install_Instructions_MacOS.txt>`_]
+- [`xylib_Install_Instructions_Windows.txt <https://github.com/paradimdata/project_chameleon/blob/main/Instructions%20and%20Specifications/xylib_Install_Instructions_Windows.txt>`_]
+- [`xylib_Install_Instructions_MacOS.txt <https://github.com/paradimdata/project_chameleon/blob/main/Instructions%20and%20Specifications/xylib_Install_Instructions_MacOS.txt>`_]
+- [`XYlib_ARM_Install_Instructions_v1.rxt <https://github.com/paradimdata/project_chameleon/blob/main/Instructions%20and%20Specifications/XYlib_ARM_Install_Instructions_v1.rtf>`_]
 
 These provide additional platform-specific installation instructions.
