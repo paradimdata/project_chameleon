@@ -14,9 +14,9 @@
 
 # Authors:
   
-- Peter Cauchy<sup>1</sup> (https://orcid.org/0009-0007-1155-0509) 
+- Peter Cauchy<sup>1, 2, 3, 4</sup> (https://orcid.org/0009-0007-1155-0509) 
 - David Elbert<sup>1, 2</sup> (https://orcid.org/0000-0002-2292-180X)
-- Tyrel McQueen<sup>1, 3, 4</sup> (https://orcid.org/0000-0002-8493-4630)
+- Tyrel McQueen<sup>1, 2, 3, 4</sup> (https://orcid.org/0000-0002-8493-4630)
 
 # Affiliations:
 1. PARADIM, William H. Miller III Department of Physics and Astronomy, Johns Hopkins University, Baltimore 21218, MD (https://ror.org/04pw1zg89)
