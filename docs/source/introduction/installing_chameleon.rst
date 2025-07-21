@@ -104,7 +104,7 @@ To use:
        from project_chameleon.rheedconverter import rheedconverter
        rheedconverter('example.img', 'example.png')
 
-This example uses the `rheedconverter` function, which takes two parameters: a `.img` input file and a `.png` ouput file. It is one of the simplest functions to test that the package is working.
+This example uses the `rheedconverter` function, which takes two parameters: a `.img` input file and a `.png` ouput file. It is one of the simplest functions that can be used to test that the package is working.
 
 Test files can be found in the `tests/data/rheed` folder of the repository. The files that can are included in the package and can be used for testing are `Image107.img`, `rheed_test_image.img`, and `test.img`. When the functions is run, an ouput should be created with the name given to the output file. In the example above, the ouput would be named `example.png`. A full list of functions and usage examples is provided in the **Data Types** section.
 
