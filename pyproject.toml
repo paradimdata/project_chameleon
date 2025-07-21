@@ -17,6 +17,10 @@ py4DSTEM = ">=0.14.15"
 pandas = ">=2.2.2"
 sphinx-rtd-theme = ">=1.0.0"
 xylib-py = ">=1.6.1"
+imagehash = ">=4.3.1"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=8.2.2"
 
 [tool.poetry.extras]
 docs = ["sphinx-rtd-theme"]
