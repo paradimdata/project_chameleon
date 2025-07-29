@@ -4,7 +4,7 @@ Installing Project Chameleon
 
 Quick Start with Miniconda3
 ---------------------------
-We recommend using Miniconda3 for the simplest installation. Miniconda3 installers can be downloaded from `the Miniconda website <https://docs.conda.io/en/latest/miniconda.html>`_, and installation instructions are available `here <https://conda.io/projects/conda/en/latest/user-guide/install/index.html>`_.
+We recommend using Miniconda3 for the simplest installation. Miniconda3 installers can be downloaded from `the Miniconda website <https://docs.conda.io/en/latest/miniconda.html>`_, and installation instructions are available `here <https://conda.io/projects/conda/en/latest/user-guide/install/index.html>`_. This method should be the easiest to get running for most users as it only requires a conda environment. If you are looking for a containerized version of Project Chameleon, instructions for installing and starting the Docker Image version can be found below. 
 
 Installation and Requirements
 -----------------------------
@@ -98,16 +98,15 @@ To use:
 
 This example uses the `rheedconverter` function, which takes two parameters: a `.img` input file and a `.png` ouput file. It is one of the simplest functions that can be used to test that the package is working.
 
-Test files can be found in the `tests/data/rheed` folder of the repository. The files that can are included in the package and can be used for testing are `Image107.img`, `rheed_test_image.img`, and `test.img`. When the functions is run, an ouput should be created with the name given to the output file. In the example above, the ouput would be named `example.png`. A full list of functions and usage examples is provided in the **Data Types** section.
+Test files can be found in the `tests/data/rheed` folder of the repository. The files that can are included in the package and can be used for testing are `Image107.img`, `rheed_test_image.img`, and `test.img`. When the function is run, an ouput should be created with the name given to the output file. In the example above, the ouput would be named `example.png`. A full list of functions and usage examples is provided in the **Data Types** section.
 
 Docker Image
 ------------
-The quickest way to deploy OpenMSIStream programs is to use the public `Docker image <https://github.com/paradimdata/project_chameleon/blob/main/Dockerfile>`_. 
+Another way to deploy Project Chameleon is to use the public `Docker image <https://github.com/paradimdata/project_chameleon/blob/main/Dockerfile>`_. This method does require that the user is familiar with Docker, but also does all of the installing of packages for you. 
 
 The image is built on the `python:3.12-slim` (Debian Linux) base image and contains a complete installation of Project Chameleon. Running the Docker image as-is will drop you into a bash terminal as the user (who has sudo privileges) in their home directory. 
 
-If you prefer to install Project Chameleon directly on your system instead of using a Docker container, we recommend starting with a minimal installation of Conda, the open source package and environment management system. The instructions below begin with installing Conda and outline all necessary steps to run OpenMSIStream programs.
-
+If you prefer to install Project Chameleon directly on your system instead of using a Docker container, we recommend starting with a minimal installation of Conda, the open source package and environment management system. 
 
 Dependencies and Further Information
 ------------------------------------
