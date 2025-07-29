@@ -25,7 +25,7 @@ Installation and Requirements
 
 2. **Download the GitHub Repository**
 
-   Clone or download the `GitHub repository <https://github.com/paradimdata/project_chameleon>`_ somewhere accessible on your system.
+   Clone or download the `GitHub repository <https://github.com/paradimdata/project_chameleon>`_ somewhere accessible on your system. This can either be done by downloading a zip directly from the Github webpage, or through Github desktop. Both of these methods should function the same. 
 
 3. **Create a New Virtual Environment**
 
@@ -44,7 +44,7 @@ Installation and Requirements
 
        brew install boost
 
-   Instructions for how to install boost on windows can be found in the 'Instructions and Specifications' folder.
+   Instructions for how to install boost on other systems(windows/linux), can be found in the 'Instructions and Specifications' folder.
 
 5. **Install Swig**
 
@@ -54,7 +54,7 @@ Installation and Requirements
 
        brew install swig
 
-   Instructions for how to install boost on windows can be found in the 'Instructions and Specifications' folder.
+   Instructions for how to install boost on other systems(windows/linux), can be found in the 'Instructions and Specifications' folder.
 
 6. **Install Project Chameleon**
 
