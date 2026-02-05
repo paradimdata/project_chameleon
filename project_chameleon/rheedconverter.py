@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import argparse
 from PIL import Image

@@ -1,7 +1,5 @@
-import numpy as np
 import argparse
 import os
-import csv
 
 def ppmsmpmsparser(inputfile, outputfile):
     """

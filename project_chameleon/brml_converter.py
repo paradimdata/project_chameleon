@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import argparse
 import zipfile
 import shutil
-import time
 import pytz
 import os
 import re
