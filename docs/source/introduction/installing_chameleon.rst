@@ -104,7 +104,7 @@ Docker Image
 ------------
 Another way to deploy Project Chameleon is to use the public `Docker image <https://github.com/paradimdata/project_chameleon/blob/main/Dockerfile>`_. This method does require that the user is familiar with Docker, but also does all of the installing of packages for you. 
 
-The image is built on the `python:3.12-slim` (Debian Linux) base image and contains a complete installation of Project Chameleon. Running the Docker image as-is will drop you into a bash terminal as the user (who has sudo privileges) in their home directory. 
+The image is built on the `python:3.12-slim` (Debian Linux) base image and contains a complete installation of Project Chameleon. Running the Docker image as-is will drop you into a bash terminal as the user (who has sudo privileges) in their home directory. More information on the Docker image can be found `here <https://project-chameleon.readthedocs.io/en/latest/implementation/docker.htmle>`_.
 
 If you prefer to install Project Chameleon directly on your system instead of using a Docker container, we recommend starting with a minimal installation of Conda, the open source package and environment management system. 
 
