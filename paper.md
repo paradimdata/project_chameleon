@@ -51,6 +51,10 @@ Fundamental research in materials science, chemistry, and solid-state physics, h
 
 Project Chameleon was designed to be used by materials science researchers, but is applicable to any field of research using instrumental characterization tools. Project Chameleon is already in use in the NSF PARADIM Materials Innovation Platform (Cornell and Johns Hopkins universities) as well as the McQueen Lab at Johns Hopkins where the ARPES, Bruker RAW, Bruker BRML, 4D STEM, Non-4D STEM, RHEED, MBE, PPMS/MPMS, Laue HS2, and JEOL SEM functions have been implemented. These functions are used in the lab file server for McQueen Lab and to create FAIR datasets published with DOIs in the PARADIM Data Portal [@paradim:2025], allowing for the download of the raw file or converted file without any work done on the user’s end.  
 
+# Related Work
+
+The value of project chameleon (PC) relative to existing alternatives is its versatility, and its focus on experimental (not computational) file formats. Existing FAIR/data-model/workflow tools are tailored primarily for computational work, or only support a small subset of experimental data types. Other data-type-specific tools do exist, but again do not capture the breadth and depth of what is needed. For example, GSAS-II is a commonly used x-ray diffraction data analysis tool that is capable of importing and exporting several formats, and Hyperspy is commonly used for the visualization and processing of EM/4D-STEM data, which is a distinct set of formats. The value of PC is in being able to convert any of these formats (and many others; e.g. all formats of xylib are supported, PC calls xylib as a backend for certain conversions) with a single plugin, with a unified API interface. PC is further openly deployable, in contrast to vendor-specific (and vendor-locked-in and licensed) development kits.
+
 # Acknowledgements
 
 We acknowledge contributions and support from Maggie Eminizer, Matt Turk, Ali Rachidi, Steve Zeltman, Ben Redemann, Abby Neil, and Evan Crites.
