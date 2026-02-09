@@ -3,7 +3,6 @@ import pandas as pd
 import os
 from matplotlib import pyplot as plt
 from scipy.signal import find_peaks
-from adjustText import adjust_text
 import argparse
 
 def get_element_peaks(element, df):
