@@ -22,6 +22,18 @@ Project Chameleon
 
 Project Chameleon is free and open source. It can be found on `Github <https://github.com/paradimdata/project_chameleon>`_. It can also be found as a docker image in the Github repository.
 
+Getting support
+---------------
+Users encountering any trouble using Project Chameleon can email contact@paradim.org for assistance. For more substantive discussions that may include suggestions on changes to OpenMSIStream as it exists, users are encouraged to create new issues on the `GitHub repository <https://github.com/paradimdata/project_chameleon/pulls>`_.
+
+Reporting Issues or Problems
+----------------------------
+Users should report issues or problems encountered with OpenMSIStream by creating new Issues on the `GitHub repository <https://github.com/paradimdata/project_chameleon/issues>`_.
+
+Contributing to Project Chameleon
+---------------------------------
+Users can contribute to OpenMSIStream by forking or cloning the `GitHub repository <https://github.com/paradimdata/project_chameleon>`_ and `creating Pull Requests <https://github.com/paradimdata/project_chameleon/pulls>`_ from their own forks or branches.
+
 .. image:: ../../PARADIM_LOGO.png
    :width: 400
 
