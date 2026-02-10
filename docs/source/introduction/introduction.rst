@@ -27,7 +27,7 @@ The section for data types provides links to the documents describing the functi
 
 There are two exisitng implementations of Project Chameleon: a Docker image implementation, and a Girder implementation. More information on the Docker Image can be found :doc:`here <docker>`. More information about the Girder implementation can be found :doc:`here <plugin>`. 
 
-Users seeking support, wishing to report issues, or wanting to contribute to Project Chameleon should do so in the `Github repository found here<https://github.com/paradimdata/project_chameleon/tree/main>`. Any problems found should be raised as issues in the repository. Anyone wishing to contribute to the project should create a pull request or create a fork. 
+Users seeking support, wishing to report issues, or wanting to contribute to Project Chameleon should do so in the `Github repository found here<https://github.com/paradimdata/project_chameleon/tree/main>`_. Any problems found should be raised as issues in the repository. Anyone wishing to contribute to the project should create a pull request or create a fork. 
 
 Acknowledgements 
 ----------
