@@ -9,67 +9,31 @@ We recommend using Miniconda3 for the simplest installation. Miniconda3 installe
 Installation and Requirements
 -----------------------------
 
-1. **Poetry**
-
-   This package is managed using `Poetry <https://python-poetry.org/>`_, which should be installed globally on your system. Once Poetry is installed, you can install this package and its dependencies in any environment of your choice.
-
-   **Install Poetry with pipx**
-
-   The easiest way to install Poetry is via pipx. If you do not already have pipx installed, follow the instructions `here <https://pipx.pypa.io/stable/installation/>`_. After pipx is installed, restart your shell or terminal. Then install Poetry with:
-
-   .. code-block:: bash
-
-       pipx install poetry
-
-   Ensure pipx is installed on your base system (not in a virtual environment). Deactivate any environments before running the command above.
-
-2. **Download the GitHub Repository**
+1. **Download the GitHub Repository**
 
    Clone or download the `GitHub repository <https://github.com/paradimdata/project_chameleon>`_ somewhere accessible on your system. This can either be done by downloading a zip directly from the Github webpage, or through Github desktop. Both of these methods should function the same. 
 
-3. **Create a New Virtual Environment**
+2. **Create a New Virtual Environment and Install Dependencies**
 
-   While any virtual environment manager should work, the example below uses Conda. The Python version must be 3.12.2 or newer:
-
-   .. code-block:: bash
-
-       conda create -n project_chameleon python=3.12.9 -y 
-       conda activate project_chameleon
-
-4. **Install Boost**
-
-   Project Chameleon requires the latest version of Boost in the environment where it is installed. On macOS, you can install Boost using Homebrew:
+   While any virtual environment manager should work, the example below uses Conda. The Python version must be 3.12.2 or newer. The commands below will both create a new virtual environment and install dependencies:
 
    .. code-block:: bash
 
-       brew install boost
+      conda env create -f environment.yml
+      conda activate project-chameleon
 
-   Instructions for how to install boost on other systems(windows/linux), can be found in the 'Instructions and Specifications' folder.
+   Note that the environment.yml file will automatically name the new envrionment "project-chameleon". To change this, edit the name in the environment.yml file and adjust the conda commands accordingly. 
 
-5. **Install Swig**
-
-   Project Chameleon requires the latest version of Swig in the environment where it is installed. On macOS, you can install Swig using Homebrew:
-
-   .. code-block:: bash
-
-       brew install swig
-
-   Instructions for how to install boost on other systems(windows/linux), can be found in the 'Instructions and Specifications' folder.
-
-6. **Install Project Chameleon**
-
-   Navigate to the project directory and install the `project_chameleon` package and its dependencies:
+3. **ARPES Dependencies Installation (Optional)**
+   If you do not plan on using the ARPES function in Project Chameleon this step in installation is not necessary. The ARPES functions require the installation of one additional package called HTMDEC Formats. To install this package, the `GitHub repository <https://github.com/htmdec/htmdec_formats>`_ should be cloned or downloaded. Then, within the newly created conda environment, enter the htmdec_formats repository and run:
 
    .. code-block:: bash
 
-       cd project_chameleon
-       poetry lock
-       poetry install
-       pip install .
+      pip install -e .
 
-   After running these commands, Project Chameleon should be installed in your local environment.
+   After this package is installed, ARPES functions should work normally.
 
-   The easiest way to access the package’s functions is through Jupyter notebooks. See below for how to use the package in a notebook.
+If 
 
 Running in Jupyter Notebooks
 ----------------------------
