@@ -33,7 +33,7 @@ Installation and Requirements
 
    After this package is installed, ARPES functions should work normally.
 
-If 
+In case of trouble with installation, more detailed instructions on installation for some packages can be found on the.:doc:`instructions and specifications <instructions_and_specifications>` page. This page also details some processes and expected structures of Project Chameleon.
 
 Running in Jupyter Notebooks
 ----------------------------
