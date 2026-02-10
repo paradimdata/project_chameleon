@@ -6,7 +6,7 @@ If you are using the free and open source web-based data management platform Gir
 
 Installation and Requirements
 -----------------------------
-These install instructions will assume that you already have Girder running in a virtual environment of some kind. If you are not sure how to get girder running, check the documentation in the Girder Github repo. After you get Girder running, download the `Chameleon plugin repository <https://github.com/paradimdata/chameleon_plugin>`_ either through Github desktop or from the Github webpage. Once the repository is downloaded, enter the directory in your virtual environment. Once in the `chameleon_plugin`, run the following commands:
+These install instructions will assume that you already have Girder running in a virtual environment of some kind. If you are not sure how to get girder running, check the documentation in the Girder Github repo. After you get Girder running, download the `Chameleon plugin repository <https://github.com/paradimdata/chameleon_plugin>`_ either through Github desktop or from the Github webpage. Once the repository is downloaded, enter the directory in your virtual environment. Once in the `chameleon_plugin` repository, run the following commands:
 
 .. code-block:: bash
 
