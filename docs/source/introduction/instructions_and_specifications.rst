@@ -1,5 +1,5 @@
 ===============================
-instructions and Specifications
+Instructions and Specifications
 ===============================
 
 This page provides detailed specifications and instructions on Project Chameleon

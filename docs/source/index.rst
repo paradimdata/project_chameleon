@@ -45,6 +45,7 @@ Users can contribute to OpenMSIStream by forking or cloning the `GitHub reposito
 
    introduction/introduction
    introduction/installing_chameleon
+   introduction/instructions_and_specifications
  
 .. toctree::
    :maxdepth: 2
