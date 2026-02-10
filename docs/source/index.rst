@@ -64,6 +64,7 @@ Users can contribute to OpenMSIStream by forking or cloning the `GitHub reposito
    :maxdepth: 2
    :caption: Existing Implementation
 
+   implementation/api
    implementation/docker
    implementation/plugin
 
