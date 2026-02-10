@@ -77,6 +77,21 @@ def brukerrawbackground(background_input, sample_input, output_name):
                     csvwriter.writerow(columns)
         Sample = pd.read_csv(sample_input + '.csv', sep=' ', header=None, names=['Time','Measurement']) # From the new .csv, read into data frame 
 
+    # Create new folder to hold outputs
+    output_folder = Path(str(output_name))
+    os.makedirs(output_folder, exist_ok=True)
+
+    if "/" in str(output_name):
+        output_label = os.path.basename(output_name)
+    else:
+        output_label = output_name
+
+    #Construct paths
+    raw_path = output_folder / f"{output_label}_raw_data.png"
+    adjusted_path = output_folder / f"{output_label}_background_adjusted.png"
+    subtracted_path = output_folder / f"{output_label}_background_subtracted.png"
+    csv_path = output_folder / f"{output_label}_backgroundSubtracted.csv"
+
     # Plot background data, and sample data independently on the same plot. Save as the raw data.png
     plt.plot(Background.iloc[:,0], Background.iloc[:,1], label='Background')
     plt.plot(Sample.iloc[:,0], Sample.iloc[:,1], label='Sample')
@@ -84,8 +99,8 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.title('Raw Data')
     plt.xlabel('Two Theta (Degrees)')
     plt.ylabel('Intensity (Arb. Units)')
+    plt.savefig(raw_path)
     plt.show()
-    plt.savefig(output_name + '_raw_data.png')
 
     # User must put in their mutiplier so it can be applied to the background data
     mult = float(input("Please input your multiplier \n"))
@@ -102,7 +117,7 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.title('Background Adjusted Raw Data')
     plt.xlabel('Two Theta (Degrees)')
     plt.ylabel('Intensity (Arb. Units)')
-    plt.savefig(output_name + '_background_adjusted.png')
+    plt.savefig(adjusted_path)
 
     # Place plots in image
     x1, x2, y1, y2 = 60, 150, 0, 800  # subregion of the original image
@@ -125,31 +140,9 @@ def brukerrawbackground(background_input, sample_input, output_name):
     plt.title('Background Subtracted Raw Data')
     plt.xlabel('Two Theta (Degrees)')
     plt.ylabel('Intensity (Arb. Units)')
+    plt.savefig(subtracted_path)
     plt.show()
-    plt.savefig(output_name + '_background_subtracted.png')
-    raw_diff.to_csv(output_name+ '_backgroundSubtracted.csv')
-
-    # Create new folder to hold outputs
-    output_folder = Path(str(output_name))
-    os.makedirs(output_folder)
-
-    #Sort all the slices into the directory. We need extensive checks to make sure correct files are moved into the folder
-    current_directory = os.getcwd()
-    for filename in os.listdir(current_directory):
-        if filename.endswith('.png') or filename.endswith('.csv'):
-            filepath = os.path.join(current_directory, filename)
-        else:
-            continue
-        if (str(output_name) in filename) and ('_raw_data' in filename): 
-            shutil.move(filepath, os.path.join(output_folder, filename))
-        elif (str(output_name) in filename) and ('_background_adjusted' in filename):
-            shutil.move(filepath, os.path.join(output_folder, filename))
-        elif (str(output_name) in filename) and ('_background_subtracted' in filename):
-            shutil.move(filepath, os.path.join(output_folder, filename))
-        elif (str(output_name) in filename) and ('_backgroundSubtracted' in filename):
-            shutil.move(filepath, os.path.join(output_folder, filename))
-        else:  
-            continue
+    raw_diff.to_csv(csv_path)
 
 def main():
     parser = argparse.ArgumentParser(description="Process some input files for background and sample data")

@@ -12,13 +12,13 @@ def test_ppms_basic_output():
     ppms_file_path_basic = (
         pathlib.Path(__file__).parent
         / test_ppms_basic_output.__name__
-        / "test_file.txt"
+        / "test_file.csv"
     )
     assert not ppms_file_path_basic.parent.is_dir()
     ppms_file_path_basic.parent.mkdir()
     try:
         with patch('builtins.input', return_value="4-Probe Resistivity"):
-            ppmsmpmsparser('data/ppms/4-probe resistivity example file.dat', ppms_file_path_basic, user_input = '3')
+            ppmsmpmsparser('data/ppms/4-probe resistivity example file.dat', ppms_file_path_basic)
         assert ppms_file_path_basic.is_file()
     finally:
         shutil.rmtree(ppms_file_path_basic.parent)
@@ -27,13 +27,13 @@ def test_ppms_probe_output():
     ppms_file_path_probe = (
         pathlib.Path(__file__).parent
         / test_ppms_probe_output.__name__
-        / "probe_test_file.txt"
+        / "probe_test_file.csv"
     )
     assert not ppms_file_path_probe.parent.is_dir()
     ppms_file_path_probe.parent.mkdir()
     try:
         with patch('builtins.input', return_value="4-Probe Resistivity"):
-            ppmsmpmsparser('data/ppms/4-probe resistivity example file.dat', ppms_file_path_probe, user_input = '3')
+            ppmsmpmsparser('data/ppms/4-probe resistivity example file.dat', ppms_file_path_probe)
         with open(ppms_file_path_probe, 'r') as file:
             test_lines = [file.readline() for _ in range(5)]
         with open('data/ppms/probe_test_output.txt', 'r') as file:

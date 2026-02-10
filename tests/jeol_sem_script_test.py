@@ -39,4 +39,4 @@ def test_jeol_sem_hash():
 def test_Jeol_sem_arguments():
     with pytest.raises(TypeError) as exc_info:
         sem_base_plot()
-    assert str(exc_info.value) == "sem_base_plot() missing 2 required positional arguments: 'input_file' and 'output_file'"
+    assert str(exc_info.value) == "sem_base_plot() missing 2 required positional arguments: 'file_name' and 'output_file'"

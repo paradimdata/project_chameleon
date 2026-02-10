@@ -32,7 +32,7 @@ def test_brukerbrml_output():
         brml_converter('data/bruker/standard.brml',brukerbrml_file_path)
         with open(brukerbrml_file_path, 'r') as file:
             test_lines = [file.readline() for _ in range(5)]
-        with open('data/bruker/standared_test.txt', 'r') as file:
+        with open('data/bruker/standard_test.txt', 'r') as file:
             base_lines = [file.readline() for _ in range(5)]
 
         assert test_lines == base_lines
@@ -42,4 +42,4 @@ def test_brukerbrml_output():
 def test_no_arguments():
     with pytest.raises(TypeError) as exc_info:
         brml_converter()
-    assert str(exc_info.value) =="brukerrawconverter() missing 2 required positional arguments: 'input' and 'output'"
+    assert str(exc_info.value) == "brml_converter() missing 2 required positional arguments: 'input_file' and 'output_file'"

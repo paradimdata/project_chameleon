@@ -80,8 +80,9 @@ def sem_base_plot(file_name, output_file, color = None, label = None):
     bars = ax.bar(x, y, width=0.025, color = color)
 
     # Set graph and axis titles
+    out = str(output_file)
     if label == None:
-        ax.set_title('Plot of ' + str(output_file.split('.')[0]))
+        ax.set_title('Plot of ' + str(out.split('.')[0]))
     else:
         ax.set_title(str(label))
     ax.set_ylabel('Counts')
